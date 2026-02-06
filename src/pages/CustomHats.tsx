@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import HatQuoteBuilder from "@/components/quote/HatQuoteBuilder";
-import serviceHats from "@/assets/service-hats.jpg";
+import heroHats from "@/assets/hero-hats.jpg";
 
 const CustomHats = () => {
   return (
