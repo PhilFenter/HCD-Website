@@ -47,7 +47,7 @@ const CustomHats = () => {
               className="relative aspect-square overflow-hidden rounded-lg"
             >
               <img
-                src={serviceHats}
+                src={heroHats}
                 alt="Custom leather patch hat close-up"
                 className="h-full w-full object-cover"
               />
