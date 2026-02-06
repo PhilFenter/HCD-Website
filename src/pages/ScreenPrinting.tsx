@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
+import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import serviceScreenprint from "@/assets/service-screenprint.jpg";
 
 const ScreenPrinting = () => {
@@ -53,22 +54,83 @@ const ScreenPrinting = () => {
         </div>
       </section>
 
-      <section id="quote" className="border-t border-border bg-secondary/30 py-20 md:py-28">
+      {/* Equipment / Technology */}
+      <section className="border-t border-border bg-secondary/30 py-20 md:py-28">
         <div className="container">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-heading text-3xl font-bold text-foreground">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
+              OUR TECHNOLOGY
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              We've invested in top-tier equipment so every print is sharp, consistent, and built to last.
+            </p>
+          </motion.div>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {[
+              {
+                title: "ROQ P-14XL Press",
+                desc: "14-color automatic screen printing press. Handles complex multi-color designs at production speed with perfect registration.",
+                features: ["Up to 14 colors", "Automatic registration", "High-speed production"],
+              },
+              {
+                title: "CTS Technology",
+                desc: "Computer to Screen technology eliminates film positives. Direct digital exposure for sharper detail and faster setup.",
+                features: ["Sharper detail", "Faster setup", "Digital precision"],
+              },
+              {
+                title: "Quality Inks",
+                desc: "Premium plastisol and water-based inks for vibrant, durable prints that hold up wash after wash.",
+                features: ["Vibrant colors", "Wash-durable", "Eco-friendly options"],
+              },
+            ].map((tech, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="rounded-lg border border-border bg-card p-6"
+              >
+                <h3 className="font-heading text-lg font-semibold text-foreground">{tech.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{tech.desc}</p>
+                <ul className="mt-4 space-y-1.5">
+                  {tech.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quote Builder */}
+      <section id="quote" className="border-t border-border py-20 md:py-28">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-10 text-center"
+          >
+            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
               REQUEST A QUOTE
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Tell us about your screen printing project and get a custom quote.
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              Walk through a few quick steps and we'll send you a custom screen printing quote within one business day.
             </p>
-            <div className="mt-8 rounded-lg border border-border bg-card p-8 text-left">
-              <p className="text-center text-muted-foreground">
-                Guided quote builder coming soon — multi-step form for garment type,
-                print colors, locations, quantities, artwork, and timeline.
-              </p>
-            </div>
-          </div>
+          </motion.div>
+
+          <ScreenPrintQuoteBuilder />
         </div>
       </section>
     </Layout>
