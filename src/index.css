@@ -8,25 +8,25 @@
   :root {
     /* Hells Canyon Designs — Warm rugged palette with gold accents */
     --background: 25 18% 10%;
-    --foreground: 35 20% 90%;
+    --foreground: 0 0% 96%;
 
     --card: 25 16% 14%;
-    --card-foreground: 35 20% 90%;
+    --card-foreground: 0 0% 96%;
 
     --popover: 25 16% 14%;
-    --popover-foreground: 35 20% 90%;
+    --popover-foreground: 0 0% 96%;
 
     --primary: 40 90% 50%;
     --primary-foreground: 25 18% 10%;
 
     --secondary: 25 14% 19%;
-    --secondary-foreground: 35 20% 90%;
+    --secondary-foreground: 0 0% 96%;
 
     --muted: 25 14% 19%;
-    --muted-foreground: 25 10% 68%;
+    --muted-foreground: 0 0% 72%;
 
     --accent: 35 85% 45%;
-    --accent-foreground: 35 20% 95%;
+    --accent-foreground: 0 0% 96%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -38,11 +38,11 @@
     --radius: 0.5rem;
 
     --sidebar-background: 25 18% 10%;
-    --sidebar-foreground: 35 20% 90%;
+    --sidebar-foreground: 0 0% 96%;
     --sidebar-primary: 40 90% 50%;
     --sidebar-primary-foreground: 25 18% 10%;
     --sidebar-accent: 25 14% 19%;
-    --sidebar-accent-foreground: 35 20% 90%;
+    --sidebar-accent-foreground: 0 0% 96%;
     --sidebar-border: 25 14% 22%;
     --sidebar-ring: 40 90% 50%;
   }
