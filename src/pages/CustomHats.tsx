@@ -25,7 +25,7 @@ const CustomHats = () => {
                 From laser-engraved leather to UV printed and embroidered patches —
                 we craft premium custom hats that make your brand stand out. Choose
                 from Richardson, YP Classics, and more, with over 4,000 hats in
-                stock.
+                stock. 12 piece minimum order.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {["Laser Engraved Leather", "UV Printed", "Embroidered Patches", "Richardson 112", "YP Classics"].map(
