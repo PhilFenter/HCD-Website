@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import serviceHats from "@/assets/service-hats.jpg";
 import serviceEmbroidery from "@/assets/service-embroidery.jpg";
 import serviceScreenprint from "@/assets/service-screenprint.jpg";
 import serviceDtf from "@/assets/service-dtf.jpg";
@@ -12,7 +11,6 @@ import galleryScreenprintDetail from "@/assets/gallery-screenprint-detail.jpg";
 
 const galleryItems = [
   { src: galleryFlagHat, alt: "Leather patch American flag on camo trucker hat", span: "md:col-span-2" },
-  { src: serviceHats, alt: "Laser engraved leather patch close-up", span: "" },
   { src: galleryEmbroideryMachine, alt: "Barudan multi-head embroidery machine in production", span: "" },
   { src: galleryEmbroideredHat, alt: "Custom 3D puff embroidered hat with flag detail", span: "md:col-span-2" },
   { src: serviceEmbroidery, alt: "Custom embroidery on polo", span: "" },
