@@ -16,6 +16,8 @@ import galleryEmbroideredHillcrest from "@/assets/gallery-embroidered-hillcrest.
 import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
 import galleryScreenprintThunder from "@/assets/gallery-screenprint-thunder.jpg";
 import galleryScreenprintPress from "@/assets/gallery-screenprint-press.jpg";
+import galleryDtfMadHatter from "@/assets/gallery-dtf-madhatter.jpg";
+import galleryDtfPrimal from "@/assets/gallery-dtf-primal.jpg";
 
 const galleryItems = [
   { src: galleryFlagHat, alt: "Leather patch American flag on camo trucker hat", span: "md:col-span-2" },
@@ -34,6 +36,8 @@ const galleryItems = [
   { src: galleryScreenprintDetail, alt: "Seekins Precision screen printed shirt detail", span: "" },
   { src: galleryScreenprintLcstate, alt: "LC State Hall of Fame screen printed t-shirt", span: "" },
   { src: galleryScreenprintThunder, alt: "Thunder on the Snake 2025 screen printed event shirt", span: "md:col-span-2" },
+  { src: galleryDtfMadHatter, alt: "Mad Hatter Grand Prix DTF transfer design", span: "" },
+  { src: galleryDtfPrimal, alt: "Primal Fitness custom DTF printed t-shirt", span: "" },
   { src: galleryScreenprintPress, alt: "ROQ automatic screen printing press in action", span: "" },
 ];
 

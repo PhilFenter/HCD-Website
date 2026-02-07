@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DTFQuoteBuilder from "@/components/quote/DTFQuoteBuilder";
-import serviceDtf from "@/assets/service-dtf.jpg";
+import galleryDtfMadHatter from "@/assets/gallery-dtf-madhatter.jpg";
 
 const DTFTransfers = () => {
   return (
@@ -48,8 +48,8 @@ const DTFTransfers = () => {
               className="relative aspect-square overflow-hidden rounded-lg"
             >
               <img
-                src={serviceDtf}
-                alt="DTF transfer on garment"
+                src={galleryDtfMadHatter}
+                alt="Mad Hatter Grand Prix DTF transfer on t-shirt"
                 className="h-full w-full object-cover"
               />
             </motion.div>
