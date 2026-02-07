@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import HatQuoteBuilder from "@/components/quote/HatQuoteBuilder";
-import heroHats from "@/assets/gallery-leather-patch-flag.jpg";
+import heroHats from "@/assets/hero-sewing-patch.jpg";
 
 const CustomHats = () => {
   return (
@@ -48,7 +48,7 @@ const CustomHats = () => {
             >
               <img
                 src={heroHats}
-                alt="Custom leather patch hat close-up"
+                alt="Sewing a laser engraved leather patch onto a camo trucker hat"
                 className="h-full w-full object-cover"
               />
             </motion.div>
