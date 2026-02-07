@@ -1,24 +1,36 @@
 import { motion } from "framer-motion";
-import serviceEmbroidery from "@/assets/service-embroidery.jpg";
-import serviceScreenprint from "@/assets/service-screenprint.jpg";
-import serviceDtf from "@/assets/service-dtf.jpg";
-import heroHats from "@/assets/hero-hats.jpg";
 import galleryFlagHat from "@/assets/gallery-flag-hat.jpg";
 import galleryEmbroideryMachine from "@/assets/gallery-embroidery-machine.jpg";
 import galleryEmbroideredHat from "@/assets/gallery-embroidered-hat.jpg";
 import galleryScreenprintShirt from "@/assets/gallery-screenprint-shirt.jpg";
 import galleryScreenprintDetail from "@/assets/gallery-screenprint-detail.jpg";
+import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
+import galleryHotshotsEmbroidery from "@/assets/gallery-hotshots-embroidery.jpg";
+import galleryDtfIdaho from "@/assets/gallery-dtf-idaho.jpg";
+import galleryLeatherPatchFlag from "@/assets/gallery-leather-patch-flag.jpg";
+import galleryScreenprintLcstate from "@/assets/gallery-screenprint-lcstate.jpg";
+import galleryScreenprintBaseball from "@/assets/gallery-screenprint-baseball.jpg";
+import galleryEmbroideredBaseballHat from "@/assets/gallery-embroidered-baseball-hat.jpg";
+import galleryScreenprintHelitack from "@/assets/gallery-screenprint-helitack.jpg";
+import galleryEmbroideredHillcrest from "@/assets/gallery-embroidered-hillcrest.jpg";
+import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
 
 const galleryItems = [
   { src: galleryFlagHat, alt: "Leather patch American flag on camo trucker hat", span: "md:col-span-2" },
+  { src: galleryEmbroideredPatch, alt: "Custom embroidered crest patch in gold and black", span: "" },
+  { src: galleryLeatherPatchFlag, alt: "Richardson 112 trucker hat with UV printed American flag leather patch", span: "" },
+  { src: galleryScreenprintBaseball, alt: "NAIA World Series volunteer screen printed t-shirt", span: "md:col-span-2" },
+  { src: galleryEmbroideredBaseballHat, alt: "LC Baseball embroidered Richardson 112 trucker hat", span: "" },
+  { src: galleryScreenprintHelitack, alt: "Grangeville Helitack screen printed t-shirt design", span: "" },
+  { src: galleryEmbroideredHillcrest, alt: "Hillcrest Aircraft embroidered rope hat", span: "" },
+  { src: galleryHotshotsEmbroidery, alt: "Hot Shots embroidered logo on red jacket", span: "" },
+  { src: galleryDtfIdaho, alt: "Idaho Dept of Lands DTF transfer on sweatshirt", span: "" },
+  { src: galleryScreenprintSquad, alt: "Volunteer Squad screen printed t-shirt", span: "" },
   { src: galleryEmbroideryMachine, alt: "Barudan multi-head embroidery machine in production", span: "" },
   { src: galleryEmbroideredHat, alt: "Custom 3D puff embroidered hat with flag detail", span: "md:col-span-2" },
-  { src: serviceEmbroidery, alt: "Custom embroidery on polo", span: "" },
   { src: galleryScreenprintShirt, alt: "Custom screen printed t-shirt design", span: "" },
   { src: galleryScreenprintDetail, alt: "Seekins Precision screen printed shirt detail", span: "" },
-  { src: serviceScreenprint, alt: "Screen printing production line", span: "" },
-  { src: serviceDtf, alt: "DTF transfer on garment", span: "" },
-  { src: heroHats, alt: "Custom leather patch hats collection", span: "" },
+  { src: galleryScreenprintLcstate, alt: "LC State Hall of Fame screen printed t-shirt", span: "" },
 ];
 
 const PortfolioGallery = () => {
