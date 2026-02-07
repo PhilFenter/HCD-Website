@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import serviceHats from "@/assets/service-hats.jpg";
-import serviceEmbroidery from "@/assets/service-embroidery.jpg";
-import serviceScreenprint from "@/assets/service-screenprint.jpg";
-import serviceDtf from "@/assets/service-dtf.jpg";
+import serviceHats from "@/assets/gallery-leather-patch-flag.jpg";
+import serviceEmbroidery from "@/assets/gallery-embroidered-patch.jpg";
+import serviceScreenprint from "@/assets/gallery-screenprint-thunder.jpg";
+import serviceDtf from "@/assets/gallery-dtf-madhatter.jpg";
 
 const services = [
   {
