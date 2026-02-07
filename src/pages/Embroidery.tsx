@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import EmbroideryQuoteBuilder from "@/components/quote/EmbroideryQuoteBuilder";
+import EmbroideryGallery from "@/components/embroidery/EmbroideryGallery";
 import galleryEmbroideryMachine from "@/assets/gallery-embroidery-machine.jpg";
 
 const Embroidery = () => {
@@ -110,6 +111,9 @@ const Embroidery = () => {
           </div>
         </div>
       </section>
+
+      {/* Gallery */}
+      <EmbroideryGallery />
 
       {/* Quote Builder */}
       <section id="quote" className="border-t border-border py-20 md:py-28">
