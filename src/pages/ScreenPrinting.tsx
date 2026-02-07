@@ -76,8 +76,8 @@ const ScreenPrinting = () => {
             {[
               {
                 title: "ROQ P-14XL Press",
-                desc: "14-color automatic screen printing press. Handles complex multi-color designs at production speed with perfect registration.",
-                features: ["Up to 14 colors", "Automatic registration", "High-speed production"],
+                desc: "Automatic screen printing press with 14 plattens and 10 print heads. Features two Stampinators for exceptionally soft-hand prints and matte finishes.",
+                features: ["Up to 10 colors", "Precise registration", "Two Stampinators"],
               },
               {
                 title: "CTS Technology",
