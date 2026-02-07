@@ -14,6 +14,8 @@ import galleryEmbroideredBaseballHat from "@/assets/gallery-embroidered-baseball
 import galleryScreenprintHelitack from "@/assets/gallery-screenprint-helitack.jpg";
 import galleryEmbroideredHillcrest from "@/assets/gallery-embroidered-hillcrest.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
+import galleryScreenprintThunder from "@/assets/gallery-screenprint-thunder.jpg";
+import galleryScreenprintPress from "@/assets/gallery-screenprint-press.jpg";
 
 const galleryItems = [
   { src: galleryFlagHat, alt: "Leather patch American flag on camo trucker hat", span: "md:col-span-2" },
@@ -31,6 +33,8 @@ const galleryItems = [
   { src: galleryScreenprintShirt, alt: "Custom screen printed t-shirt design", span: "" },
   { src: galleryScreenprintDetail, alt: "Seekins Precision screen printed shirt detail", span: "" },
   { src: galleryScreenprintLcstate, alt: "LC State Hall of Fame screen printed t-shirt", span: "" },
+  { src: galleryScreenprintThunder, alt: "Thunder on the Snake 2025 screen printed event shirt", span: "md:col-span-2" },
+  { src: galleryScreenprintPress, alt: "ROQ automatic screen printing press in action", span: "" },
 ];
 
 const PortfolioGallery = () => {
