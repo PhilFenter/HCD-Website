@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import heroImage from "@/assets/gallery-leather-patch-flag.jpg";
+import heroImage from "@/assets/hero-leather-patches.jpg";
 
 const HeroSection = () => {
   return (
@@ -11,7 +11,7 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Custom leather patch hats on workbench"
+          alt="Collection of custom laser engraved leather patches"
           className="h-full w-full object-cover"
           loading="eager"
         />
