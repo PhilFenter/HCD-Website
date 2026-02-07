@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import EmbroideryQuoteBuilder from "@/components/quote/EmbroideryQuoteBuilder";
-import serviceEmbroidery from "@/assets/service-embroidery.jpg";
+import galleryEmbroideryMachine from "@/assets/gallery-embroidery-machine.jpg";
 
 const Embroidery = () => {
   return (
@@ -43,8 +43,8 @@ const Embroidery = () => {
               className="relative aspect-square overflow-hidden rounded-lg"
             >
               <img
-                src={serviceEmbroidery}
-                alt="Embroidery machine stitching logo"
+                src={galleryEmbroideryMachine}
+                alt="Barudan multi-head embroidery machine in production"
                 className="h-full w-full object-cover"
               />
             </motion.div>
