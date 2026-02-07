@@ -281,17 +281,17 @@ const HatQuoteBuilder = () => {
                   HOW MANY HATS?
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Select a quantity range. We'll provide exact pricing in your
+                  Select a quantity range (12 piece minimum). We'll provide exact pricing in your
                   quote.
                 </p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {[
-                    { value: "12-24", label: "12 – 24 Hats", desc: "Small batch — perfect for a team or event." },
+                    { value: "12-24", label: "12 – 24 Hats", desc: "Our minimum order — perfect for a team or event." },
                     { value: "24-48", label: "24 – 48 Hats", desc: "Mid-range — most popular for small businesses." },
                     { value: "48-96", label: "48 – 96 Hats", desc: "Large order — better per-unit pricing." },
                     { value: "96-200", label: "96 – 200 Hats", desc: "Bulk order — great for retail or large teams." },
                     { value: "200+", label: "200+ Hats", desc: "Enterprise volume — best pricing available." },
-                    { value: "not-sure", label: "Not Sure Yet", desc: "We'll help you figure out the right quantity." },
+                    { value: "not-sure", label: "Not Sure Yet", desc: "12 piece minimum. We'll help you find the right quantity." },
                   ].map((opt) => (
                     <OptionCard
                       key={opt.value}
