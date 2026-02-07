@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
+import ScreenPrintingGallery from "@/components/screen-printing/ScreenPrintingGallery";
 import galleryScreenprintPress from "@/assets/gallery-screenprint-press.jpg";
 
 const ScreenPrinting = () => {
@@ -112,6 +113,9 @@ const ScreenPrinting = () => {
           </div>
         </div>
       </section>
+
+      {/* Gallery */}
+      <ScreenPrintingGallery />
 
       {/* Quote Builder */}
       <section id="quote" className="border-t border-border py-20 md:py-28">
