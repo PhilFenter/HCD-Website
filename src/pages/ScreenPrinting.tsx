@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
-import serviceScreenprint from "@/assets/service-screenprint.jpg";
+import galleryScreenprintPress from "@/assets/gallery-screenprint-press.jpg";
 
 const ScreenPrinting = () => {
   return (
@@ -45,8 +45,8 @@ const ScreenPrinting = () => {
               className="relative aspect-square overflow-hidden rounded-lg"
             >
               <img
-                src={serviceScreenprint}
-                alt="Screen printing press in production"
+                src={galleryScreenprintPress}
+                alt="ROQ automatic screen printing press in production"
                 className="h-full w-full object-cover"
               />
             </motion.div>
