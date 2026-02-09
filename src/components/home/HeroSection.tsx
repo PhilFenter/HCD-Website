@@ -15,7 +15,7 @@ const HeroSection = () => {
           className="h-full w-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
       </div>
 
       <div className="container relative z-10">
@@ -24,7 +24,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="font-brand text-3xl text-primary sm:text-4xl md:text-6xl lg:text-7xl"
+            className="font-heading text-3xl font-bold text-primary sm:text-4xl md:text-6xl lg:text-7xl"
           >
             HELLS CANYON DESIGNS
           </motion.p>
