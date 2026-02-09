@@ -19,12 +19,21 @@ const HeroSection = () => {
       </div>
 
       <div className="container relative z-10">
-        <div className="max-w-2xl">
+        <div className="flex flex-col items-center text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="font-heading text-sm font-medium tracking-[0.2em] text-primary"
+            className="font-brand text-3xl text-primary sm:text-4xl md:text-6xl lg:text-7xl"
+          >
+            HELLS CANYON DESIGNS
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-2 font-heading text-sm font-medium tracking-[0.2em] text-muted-foreground"
           >
             CRAFTED IN IDAHO · SHIPPED NATIONWIDE
           </motion.p>
@@ -32,8 +41,8 @@ const HeroSection = () => {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-4 font-heading text-5xl font-bold leading-tight text-foreground md:text-7xl"
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-6xl"
           >
             YOUR BRAND,
             <br />
@@ -43,7 +52,7 @@ const HeroSection = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
             Custom leather patch hats, embroidery, screen printing & DTF
@@ -53,7 +62,7 @@ const HeroSection = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-8 flex flex-col gap-4 sm:flex-row"
           >
             <Button size="lg" asChild className="text-base font-heading tracking-wide">
