@@ -44,7 +44,7 @@ const Header = () => {
       <div className="container flex h-16 items-center justify-between md:h-20">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-heading text-xl font-bold tracking-wider text-primary md:text-2xl">
+          <span className="font-brand text-xl tracking-wider text-primary md:text-2xl">
             HELLS CANYON DESIGNS
           </span>
         </Link>

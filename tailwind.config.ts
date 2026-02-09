@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         heading: ['Oswald', 'sans-serif'],
+        brand: ['Permanent Marker', 'cursive'],
         body: ['Source Sans 3', 'sans-serif'],
       },
       colors: {
