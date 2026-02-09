@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useCallback } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -11,9 +11,33 @@ const navLinks = [
   { label: "Our Story", path: "/about" },
 ];
 
+const servicePages = ["/custom-hats", "/embroidery", "/screen-printing", "/dtf-transfers"];
+
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleQuoteClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setMobileOpen(false);
+    const isOnServicePage = servicePages.includes(location.pathname);
+
+    if (isOnServicePage) {
+      // Same page — just scroll to #quote
+      const el = document.getElementById("quote");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      // Navigate to custom hats quote section
+      navigate("/custom-hats");
+      setTimeout(() => {
+        const el = document.getElementById("quote");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    }
+  }, [location.pathname, navigate]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -51,8 +75,8 @@ const Header = () => {
             <Phone className="h-4 w-4" />
             (208) 305-7498
           </a>
-          <Button asChild>
-            <Link to="/custom-hats#quote">Get a Free Quote</Link>
+          <Button onClick={handleQuoteClick}>
+            Get a Free Quote
           </Button>
         </div>
 
@@ -92,10 +116,8 @@ const Header = () => {
                 <Phone className="h-4 w-4" />
                 (208) 305-7498
               </a>
-              <Button asChild className="mx-4">
-                <Link to="/custom-hats#quote" onClick={() => setMobileOpen(false)}>
-                  Get a Free Quote
-                </Link>
+              <Button className="mx-4" onClick={handleQuoteClick}>
+                Get a Free Quote
               </Button>
             </div>
           </nav>
