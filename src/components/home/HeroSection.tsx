@@ -33,7 +33,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-2 font-heading text-sm font-medium tracking-[0.2em] text-muted-foreground"
+            className="mt-3 font-heading text-base font-medium tracking-[0.2em] text-muted-foreground sm:text-lg md:text-xl"
           >
             CRAFTED IN IDAHO · SHIPPED NATIONWIDE
           </motion.p>
