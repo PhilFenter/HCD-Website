@@ -31,7 +31,7 @@ const Footer = () => {
             </h4>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Custom leather patch hats, embroidery, screen printing, and DTF
-              transfers — crafted with care in Lewiston, Idaho.
+              transfers — crafted with care in Idaho, shipped nationwide.
             </p>
           </div>
 
