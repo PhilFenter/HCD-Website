@@ -130,7 +130,7 @@ const ScreenPrinting = () => {
               REQUEST A QUOTE
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-              Walk through a few quick steps and we'll send you a custom screen printing quote within one business day.
+              Walk through a few quick steps and we'll send you a custom screen printing quote within one business day. Free nationwide shipping.
             </p>
           </motion.div>
 

@@ -38,7 +38,7 @@ const SocialProof = () => {
             100+ Five-Star Reviews
           </p>
           <p className="text-sm text-muted-foreground">
-            Trusted by businesses across the Northwest
+            Trusted by businesses across the country
           </p>
         </motion.div>
 

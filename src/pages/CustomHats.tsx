@@ -125,6 +125,7 @@ const CustomHats = () => {
           {[
             { value: "4,000+", label: "Hats in Stock" },
             { value: "100+", label: "Five-Star Reviews" },
+            { value: "50 States", label: "Shipped Nationwide" },
             { value: "1 Day", label: "Quote Turnaround" },
           ].map((stat) => (
             <div key={stat.label} className="flex items-center gap-3">
@@ -151,7 +152,7 @@ const CustomHats = () => {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Walk through a few quick steps and we'll send you a custom quote
-              within one business day. No obligation.
+              within one business day. Free shipping anywhere in the U.S.
             </p>
           </motion.div>
 

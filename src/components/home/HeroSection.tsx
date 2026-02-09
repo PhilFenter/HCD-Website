@@ -26,7 +26,7 @@ const HeroSection = () => {
             transition={{ duration: 0.5 }}
             className="font-heading text-sm font-medium tracking-[0.2em] text-primary"
           >
-            LEWISTON, IDAHO
+            CRAFTED IN IDAHO · SHIPPED NATIONWIDE
           </motion.p>
 
           <motion.h1
@@ -47,7 +47,7 @@ const HeroSection = () => {
             className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
             Custom leather patch hats, embroidery, screen printing & DTF
-            transfers — built to make your brand unforgettable.
+            transfers — crafted in Idaho, shipped to your door anywhere in the U.S.
           </motion.p>
 
           <motion.div

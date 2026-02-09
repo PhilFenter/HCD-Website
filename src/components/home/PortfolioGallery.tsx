@@ -56,7 +56,7 @@ const PortfolioGallery = () => {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
             A sample of custom projects we've crafted for businesses across the
-            Northwest. Your brand could be next.
+            country. Your brand could be next.
           </p>
         </motion.div>
 
