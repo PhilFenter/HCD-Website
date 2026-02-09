@@ -149,7 +149,7 @@ const DTFTransfers = () => {
               REQUEST A DTF QUOTE
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-              Walk through a few quick steps and we'll send you a custom DTF quote within one business day. Free nationwide shipping.
+              Walk through a few quick steps and we'll send you a custom DTF quote within one business day.
             </p>
           </motion.div>
 
