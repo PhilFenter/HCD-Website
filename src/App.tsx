@@ -9,6 +9,7 @@ import Embroidery from "./pages/Embroidery";
 import ScreenPrinting from "./pages/ScreenPrinting";
 import DTFTransfers from "./pages/DTFTransfers";
 import About from "./pages/About";
+import Quote from "./pages/Quote";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/screen-printing" element={<ScreenPrinting />} />
           <Route path="/dtf-transfers" element={<DTFTransfers />} />
           <Route path="/about" element={<About />} />
+          <Route path="/quote" element={<Quote />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
