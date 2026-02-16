@@ -8,10 +8,10 @@ import EmbroideryQuoteBuilder from "@/components/quote/EmbroideryQuoteBuilder";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import DTFQuoteBuilder from "@/components/quote/DTFQuoteBuilder";
 
-import serviceHats from "@/assets/service-hats.jpg";
-import serviceEmbroidery from "@/assets/service-embroidery.jpg";
-import serviceScreenprint from "@/assets/service-screenprint.jpg";
-import serviceDtf from "@/assets/service-dtf.jpg";
+import serviceHats from "@/assets/gallery-leather-patch-flag.jpg";
+import serviceEmbroidery from "@/assets/gallery-embroidery-machine.jpg";
+import serviceScreenprint from "@/assets/gallery-screenprint-press.jpg";
+import serviceDtf from "@/assets/gallery-dtf-primal.jpg";
 
 type ServiceKey = "hats" | "embroidery" | "screen-printing" | "dtf";
 
