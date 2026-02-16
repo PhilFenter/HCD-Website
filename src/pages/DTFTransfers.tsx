@@ -137,7 +137,7 @@ const DTFTransfers = () => {
       </section>
 
       {/* Quote Builder */}
-      <section id="quote" className="border-t border-border py-20 md:py-28">
+      <section id="quote" className="border-t border-border py-20 md:py-28 scroll-mt-24">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
