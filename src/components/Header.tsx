@@ -30,12 +30,8 @@ const Header = () => {
         el.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      // Navigate to custom hats quote section
-      navigate("/custom-hats");
-      setTimeout(() => {
-        const el = document.getElementById("quote");
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 300);
+      // Navigate to the dedicated quote page
+      navigate("/quote");
     }
   }, [location.pathname, navigate]);
 
