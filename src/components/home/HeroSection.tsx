@@ -65,7 +65,7 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-8 flex flex-col gap-4 sm:flex-row"
           >
-            <Button size="lg" asChild className="text-base font-heading tracking-wide">
+            <Button size="lg" variant="cta" asChild className="text-base font-heading tracking-wide">
               <Link to="/quote">
                 Get a Free Quote
                 <ArrowRight className="ml-2 h-5 w-5" />

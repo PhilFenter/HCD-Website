@@ -16,7 +16,7 @@ const Footer = () => {
               Get a custom quote in minutes — no obligation, no hassle.
             </p>
           </div>
-          <Button size="lg" asChild>
+          <Button size="lg" variant="cta" asChild>
             <Link to="/custom-hats#quote">Get a Free Quote</Link>
           </Button>
         </div>

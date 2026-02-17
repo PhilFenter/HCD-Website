@@ -35,6 +35,9 @@
     --input: 25 14% 22%;
     --ring: 40 90% 50%;
 
+    --cta: 142 60% 40%;
+    --cta-foreground: 0 0% 100%;
+
     --radius: 0.5rem;
 
     --sidebar-background: 25 18% 10%;
