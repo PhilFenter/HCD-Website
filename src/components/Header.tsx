@@ -71,7 +71,7 @@ const Header = () => {
             <Phone className="h-4 w-4" />
             (208) 305-7498
           </a>
-          <Button variant="cta" onClick={handleQuoteClick}>
+          <Button onClick={handleQuoteClick}>
             Get a Free Quote
           </Button>
         </div>
@@ -112,7 +112,7 @@ const Header = () => {
                 <Phone className="h-4 w-4" />
                 (208) 305-7498
               </a>
-              <Button className="mx-4" variant="cta" onClick={handleQuoteClick}>
+              <Button className="mx-4" onClick={handleQuoteClick}>
                 Get a Free Quote
               </Button>
             </div>
