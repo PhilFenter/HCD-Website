@@ -30,10 +30,11 @@ function getPerHatPrice(qty: number): number | null {
 }
 
 function calcEstimate(patchType: string, qty: number) {
+  if (patchType === "embroidered-patch") return null; // contact us for pricing
   const perHat = getPerHatPrice(qty);
   if (!perHat || qty < MIN_QTY) return null;
   const subtotal = perHat * qty;
-  const digitizing = patchType === "embroidered" ? EMBROIDERY_DIGITIZING_FEE : 0;
+  const digitizing = patchType === "direct-embroidery" ? EMBROIDERY_DIGITIZING_FEE : 0;
   return { perHat, subtotal, digitizing, total: subtotal + digitizing, qty };
 }
 
@@ -230,10 +231,16 @@ const HatQuoteBuilder = () => {
                     onClick={() => update({ patchType: "uv-printed" })}
                   />
                   <OptionCard
+                    label="Direct Embroidery"
+                    description="Stitched directly onto the hat — vibrant, durable, and classic. Includes a one-time $45 digitizing fee."
+                    selected={data.patchType === "direct-embroidery"}
+                    onClick={() => update({ patchType: "direct-embroidery" })}
+                  />
+                  <OptionCard
                     label="Embroidered Patch"
-                    description="Classic sewn embroidered patches. Vibrant colors and a traditional textile look."
-                    selected={data.patchType === "embroidered"}
-                    onClick={() => update({ patchType: "embroidered" })}
+                    description="Custom embroidered patch sewn onto the hat. Contact us for pricing."
+                    selected={data.patchType === "embroidered-patch"}
+                    onClick={() => update({ patchType: "embroidered-patch" })}
                   />
                   <OptionCard
                     label="Not Sure / Other"
@@ -360,9 +367,14 @@ const HatQuoteBuilder = () => {
                       </div>
                     ))}
                   </div>
-                  {data.patchType === "embroidered" && (
+                  {data.patchType === "direct-embroidery" && (
                     <p className="mt-3 text-xs text-muted-foreground">
-                      + ${EMBROIDERY_DIGITIZING_FEE} one-time digitizing fee for embroidered patches
+                      + ${EMBROIDERY_DIGITIZING_FEE} one-time digitizing fee for direct embroidery
+                    </p>
+                  )}
+                  {data.patchType === "embroidered-patch" && (
+                    <p className="mt-3 text-xs text-primary">
+                      Embroidered patch pricing varies — we'll provide a custom quote.
                     </p>
                   )}
                 </div>
