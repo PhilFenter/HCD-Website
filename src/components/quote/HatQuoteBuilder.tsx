@@ -18,13 +18,13 @@ const HAT_PRICE_TIERS = [
   { min: 12, price: 27 },
 ];
 
-// Per-hat blank costs by style (added to patch pricing)
+// Per-hat upcharge vs Richardson 112 baseline ($6.75 blank)
 const HAT_BLANK_PRICES: Record<string, number> = {
-  "richardson-112": 0,    // baseline — already included in tier pricing
-  "richardson-110": 8.00,
-  "richardson-112pfp": 8.25,
-  "yp-classics-6606": 7.80,
-  "legacy-ofa": 8.75,
+  "richardson-112": 0,       // baseline
+  "richardson-110": 1.25,    // $8.00 - $6.75
+  "richardson-112pfp": 1.50, // $8.25 - $6.75
+  "yp-classics-6606": 1.05,  // $7.80 - $6.75
+  "legacy-ofa": 2.00,        // $8.75 - $6.75
 };
 
 const EMBROIDERY_DIGITIZING_FEE = 45;
@@ -284,25 +284,25 @@ const HatQuoteBuilder = () => {
                   />
                   <OptionCard
                     label="Richardson 112PFP"
-                    description="Five-panel trucker with a pre-curved visor. Clean, modern look. (+$8.25/hat)"
+                    description="Five-panel trucker with a pre-curved visor. Clean, modern look. (+$1.50/hat)"
                     selected={data.hatStyle === "richardson-112pfp"}
                     onClick={() => update({ hatStyle: "richardson-112pfp" })}
                   />
                   <OptionCard
                     label="Richardson 110"
-                    description="Structured R-Flex fitted hat. Professional, low-key look. (+$8.00/hat)"
+                    description="Structured R-Flex fitted hat. Professional, low-key look. (+$1.25/hat)"
                     selected={data.hatStyle === "richardson-110"}
                     onClick={() => update({ hatStyle: "richardson-110" })}
                   />
                   <OptionCard
                     label="YP Classics 6606 (Yupoong)"
-                    description="Classic-style trucker caps. Retro look with mesh back. (+$7.80/hat)"
+                    description="Classic-style trucker caps. Retro look with mesh back. (+$1.05/hat)"
                     selected={data.hatStyle === "yp-classics-6606"}
                     onClick={() => update({ hatStyle: "yp-classics-6606" })}
                   />
                   <OptionCard
                     label="Legacy OFA"
-                    description="Classic unstructured hat with an old-school relaxed fit. (+$8.75/hat)"
+                    description="Classic unstructured hat with an old-school relaxed fit. (+$2.00/hat)"
                     selected={data.hatStyle === "legacy-ofa"}
                     onClick={() => update({ hatStyle: "legacy-ofa" })}
                   />
