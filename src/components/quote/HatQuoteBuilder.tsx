@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, ArrowLeft, Check, Upload, X } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Upload, X, DollarSign } from "lucide-react";
 import OptionCard from "./OptionCard";
+
+// ── Pricing ────────────────────────────────────────────
+const HAT_PRICE_TIERS = [
+  { min: 100, price: 19 },
+  { min: 72, price: 21 },
+  { min: 60, price: 22 },
+  { min: 48, price: 23 },
+  { min: 24, price: 26 },
+  { min: 12, price: 27 },
+];
+
+const EMBROIDERY_DIGITIZING_FEE = 45;
+const MIN_QTY = 12;
+
+function getPerHatPrice(qty: number): number | null {
+  if (qty < MIN_QTY) return null;
+  for (const tier of HAT_PRICE_TIERS) {
+    if (qty >= tier.min) return tier.price;
+  }
+  return null;
+}
+
+function calcEstimate(patchType: string, qty: number) {
+  const perHat = getPerHatPrice(qty);
+  if (!perHat || qty < MIN_QTY) return null;
+  const subtotal = perHat * qty;
+  const digitizing = patchType === "embroidered" ? EMBROIDERY_DIGITIZING_FEE : 0;
+  return { perHat, subtotal, digitizing, total: subtotal + digitizing, qty };
+}
 
 // ── Types ──────────────────────────────────────────────
 interface HatQuoteData {
@@ -59,6 +88,12 @@ const HatQuoteBuilder = () => {
   const update = (fields: Partial<HatQuoteData>) =>
     setData((prev) => ({ ...prev, ...fields }));
 
+  const qty = Number(data.quantity) || 0;
+  const estimate = useMemo(
+    () => calcEstimate(data.patchType, qty),
+    [data.patchType, qty]
+  );
+
   const canAdvance = (): boolean => {
     switch (step) {
       case 0:
@@ -66,7 +101,7 @@ const HatQuoteBuilder = () => {
       case 1:
         return !!data.hatStyle;
       case 2:
-        return !!data.quantity;
+        return !!data.quantity && qty >= MIN_QTY;
       case 3:
         return true; // artwork is optional
       case 4:
@@ -281,26 +316,55 @@ const HatQuoteBuilder = () => {
                   HOW MANY HATS?
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Select a quantity range (12 piece minimum). We'll provide exact pricing in your
-                  quote.
+                  Enter your quantity (12 piece minimum). Pricing includes your
+                  chosen patch on Richardson 112 hats with free shipping.
                 </p>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {[
-                    { value: "12-24", label: "12 – 24 Hats", desc: "Our minimum order — perfect for a team or event." },
-                    { value: "24-48", label: "24 – 48 Hats", desc: "Mid-range — most popular for small businesses." },
-                    { value: "48-96", label: "48 – 96 Hats", desc: "Large order — better per-unit pricing." },
-                    { value: "96-200", label: "96 – 200 Hats", desc: "Bulk order — great for retail or large teams." },
-                    { value: "200+", label: "200+ Hats", desc: "Enterprise volume — best pricing available." },
-                    { value: "not-sure", label: "Not Sure Yet", desc: "12 piece minimum. We'll help you find the right quantity." },
-                  ].map((opt) => (
-                    <OptionCard
-                      key={opt.value}
-                      label={opt.label}
-                      description={opt.desc}
-                      selected={data.quantity === opt.value}
-                      onClick={() => update({ quantity: opt.value })}
-                    />
-                  ))}
+                <div className="mt-6">
+                  <Label htmlFor="hat-qty" className="text-foreground">
+                    Quantity
+                  </Label>
+                  <Input
+                    id="hat-qty"
+                    type="number"
+                    min={MIN_QTY}
+                    placeholder="e.g. 48"
+                    value={data.quantity}
+                    onChange={(e) => update({ quantity: e.target.value })}
+                    className="mt-2 max-w-[180px] text-lg"
+                  />
+                  {data.quantity && Number(data.quantity) > 0 && Number(data.quantity) < MIN_QTY && (
+                    <p className="mt-2 text-sm text-destructive">
+                      Minimum order is {MIN_QTY} hats.
+                    </p>
+                  )}
+                </div>
+
+                {/* Pricing tiers reference */}
+                <div className="mt-6 rounded-lg border border-border bg-secondary/30 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                    Volume Pricing (per hat)
+                  </p>
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                    {HAT_PRICE_TIERS.slice().reverse().map((tier) => (
+                      <div
+                        key={tier.min}
+                        className={`rounded-md border px-3 py-2 text-center transition-colors ${
+                          Number(data.quantity) >= tier.min &&
+                          (HAT_PRICE_TIERS.find(t => Number(data.quantity) >= t.min)?.min === tier.min)
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border text-muted-foreground"
+                        }`}
+                      >
+                        <span className="block text-xs">{tier.min}+</span>
+                        <span className="block text-sm font-bold">${tier.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {data.patchType === "embroidered" && (
+                    <p className="mt-3 text-xs text-muted-foreground">
+                      + ${EMBROIDERY_DIGITIZING_FEE} one-time digitizing fee for embroidered patches
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -497,6 +561,40 @@ const HatQuoteBuilder = () => {
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Estimated Price */}
+        {estimate && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 rounded-lg border border-primary/30 bg-primary/5 p-5"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <DollarSign className="h-5 w-5 text-primary" />
+              <span className="font-heading text-sm font-semibold tracking-wider text-primary">
+                ESTIMATED PRICE
+              </span>
+            </div>
+            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+              <div>
+                <span className="text-2xl font-bold text-foreground">${estimate.perHat}</span>
+                <span className="text-sm text-muted-foreground"> /hat</span>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {estimate.qty} hats × ${estimate.perHat} = ${estimate.subtotal}
+                {estimate.digitizing > 0 && (
+                  <span> + ${estimate.digitizing} digitizing</span>
+                )}
+              </div>
+              <div className="font-heading text-lg font-bold text-primary">
+                Total: ${estimate.total}
+              </div>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Includes patch + hat + free shipping. Final price confirmed within 1 business day.
+            </p>
+          </motion.div>
+        )}
 
         {/* Navigation */}
         <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
