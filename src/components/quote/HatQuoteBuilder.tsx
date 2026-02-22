@@ -18,6 +18,15 @@ const HAT_PRICE_TIERS = [
   { min: 12, price: 27 },
 ];
 
+// Per-hat blank costs by style (added to patch pricing)
+const HAT_BLANK_PRICES: Record<string, number> = {
+  "richardson-112": 0,    // baseline — already included in tier pricing
+  "richardson-110": 8.00,
+  "richardson-112pfp": 8.25,
+  "yp-classics-6606": 7.80,
+  "legacy-ofa": 8.75,
+};
+
 const EMBROIDERY_DIGITIZING_FEE = 45;
 const MIN_QTY = 12;
 
@@ -31,13 +40,15 @@ function getPerHatPrice(qty: number): number | null {
 
 const EMBROIDERED_PATCH_MIN = 60;
 
-function calcEstimate(patchType: string, qty: number) {
+function calcEstimate(patchType: string, hatStyle: string, qty: number) {
   if (patchType === "embroidered-patch" && qty < EMBROIDERED_PATCH_MIN) return null;
   const perHat = getPerHatPrice(qty);
   if (!perHat || qty < MIN_QTY) return null;
-  const subtotal = perHat * qty;
+  const blankUpcharge = HAT_BLANK_PRICES[hatStyle] ?? 0;
+  const perHatTotal = perHat + blankUpcharge;
+  const subtotal = perHatTotal * qty;
   const digitizing = patchType === "direct-embroidery" ? EMBROIDERY_DIGITIZING_FEE : 0;
-  return { perHat, subtotal, digitizing, total: subtotal + digitizing, qty };
+  return { perHat: perHatTotal, basePrice: perHat, blankUpcharge, subtotal, digitizing, total: subtotal + digitizing, qty };
 }
 
 // ── Types ──────────────────────────────────────────────
@@ -93,8 +104,8 @@ const HatQuoteBuilder = () => {
 
   const qty = Number(data.quantity) || 0;
   const estimate = useMemo(
-    () => calcEstimate(data.patchType, qty),
-    [data.patchType, qty]
+    () => calcEstimate(data.patchType, data.hatStyle, qty),
+    [data.patchType, data.hatStyle, qty]
   );
 
   const canAdvance = (): boolean => {
@@ -267,33 +278,33 @@ const HatQuoteBuilder = () => {
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <OptionCard
                     label="Richardson 112"
-                    description="The industry standard trucker hat. Structured mid-profile with a snapback closure."
+                    description="The industry standard trucker hat. Structured mid-profile with a snapback closure. (Included in base price)"
                     selected={data.hatStyle === "richardson-112"}
                     onClick={() => update({ hatStyle: "richardson-112" })}
                   />
                   <OptionCard
                     label="Richardson 112PFP"
-                    description="Five-panel trucker with a pre-curved visor. Clean, modern look."
+                    description="Five-panel trucker with a pre-curved visor. Clean, modern look. (+$8.25/hat)"
                     selected={data.hatStyle === "richardson-112pfp"}
                     onClick={() => update({ hatStyle: "richardson-112pfp" })}
                   />
                   <OptionCard
-                    label="YP Classics (Yupoong)"
-                    description="Retro-style trucker caps with foam front and mesh back."
-                    selected={data.hatStyle === "yp-classics"}
-                    onClick={() => update({ hatStyle: "yp-classics" })}
-                  />
-                  <OptionCard
                     label="Richardson 110"
-                    description="Structured R-Flex fitted hat. Professional, low-key look."
+                    description="Structured R-Flex fitted hat. Professional, low-key look. (+$8.00/hat)"
                     selected={data.hatStyle === "richardson-110"}
                     onClick={() => update({ hatStyle: "richardson-110" })}
                   />
                   <OptionCard
-                    label="Pacific Headwear"
-                    description="Wide range of styles — trucker, snapback, performance, and more."
-                    selected={data.hatStyle === "pacific"}
-                    onClick={() => update({ hatStyle: "pacific" })}
+                    label="YP Classics 6606 (Yupoong)"
+                    description="Classic-style trucker caps. Retro look with mesh back. (+$7.80/hat)"
+                    selected={data.hatStyle === "yp-classics-6606"}
+                    onClick={() => update({ hatStyle: "yp-classics-6606" })}
+                  />
+                  <OptionCard
+                    label="Legacy OFA"
+                    description="Classic unstructured hat with an old-school relaxed fit. (+$8.75/hat)"
+                    selected={data.hatStyle === "legacy-ofa"}
+                    onClick={() => update({ hatStyle: "legacy-ofa" })}
                   />
                   <OptionCard
                     label="Other / Not Sure"
@@ -348,26 +359,31 @@ const HatQuoteBuilder = () => {
                   )}
                 </div>
 
-                {/* Pricing tiers reference */}
+                {/* Clickable pricing tiers */}
                 <div className="mt-6 rounded-lg border border-border bg-secondary/30 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                    Volume Pricing (per hat)
+                    Volume Pricing — click a tier or enter a custom quantity
                   </p>
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-                    {HAT_PRICE_TIERS.slice().reverse().map((tier) => (
-                      <div
-                        key={tier.min}
-                        className={`rounded-md border px-3 py-2 text-center transition-colors ${
-                          Number(data.quantity) >= tier.min &&
-                          (HAT_PRICE_TIERS.find(t => Number(data.quantity) >= t.min)?.min === tier.min)
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border text-muted-foreground"
-                        }`}
-                      >
-                        <span className="block text-xs">{tier.min}+</span>
-                        <span className="block text-sm font-bold">${tier.price}</span>
-                      </div>
-                    ))}
+                    {HAT_PRICE_TIERS.slice().reverse().map((tier) => {
+                      const isActive = qty >= tier.min &&
+                        (HAT_PRICE_TIERS.find(t => qty >= t.min)?.min === tier.min);
+                      return (
+                        <button
+                          key={tier.min}
+                          type="button"
+                          onClick={() => update({ quantity: String(tier.min) })}
+                          className={`rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
+                            isActive
+                              ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
+                              : "border-border text-muted-foreground"
+                          }`}
+                        >
+                          <span className="block text-xs">{tier.min}+</span>
+                          <span className="block text-sm font-bold">${tier.price}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                   {data.patchType === "direct-embroidery" && (
                     <p className="mt-3 text-xs text-muted-foreground">
@@ -596,17 +612,20 @@ const HatQuoteBuilder = () => {
             </div>
             <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
               <div>
-                <span className="text-2xl font-bold text-foreground">${estimate.perHat}</span>
+                <span className="text-2xl font-bold text-foreground">${estimate.perHat.toFixed(2)}</span>
                 <span className="text-sm text-muted-foreground"> /hat</span>
+                {estimate.blankUpcharge > 0 && (
+                  <span className="ml-2 text-xs text-muted-foreground">(base ${estimate.basePrice} + ${estimate.blankUpcharge.toFixed(2)} hat upcharge)</span>
+                )}
               </div>
               <div className="text-sm text-muted-foreground">
-                {estimate.qty} hats × ${estimate.perHat} = ${estimate.subtotal}
+                {estimate.qty} hats × ${estimate.perHat.toFixed(2)} = ${estimate.subtotal.toFixed(2)}
                 {estimate.digitizing > 0 && (
                   <span> + ${estimate.digitizing} digitizing</span>
                 )}
               </div>
               <div className="font-heading text-lg font-bold text-primary">
-                Total: ${estimate.total}
+                Total: ${estimate.total.toFixed(2)}
               </div>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
