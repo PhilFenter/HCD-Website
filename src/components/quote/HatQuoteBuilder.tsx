@@ -29,8 +29,10 @@ function getPerHatPrice(qty: number): number | null {
   return null;
 }
 
+const EMBROIDERED_PATCH_MIN = 60;
+
 function calcEstimate(patchType: string, qty: number) {
-  if (patchType === "embroidered-patch") return null; // contact us for pricing
+  if (patchType === "embroidered-patch" && qty < EMBROIDERED_PATCH_MIN) return null;
   const perHat = getPerHatPrice(qty);
   if (!perHat || qty < MIN_QTY) return null;
   const subtotal = perHat * qty;
@@ -102,7 +104,7 @@ const HatQuoteBuilder = () => {
       case 1:
         return !!data.hatStyle;
       case 2:
-        return !!data.quantity && qty >= MIN_QTY;
+        return !!data.quantity && qty >= MIN_QTY && (data.patchType !== "embroidered-patch" || qty >= EMBROIDERED_PATCH_MIN);
       case 3:
         return true; // artwork is optional
       case 4:
@@ -238,7 +240,7 @@ const HatQuoteBuilder = () => {
                   />
                   <OptionCard
                     label="Embroidered Patch"
-                    description="Custom embroidered patch sewn onto the hat. Contact us for pricing."
+                    description="Custom embroidered patch sewn onto the hat. Available on orders of 60+ hats."
                     selected={data.patchType === "embroidered-patch"}
                     onClick={() => update({ patchType: "embroidered-patch" })}
                   />
@@ -374,7 +376,12 @@ const HatQuoteBuilder = () => {
                   )}
                   {data.patchType === "embroidered-patch" && (
                     <p className="mt-3 text-xs text-primary">
-                      Embroidered patch pricing varies — we'll provide a custom quote.
+                      Embroidered patches available on orders of {EMBROIDERED_PATCH_MIN}+ hats.
+                      {qty > 0 && qty < EMBROIDERED_PATCH_MIN && (
+                        <span className="block mt-1 text-destructive">
+                          Please enter at least {EMBROIDERED_PATCH_MIN} to continue.
+                        </span>
+                      )}
                     </p>
                   )}
                 </div>
