@@ -124,7 +124,8 @@ function calcEstimate(
   garmentType: string,
   intent: string,
   qty: number,
-  poloTier: string
+  poloTier: string,
+  embroideryLocationCount: number = 1
 ): PriceEstimate | null {
   if (!garmentType || qty < MIN_QTY) return null;
   if (garmentType === "polo" && !poloTier) return null;
@@ -143,9 +144,10 @@ function calcEstimate(
   let decorationLow: number;
   let decorationHigh: number;
 
+  const locCount = Math.max(1, embroideryLocationCount);
   if (rec === "embroidery") {
-    decorationLow = EMBROIDERY_RANGE.low;
-    decorationHigh = EMBROIDERY_RANGE.high;
+    decorationLow = EMBROIDERY_RANGE.low * locCount;
+    decorationHigh = EMBROIDERY_RANGE.high * locCount;
   } else if (rec === "screen-print-or-dtf") {
     const sp = getScreenPrintPrice(qty);
     const dtf = getDtfPrice(qty);
@@ -239,16 +241,18 @@ const GarmentQuoteBuilder = () => {
 
   const qty = Number(data.quantity) || 0;
   const isPolo = data.garmentType === "polo";
+  const embLocCount = data.embroideryLocations.length;
   const estimate = useMemo(
-    () => calcEstimate(data.garmentType, data.intent, qty, data.poloTier),
-    [data.garmentType, data.intent, qty, data.poloTier]
+    () => calcEstimate(data.garmentType, data.intent, qty, data.poloTier, embLocCount),
+    [data.garmentType, data.intent, qty, data.poloTier, embLocCount]
   );
 
   // Auto-determine if screen print details step should appear
   // Polos are embroidery-only, so never show print details for them
   const showScreenPrintDetails = !isPolo && qty >= SCREEN_PRINT_MIN_QTY;
-  // Show embroidery step for polos always, or for work/brand intents on other garments
-  const showEmbroideryDetails = isPolo || shouldShowEmbroideryOption(data.garmentType, data.intent, qty);
+  // Show embroidery step for non-polo garments with work/brand intent
+  // Polos get embroidery locations embedded in the Garment step (before pricing)
+  const showEmbroideryDetails = !isPolo && shouldShowEmbroideryOption(data.garmentType, data.intent, qty);
 
   // Build dynamic steps array
   const STEPS = useMemo(() => {
@@ -289,7 +293,7 @@ const GarmentQuoteBuilder = () => {
       case "Intent":
         return !!data.intent;
       case "Garment":
-        if (isPolo) return !!data.garmentType && !!data.poloTier && !!data.quantity && qty >= MIN_QTY;
+        if (isPolo) return !!data.garmentType && !!data.poloTier && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
         return !!data.garmentType && !!data.quantity && qty >= MIN_QTY;
       case "Print Details":
         // Optional — user can skip if they want DTF instead
@@ -479,6 +483,36 @@ const GarmentQuoteBuilder = () => {
                   )}
                 </div>
 
+                {/* Polo: Embroidery Locations (before estimate so locations affect pricing) */}
+                {isPolo && qty >= MIN_QTY && (
+                  <div className="mt-6">
+                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">EMBROIDERY LOCATIONS</Label>
+                    <p className="mt-1 text-xs text-muted-foreground">Select where you'd like embroidery. Each location affects per-piece pricing.</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {EMBROIDERY_LOCATIONS.map((loc) => (
+                        <OptionCard
+                          key={loc}
+                          label={loc}
+                          description={loc === "Full Back" ? "Large back piece — requires custom pricing" : undefined}
+                          selected={data.embroideryLocations.includes(loc)}
+                          onClick={() => toggleEmbroideryLocation(loc)}
+                        />
+                      ))}
+                    </div>
+                    {data.embroideryLocations.length > 0 && (
+                      <p className="mt-3 text-sm text-muted-foreground">{data.embroideryLocations.length} of 5 locations selected</p>
+                    )}
+                    {hasFullBackEmbroidery && (
+                      <div className="mt-3 flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600" />
+                        <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                          Full back embroidery is a large-format piece that requires custom pricing. We'll include a detailed quote for this location.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Live Price Estimate + Recommendation */}
                 {estimate && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 rounded-lg border border-primary/30 bg-primary/5 p-5">
@@ -503,11 +537,11 @@ const GarmentQuoteBuilder = () => {
                     <div className="mt-4 space-y-2 border-t border-primary/20 pt-4">
                       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Our recommendation</p>
 
-                      {estimate.recommendedDecoration === "embroidery" && (
+                        {estimate.recommendedDecoration === "embroidery" && (
                         <div className="flex items-start gap-2">
                           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                           <p className="text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">Embroidery</span> — The standard for polos. Classic, premium, professional look. We'll ask about locations next.
+                            <span className="font-semibold text-foreground">Embroidery</span> — {embLocCount} location{embLocCount !== 1 ? "s" : ""} × ${EMBROIDERY_RANGE.low}–${EMBROIDERY_RANGE.high}/ea on top of garment cost.
                           </p>
                         </div>
                       )}
