@@ -29,14 +29,24 @@ const GARMENT_BASE_COSTS: Record<string, number> = {
   "not-sure": 10,
 };
 
-// Polo brand tiers — customer-facing prices (embroidery only)
-const POLO_TIERS: { value: string; label: string; desc: string; price: number }[] = [
-  { value: "budget", label: "Budget", desc: "Port & Company — reliable, affordable basics.", price: 36 },
-  { value: "mid-range", label: "Mid-Range", desc: "Sport-Tek, Ogio — moisture-wicking, modern fit.", price: 55 },
-  { value: "premium", label: "Premium", desc: "Nike, Under Armour — top-tier brand recognition.", price: 75 },
+// Polo brand tiers — all-in per-piece prices (garment + embroidery, 1 location)
+const POLO_TIERS: { value: string; label: string; desc: string; priceLow: number; priceHigh: number }[] = [
+  { value: "budget", label: "Budget", desc: "Port & Company — reliable, affordable basics.", priceLow: 35, priceHigh: 55 },
+  { value: "mid-range", label: "Mid-Range", desc: "Sport-Tek, Ogio — moisture-wicking, modern fit.", priceLow: 55, priceHigh: 75 },
+  { value: "premium", label: "Premium", desc: "Nike, Under Armour — top-tier brand recognition.", priceLow: 75, priceHigh: 125 },
 ];
 
 const GARMENT_MARKUP = 2; // 200% = cost × 2
+
+// Quantity discount tiers — 8% off at each break, cumulative
+const QTY_DISCOUNT_BREAKS = [24, 36, 48, 72];
+function getQtyDiscount(qty: number): number {
+  let discount = 0;
+  for (const brk of QTY_DISCOUNT_BREAKS) {
+    if (qty >= brk) discount += 0.08;
+  }
+  return discount; // e.g. 0.08, 0.16, 0.24, 0.32
+}
 
 // DTF decoration per piece (left chest 4×4 + back 11×14)
 const DTF_TIERS = [
@@ -130,12 +140,28 @@ function calcEstimate(
   if (!garmentType || qty < MIN_QTY) return null;
   if (garmentType === "polo" && !poloTier) return null;
 
-  let garmentPrice: number;
+  const qtyDiscount = getQtyDiscount(qty);
+  const multiplier = 1 - qtyDiscount;
+
+  let garmentPriceLow: number;
+  let garmentPriceHigh: number;
+
   if (garmentType === "polo") {
-    garmentPrice = POLO_TIERS.find((t) => t.value === poloTier)?.price ?? 55;
+    const tier = POLO_TIERS.find((t) => t.value === poloTier);
+    // Polo tiers are all-in (garment + 1 location embroidery)
+    const baseLow = tier?.priceLow ?? 55;
+    const baseHigh = tier?.priceHigh ?? 75;
+    // Extra locations add embroidery cost
+    const extraLocs = Math.max(0, embroideryLocationCount - 1);
+    const extraCostLow = extraLocs * EMBROIDERY_RANGE.low;
+    const extraCostHigh = extraLocs * EMBROIDERY_RANGE.high;
+    garmentPriceLow = (baseLow + extraCostLow) * multiplier;
+    garmentPriceHigh = (baseHigh + extraCostHigh) * multiplier;
   } else {
     const baseCost = GARMENT_BASE_COSTS[garmentType] ?? 10;
-    garmentPrice = baseCost * GARMENT_MARKUP;
+    const garmentBase = baseCost * GARMENT_MARKUP;
+    garmentPriceLow = garmentBase;
+    garmentPriceHigh = garmentBase;
   }
 
   const rec = getRecommendedDecoration(garmentType, intent, qty);
@@ -144,30 +170,40 @@ function calcEstimate(
   let decorationLow: number;
   let decorationHigh: number;
 
-  const locCount = Math.max(1, embroideryLocationCount);
-  if (rec === "embroidery") {
-    decorationLow = EMBROIDERY_RANGE.low * locCount;
-    decorationHigh = EMBROIDERY_RANGE.high * locCount;
-  } else if (rec === "screen-print-or-dtf") {
-    const sp = getScreenPrintPrice(qty);
-    const dtf = getDtfPrice(qty);
-    decorationLow = Math.min(sp ?? dtf, dtf);
-    decorationHigh = Math.max(sp ?? dtf, dtf);
+  if (garmentType === "polo") {
+    // Decoration is already included in polo tier pricing
+    decorationLow = 0;
+    decorationHigh = 0;
   } else {
-    const dtf = getDtfPrice(qty);
-    decorationLow = dtf;
-    decorationHigh = dtf;
+    const locCount = Math.max(1, embroideryLocationCount);
+    if (rec === "embroidery") {
+      decorationLow = EMBROIDERY_RANGE.low * locCount * multiplier;
+      decorationHigh = EMBROIDERY_RANGE.high * locCount * multiplier;
+    } else if (rec === "screen-print-or-dtf") {
+      const sp = getScreenPrintPrice(qty);
+      const dtf = getDtfPrice(qty);
+      decorationLow = Math.min(sp ?? dtf, dtf);
+      decorationHigh = Math.max(sp ?? dtf, dtf);
+    } else {
+      const dtf = getDtfPrice(qty);
+      decorationLow = dtf;
+      decorationHigh = dtf;
+    }
+
+    if (showEmbroideryNote && rec !== "embroidery") {
+      decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
+    }
+
+    // Apply quantity discount to non-polo garment + decoration
+    garmentPriceLow *= multiplier;
+    garmentPriceHigh *= multiplier;
   }
 
-  if (showEmbroideryNote && rec !== "embroidery") {
-    decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
-  }
-
-  const perPieceLow = garmentPrice + decorationLow;
-  const perPieceHigh = garmentPrice + decorationHigh;
+  const perPieceLow = garmentPriceLow + decorationLow;
+  const perPieceHigh = garmentPriceHigh + decorationHigh;
 
   return {
-    garmentPrice,
+    garmentPrice: garmentPriceLow,
     decorationLow,
     decorationHigh,
     perPieceLow,
@@ -461,7 +497,7 @@ const GarmentQuoteBuilder = () => {
                       {POLO_TIERS.map((tier) => (
                         <OptionCard
                           key={tier.value}
-                          label={`${tier.label} — $${tier.price}`}
+                          label={`${tier.label} — $${tier.priceLow}–$${tier.priceHigh}`}
                           description={tier.desc}
                           selected={data.poloTier === tier.value}
                           onClick={() => update({ poloTier: tier.value })}
@@ -530,7 +566,10 @@ const GarmentQuoteBuilder = () => {
                         {estimate.qty} pieces × ${estimate.perPieceLow.toFixed(2)}{estimate.perPieceLow !== estimate.perPieceHigh && `–$${estimate.perPieceHigh.toFixed(2)}`} = ${Math.round(estimate.totalLow).toLocaleString()}{estimate.totalLow !== estimate.totalHigh && `–$${Math.round(estimate.totalHigh).toLocaleString()}`} estimated
                       </div>
                     </div>
-                    <p className="mt-2 text-xs text-muted-foreground">Includes garment + decoration. Final price confirmed within 1 business day.</p>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Includes garment + decoration. Final price confirmed within 1 business day.
+                      {getQtyDiscount(qty) > 0 && ` (${Math.round(getQtyDiscount(qty) * 100)}% volume discount applied)`}
+                    </p>
 
                     {/* Decoration recommendations */}
                     <div className="mt-4 space-y-2 border-t border-primary/20 pt-4">
@@ -540,7 +579,9 @@ const GarmentQuoteBuilder = () => {
                         <div className="flex items-start gap-2">
                           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                           <p className="text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">Embroidery</span> — {embLocCount} location{embLocCount !== 1 ? "s" : ""} × ${EMBROIDERY_RANGE.low}–${EMBROIDERY_RANGE.high}/ea on top of garment cost.
+                            <span className="font-semibold text-foreground">Embroidery</span> — {embLocCount} location{embLocCount !== 1 ? "s" : ""}.
+                            {isPolo ? " Price includes garment + embroidery." : ` $${EMBROIDERY_RANGE.low}–$${EMBROIDERY_RANGE.high}/ea per location on top of garment cost.`}
+                            {getQtyDiscount(qty) > 0 && ` ${Math.round(getQtyDiscount(qty) * 100)}% quantity discount applied.`}
                           </p>
                         </div>
                       )}
