@@ -295,7 +295,8 @@ const GarmentQuoteBuilder = () => {
         // Optional — user can skip if they want DTF instead
         return true;
       case "Embroidery":
-        // Optional — user can skip if they don't want embroidery
+        // Required for polos (embroidery-only), optional for other garments
+        if (isPolo) return data.embroideryLocations.length > 0;
         return true;
       case "Deadline":
         return !!data.timeline;
