@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, ArrowLeft, Check, Upload, X, DollarSign } from "lucide-react";
 import OptionCard from "./OptionCard";
+import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
 
 // ── Pricing ────────────────────────────────────────────
 const HAT_PRICE_TIERS = [
@@ -59,6 +60,7 @@ interface HatQuoteData {
   quantity: string;
   artworkFile: File | null;
   artworkNotes: string;
+  artworkRights: boolean;
   timeline: string;
   name: string;
   email: string;
@@ -74,6 +76,7 @@ const initialData: HatQuoteData = {
   quantity: "",
   artworkFile: null,
   artworkNotes: "",
+  artworkRights: false,
   timeline: "",
   name: "",
   email: "",
@@ -458,6 +461,8 @@ const HatQuoteBuilder = () => {
                     </label>
                   )}
                 </div>
+
+                <ArtworkRightsCheckbox checked={data.artworkRights} onCheckedChange={(val) => update({ artworkRights: val })} />
 
                 <div className="mt-6">
                   <Label htmlFor="artwork-notes" className="text-foreground">

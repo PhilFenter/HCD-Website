@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, ArrowLeft, Check, Upload, X } from "lucide-react";
 import OptionCard from "./OptionCard";
+import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
 
 interface DTFQuoteData {
   orderType: string;
@@ -14,6 +15,7 @@ interface DTFQuoteData {
   quantity: string;
   artworkFile: File | null;
   artworkNotes: string;
+  artworkRights: boolean;
   timeline: string;
   name: string;
   email: string;
@@ -28,6 +30,7 @@ const initialData: DTFQuoteData = {
   quantity: "",
   artworkFile: null,
   artworkNotes: "",
+  artworkRights: false,
   timeline: "",
   name: "",
   email: "",
@@ -197,6 +200,7 @@ const DTFQuoteBuilder = () => {
                     </label>
                   )}
                 </div>
+                <ArtworkRightsCheckbox checked={data.artworkRights} onCheckedChange={(val) => update({ artworkRights: val })} />
                 <div className="mt-6">
                   <Label htmlFor="artwork-notes" className="text-foreground">Artwork Notes (optional)</Label>
                   <Textarea id="artwork-notes" placeholder="Describe your design, sizes needed, placement, or any special instructions..." value={data.artworkNotes} onChange={(e) => update({ artworkNotes: e.target.value })} className="mt-2" rows={3} />
