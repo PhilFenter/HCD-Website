@@ -85,7 +85,19 @@ function getScreenPrintPrice(qty: number): number | null {
   return null;
 }
 
-type DecorationMethod = "dtf" | "screen-print" | "embroidery" | "screen-print-or-dtf" | "";
+type DecorationMethod = "dtf" | "screen-print" | "screen-print-or-dtf" | "";
+
+// Auto-determine decoration recommendation based on intent + qty
+function getRecommendedDecoration(intent: string, qty: number): DecorationMethod {
+  if (qty < SCREEN_PRINT_MIN_QTY) return "dtf";
+  if (qty >= SCREEN_PRINT_MIN_QTY) return "screen-print-or-dtf";
+  return "dtf";
+}
+
+// Whether embroidery should be mentioned as a premium option
+function shouldShowEmbroideryOption(intent: string, qty: number): boolean {
+  return qty >= MIN_QTY && (intent === "work" || intent === "brand");
+}
 
 interface PriceEstimate {
   garmentPrice: number;
@@ -100,56 +112,33 @@ interface PriceEstimate {
   showEmbroideryNote: boolean;
 }
 
-function getRecommendedDecoration(intent: string, qty: number): DecorationMethod {
-  if (qty < SCREEN_PRINT_MIN_QTY) return "dtf";
-  if (qty >= SCREEN_PRINT_MIN_QTY && (intent === "work" || intent === "brand"))
-    return "screen-print-or-dtf";
-  return "dtf";
-}
-
 function calcEstimate(
   garmentType: string,
   intent: string,
-  qty: number,
-  decorationChoice: string
+  qty: number
 ): PriceEstimate | null {
   if (!garmentType || qty < MIN_QTY) return null;
 
   const baseCost = GARMENT_BASE_COSTS[garmentType] ?? 10;
   const garmentPrice = baseCost * GARMENT_MARKUP;
-
-  const rec = decorationChoice
-    ? (decorationChoice as DecorationMethod)
-    : getRecommendedDecoration(intent, qty);
-
-  const showEmbroideryNote =
-    qty >= MIN_QTY && (intent === "work" || intent === "brand") && !decorationChoice;
+  const rec = getRecommendedDecoration(intent, qty);
+  const showEmbroideryNote = shouldShowEmbroideryOption(intent, qty);
 
   let decorationLow: number;
   let decorationHigh: number;
 
-  if (rec === "embroidery") {
-    decorationLow = EMBROIDERY_RANGE.low;
-    decorationHigh = EMBROIDERY_RANGE.high;
-  } else if (rec === "screen-print") {
-    const sp = getScreenPrintPrice(qty);
-    decorationLow = sp ?? getDtfPrice(qty);
-    decorationHigh = decorationLow;
-  } else if (rec === "screen-print-or-dtf") {
+  if (rec === "screen-print-or-dtf") {
     const sp = getScreenPrintPrice(qty);
     const dtf = getDtfPrice(qty);
     decorationLow = Math.min(sp ?? dtf, dtf);
     decorationHigh = Math.max(sp ?? dtf, dtf);
-    if (showEmbroideryNote) {
-      decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
-    }
   } else {
     const dtf = getDtfPrice(qty);
     decorationLow = dtf;
     decorationHigh = dtf;
   }
 
-  if (showEmbroideryNote && rec !== "embroidery") {
+  if (showEmbroideryNote) {
     decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
   }
 
@@ -175,7 +164,6 @@ interface GarmentQuoteData {
   intent: string;
   garmentType: string;
   quantity: string;
-  decorationMethod: string; // user-confirmed decoration
   printColors: string;
   printLocations: string[];
   embroideryLocations: string[];
@@ -194,7 +182,6 @@ const initialData: GarmentQuoteData = {
   intent: "",
   garmentType: "",
   quantity: "",
-  decorationMethod: "",
   printColors: "",
   printLocations: [],
   embroideryLocations: [],
@@ -208,9 +195,6 @@ const initialData: GarmentQuoteData = {
   company: "",
   notes: "",
 };
-
-// Steps are dynamic — decoration details step inserted conditionally
-const BASE_STEPS = ["Intent", "Garment", "Decoration", "Deadline", "Artwork", "Contact"];
 
 const GARMENT_LABELS: Record<string, string> = {
   tshirt: "T-Shirt",
@@ -234,17 +218,24 @@ const GarmentQuoteBuilder = () => {
 
   const qty = Number(data.quantity) || 0;
   const estimate = useMemo(
-    () => calcEstimate(data.garmentType, data.intent, qty, data.decorationMethod),
-    [data.garmentType, data.intent, qty, data.decorationMethod]
+    () => calcEstimate(data.garmentType, data.intent, qty),
+    [data.garmentType, data.intent, qty]
   );
 
-  // Determine if decoration detail step shows
-  const needsDecorationDetails = !!data.decorationMethod && data.decorationMethod !== "dtf";
-  const STEPS = needsDecorationDetails
-    ? ["Intent", "Garment", "Decoration", "Details", "Deadline", "Artwork", "Contact"]
-    : BASE_STEPS;
+  // Auto-determine if screen print details step should appear
+  // Shows when qty >= 72 (screen print is a viable option)
+  const showScreenPrintDetails = qty >= SCREEN_PRINT_MIN_QTY;
+  const showEmbroideryDetails = shouldShowEmbroideryOption(data.intent, qty);
 
-  // Map logical step indices
+  // Build dynamic steps array
+  const STEPS = useMemo(() => {
+    const steps = ["Intent", "Garment"];
+    if (showScreenPrintDetails) steps.push("Print Details");
+    if (showEmbroideryDetails) steps.push("Embroidery");
+    steps.push("Deadline", "Artwork", "Contact");
+    return steps;
+  }, [showScreenPrintDetails, showEmbroideryDetails]);
+
   const getStepKey = (s: number): string => STEPS[s] ?? "";
 
   const togglePrintLocation = (loc: string) => {
@@ -262,7 +253,7 @@ const GarmentQuoteBuilder = () => {
       if (already) {
         return { ...prev, embroideryLocations: prev.embroideryLocations.filter((l) => l !== loc) };
       }
-      if (prev.embroideryLocations.length >= 5) return prev; // max 5
+      if (prev.embroideryLocations.length >= 5) return prev;
       return { ...prev, embroideryLocations: [...prev.embroideryLocations, loc] };
     });
   };
@@ -276,15 +267,11 @@ const GarmentQuoteBuilder = () => {
         return !!data.intent;
       case "Garment":
         return !!data.garmentType && !!data.quantity && qty >= MIN_QTY;
-      case "Decoration":
-        return !!data.decorationMethod;
-      case "Details":
-        if (data.decorationMethod === "screen-print") {
-          return !!data.printColors && data.printLocations.length > 0;
-        }
-        if (data.decorationMethod === "embroidery") {
-          return data.embroideryLocations.length > 0;
-        }
+      case "Print Details":
+        // Optional — user can skip if they want DTF instead
+        return true;
+      case "Embroidery":
+        // Optional — user can skip if they don't want embroidery
         return true;
       case "Deadline":
         return !!data.timeline;
@@ -314,7 +301,6 @@ const GarmentQuoteBuilder = () => {
         intent: data.intent,
         garmentType: data.garmentType,
         quantity: qty,
-        decorationMethod: data.decorationMethod,
         printColors: data.printColors,
         printLocations: data.printLocations,
         embroideryLocations: data.embroideryLocations,
@@ -354,36 +340,6 @@ const GarmentQuoteBuilder = () => {
     }
   };
 
-  // Determine available decoration methods for the Decoration step
-  const availableDecorations = useMemo(() => {
-    const options: { value: string; label: string; desc: string }[] = [];
-    options.push({
-      value: "dtf",
-      label: "DTF Printing",
-      desc: "Full color, photo-quality prints on any fabric. Great for complex logos, gradients, and smaller runs.",
-    });
-    if (qty >= SCREEN_PRINT_MIN_QTY) {
-      options.push({
-        value: "screen-print",
-        label: "Screen Printing",
-        desc: "Bold, durable ink — best value for 72+ pieces of the same design. The more you order, the better the price.",
-      });
-    }
-    if (qty >= MIN_QTY && (data.intent === "work" || data.intent === "brand")) {
-      options.push({
-        value: "embroidery",
-        label: "Embroidery",
-        desc: "Classic, premium look for polos, jackets, and workwear. Flat rate per location — simple designs come in under, complex ones over.",
-      });
-    }
-    options.push({
-      value: "not-sure",
-      label: "Not Sure — Recommend for Me",
-      desc: "We'll look at your artwork and recommend the best decoration method.",
-    });
-    return options;
-  }, [qty, data.intent]);
-
   // ── Success State ──
   if (submitted) {
     const garmentLabel = GARMENT_LABELS[data.garmentType] ?? "apparel";
@@ -392,22 +348,11 @@ const GarmentQuoteBuilder = () => {
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary">
           <Check className="h-8 w-8 text-primary-foreground" />
         </div>
-        <h3 className="mt-6 font-heading text-2xl font-bold text-foreground">
-          QUOTE REQUEST RECEIVED!
-        </h3>
+        <h3 className="mt-6 font-heading text-2xl font-bold text-foreground">QUOTE REQUEST RECEIVED!</h3>
         <p className="mt-3 text-muted-foreground">
-          Thanks, {data.name}! We'll review your {garmentLabel} request and send
-          you a detailed quote within one business day.
+          Thanks, {data.name}! We'll review your {garmentLabel} request and send you a detailed quote within one business day.
         </p>
-        <Button
-          className="mt-8"
-          variant="outline"
-          onClick={() => {
-            setSubmitted(false);
-            setStep(0);
-            setData(initialData);
-          }}
-        >
+        <Button className="mt-8" variant="outline" onClick={() => { setSubmitted(false); setStep(0); setData(initialData); }}>
           Submit Another Request
         </Button>
       </div>
@@ -422,7 +367,7 @@ const GarmentQuoteBuilder = () => {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           {STEPS.map((label, i) => (
-            <div key={i} className="flex flex-1 flex-col items-center">
+            <div key={label} className="flex flex-1 flex-col items-center">
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                   i < step
@@ -434,43 +379,27 @@ const GarmentQuoteBuilder = () => {
               >
                 {i < step ? <Check className="h-4 w-4" /> : i + 1}
               </div>
-              <span
-                className={`mt-1.5 hidden text-[10px] font-medium sm:block ${
-                  i <= step ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
+              <span className={`mt-1.5 hidden text-[10px] font-medium sm:block ${i <= step ? "text-primary" : "text-muted-foreground"}`}>
                 {label}
               </span>
             </div>
           ))}
         </div>
         <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-          <div
-            className="h-full rounded-full bg-primary transition-all duration-300"
-            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
-          />
+          <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
         </div>
       </div>
 
       {/* Step content */}
       <div className="rounded-lg border border-border bg-card p-6 md:p-8">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.25 }}
-          >
+          <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}>
+
             {/* Step: Intent */}
             {stepKey === "Intent" && (
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  WHAT ARE THESE FOR?
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  This helps us recommend the right decoration and garment for your needs.
-                </p>
+                <h3 className="font-heading text-xl font-bold text-foreground">WHAT ARE THESE FOR?</h3>
+                <p className="mt-2 text-sm text-muted-foreground">This helps us recommend the right decoration and garment for your needs.</p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <OptionCard label="Work & Crew Gear" description="Uniforms, jobsite shirts, company polos — durable, professional, and reorderable." selected={data.intent === "work"} onClick={() => update({ intent: "work" })} />
                   <OptionCard label="Team & Club" description="Sports teams, school groups, clubs — matching gear for the whole group." selected={data.intent === "team"} onClick={() => update({ intent: "team" })} />
@@ -483,12 +412,8 @@ const GarmentQuoteBuilder = () => {
             {/* Step: Garment Type & Quantity */}
             {stepKey === "Garment" && (
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  WHAT ARE WE DECORATING?
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Choose your garment and quantity. Pricing updates live as you adjust.
-                </p>
+                <h3 className="font-heading text-xl font-bold text-foreground">WHAT ARE WE DECORATING?</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Choose your garment and quantity. Pricing updates live as you adjust.</p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <OptionCard label="T-Shirt" selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt" })} />
                   <OptionCard label="Hoodie / Sweatshirt" selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie" })} />
@@ -498,32 +423,15 @@ const GarmentQuoteBuilder = () => {
                   <OptionCard label="Not Sure Yet" selected={data.garmentType === "not-sure"} onClick={() => update({ garmentType: "not-sure" })} />
                 </div>
 
-                {/* Quantity */}
                 <div className="mt-6">
                   <Label htmlFor="garment-qty" className="text-foreground">Quantity</Label>
-                  <Input
-                    id="garment-qty"
-                    type="number"
-                    min={MIN_QTY}
-                    placeholder="e.g. 48"
-                    value={data.quantity}
-                    onChange={(e) => update({ quantity: e.target.value })}
-                    className="mt-2 max-w-[180px] text-lg"
-                  />
+                  <Input id="garment-qty" type="number" min={MIN_QTY} placeholder="e.g. 48" value={data.quantity} onChange={(e) => update({ quantity: e.target.value })} className="mt-2 max-w-[180px] text-lg" />
                   {data.quantity && qty > 0 && qty < MIN_QTY && (
                     <p className="mt-2 text-sm text-destructive">Our minimum order is {MIN_QTY} pieces.</p>
                   )}
-                  {data.quantity && qty >= MIN_QTY && qty < SCREEN_PRINT_MIN_QTY && (
-                    <div className="mt-3 flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
-                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600" />
-                      <p className="text-sm text-yellow-700 dark:text-yellow-400">
-                        Screen printing requires 72+ pieces. For smaller quantities we recommend DTF printing — same great look, no minimums on design complexity.
-                      </p>
-                    </div>
-                  )}
                 </div>
 
-                {/* Live Price Estimate */}
+                {/* Live Price Estimate + Recommendation */}
                 {estimate && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 rounded-lg border border-primary/30 bg-primary/5 p-5">
                     <div className="mb-3 flex items-center gap-2">
@@ -541,61 +449,60 @@ const GarmentQuoteBuilder = () => {
                         {estimate.qty} pieces × ${estimate.perPieceLow.toFixed(2)}{estimate.perPieceLow !== estimate.perPieceHigh && `–$${estimate.perPieceHigh.toFixed(2)}`} = ${Math.round(estimate.totalLow).toLocaleString()}{estimate.totalLow !== estimate.totalHigh && `–$${Math.round(estimate.totalHigh).toLocaleString()}`} estimated
                       </div>
                     </div>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Includes garment + decoration. Final price confirmed within 1 business day.
-                    </p>
-                    {data.decorationMethod === "embroidery" && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new embroidery logos.
-                      </p>
-                    )}
+                    <p className="mt-2 text-xs text-muted-foreground">Includes garment + decoration. Final price confirmed within 1 business day.</p>
+
+                    {/* Decoration recommendations */}
+                    <div className="mt-4 space-y-2 border-t border-primary/20 pt-4">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Our recommendation</p>
+
+                      {estimate.recommendedDecoration === "dtf" && (
+                        <div className="flex items-start gap-2">
+                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">DTF Printing</span> — Full color, photo-quality prints on any fabric. Great for complex logos, gradients, and smaller runs.
+                          </p>
+                        </div>
+                      )}
+
+                      {estimate.recommendedDecoration === "screen-print-or-dtf" && (
+                        <>
+                          <div className="flex items-start gap-2">
+                            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-semibold text-foreground">Screen Printing</span> — Bold, durable ink — best value for 72+ pieces of the same design. We'll ask about colors and locations next.
+                            </p>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-semibold text-foreground">DTF Printing</span> — Also a great option if your design has gradients or many colors.
+                            </p>
+                          </div>
+                        </>
+                      )}
+
+                      {estimate.showEmbroideryNote && (
+                        <div className="flex items-start gap-2">
+                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">Embroidery</span> — Classic, premium look for polos, jackets, and workwear. One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new logos.
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </motion.div>
                 )}
               </div>
             )}
 
-            {/* Step: Decoration Method */}
-            {stepKey === "Decoration" && (
+            {/* Step: Screen Print Details (auto-shown when qty >= 72) */}
+            {stepKey === "Print Details" && (
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  HOW SHOULD WE DECORATE THEM?
-                </h3>
+                <h3 className="font-heading text-xl font-bold text-foreground">SCREEN PRINT DETAILS</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Choose a decoration method. We'll help you pick if you're not sure.
-                </p>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {availableDecorations.map((opt) => (
-                    <OptionCard
-                      key={opt.value}
-                      label={opt.label}
-                      description={opt.desc}
-                      selected={data.decorationMethod === opt.value}
-                      onClick={() =>
-                        update({
-                          decorationMethod: opt.value,
-                          // Reset detail fields when switching methods
-                          printColors: "",
-                          printLocations: [],
-                          embroideryLocations: [],
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Step: Decoration Details (conditional) */}
-            {stepKey === "Details" && data.decorationMethod === "screen-print" && (
-              <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  SCREEN PRINT DETAILS
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Tell us about your print colors and locations. This affects pricing.
+                  Since you're ordering {qty}+ pieces, screen printing may be your best value. Fill in the details below — or skip this step if you'd prefer DTF.
                 </p>
 
-                {/* Print Colors */}
                 <div className="mt-6">
                   <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">PRINT COLORS</Label>
                   <p className="mt-1 text-xs text-muted-foreground">More colors = more detail, but affects pricing. We'll help optimize.</p>
@@ -612,7 +519,6 @@ const GarmentQuoteBuilder = () => {
                   </div>
                 </div>
 
-                {/* Print Locations */}
                 <div className="mt-6">
                   <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">PRINT LOCATIONS</Label>
                   <p className="mt-1 text-xs text-muted-foreground">Select all locations where you'd like printing.</p>
@@ -625,13 +531,12 @@ const GarmentQuoteBuilder = () => {
               </div>
             )}
 
-            {stepKey === "Details" && data.decorationMethod === "embroidery" && (
+            {/* Step: Embroidery Details (auto-shown for work/brand intents) */}
+            {stepKey === "Embroidery" && (
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  EMBROIDERY LOCATIONS
-                </h3>
+                <h3 className="font-heading text-xl font-bold text-foreground">EMBROIDERY LOCATIONS</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Select up to 5 locations for embroidery. Each location is priced separately.
+                  Embroidery is a premium option for your order. Select locations if you'd like embroidery — or skip this step if you prefer print.
                 </p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {EMBROIDERY_LOCATIONS.map((loc) => (
@@ -645,9 +550,7 @@ const GarmentQuoteBuilder = () => {
                   ))}
                 </div>
                 {data.embroideryLocations.length > 0 && (
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    {data.embroideryLocations.length} of 5 locations selected
-                  </p>
+                  <p className="mt-3 text-sm text-muted-foreground">{data.embroideryLocations.length} of 5 locations selected</p>
                 )}
                 {hasFullBackEmbroidery && (
                   <div className="mt-3 flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
@@ -663,12 +566,8 @@ const GarmentQuoteBuilder = () => {
             {/* Step: Deadline */}
             {stepKey === "Deadline" && (
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  DO YOU HAVE A HARD DEADLINE?
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Rush orders are available — we just want to make sure we can deliver on time.
-                </p>
+                <h3 className="font-heading text-xl font-bold text-foreground">DO YOU HAVE A HARD DEADLINE?</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Rush orders are available — we just want to make sure we can deliver on time.</p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <OptionCard label="Yes, I have a date" description="I need these by a specific date." selected={data.timeline === "specific-date"} onClick={() => update({ timeline: "specific-date" })} />
                   <OptionCard label="No firm deadline — flexible" description="No rush, work me into the schedule." selected={data.timeline === "flexible"} onClick={() => update({ timeline: "flexible" })} />
@@ -687,12 +586,8 @@ const GarmentQuoteBuilder = () => {
             {/* Step: Artwork */}
             {stepKey === "Artwork" && (
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  UPLOAD YOUR ARTWORK
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Have your logo ready? Upload it here. We accept AI, EPS, SVG, PDF, PNG, or JPG.
-                </p>
+                <h3 className="font-heading text-xl font-bold text-foreground">UPLOAD YOUR ARTWORK</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Have your logo ready? Upload it here. We accept AI, EPS, SVG, PDF, PNG, or JPG.</p>
                 <div className="mt-6">
                   {data.artworkFile ? (
                     <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 p-4">
@@ -703,9 +598,7 @@ const GarmentQuoteBuilder = () => {
                           <p className="text-xs text-muted-foreground">{(data.artworkFile.size / 1024 / 1024).toFixed(2)} MB</p>
                         </div>
                       </div>
-                      <button onClick={() => update({ artworkFile: null })} className="text-muted-foreground hover:text-foreground">
-                        <X className="h-4 w-4" />
-                      </button>
+                      <button onClick={() => update({ artworkFile: null })} className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
                     </div>
                   ) : (
                     <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-secondary/30 p-10 transition-colors hover:border-primary/50 hover:bg-secondary/50">
