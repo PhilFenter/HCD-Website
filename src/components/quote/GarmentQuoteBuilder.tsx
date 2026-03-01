@@ -250,9 +250,8 @@ const GarmentQuoteBuilder = () => {
   // Auto-determine if screen print details step should appear
   // Polos are embroidery-only, so never show print details for them
   const showScreenPrintDetails = !isPolo && qty >= SCREEN_PRINT_MIN_QTY;
-  // Show embroidery step for non-polo garments with work/brand intent
-  // Polos get embroidery locations embedded in the Garment step (before pricing)
-  const showEmbroideryDetails = !isPolo && shouldShowEmbroideryOption(data.garmentType, data.intent, qty);
+  // Embroidery locations are now embedded in the Garment step for all types
+  const showEmbroideryDetails = false;
 
   // Build dynamic steps array
   const STEPS = useMemo(() => {
@@ -294,7 +293,7 @@ const GarmentQuoteBuilder = () => {
         return !!data.intent;
       case "Garment":
         if (isPolo) return !!data.garmentType && !!data.poloTier && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
-        return !!data.garmentType && !!data.quantity && qty >= MIN_QTY;
+        return !!data.garmentType && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
       case "Print Details":
         // Optional — user can skip if they want DTF instead
         return true;
@@ -483,8 +482,8 @@ const GarmentQuoteBuilder = () => {
                   )}
                 </div>
 
-                {/* Polo: Embroidery Locations (before estimate so locations affect pricing) */}
-                {isPolo && qty >= MIN_QTY && (
+                {/* Embroidery Locations — all garments (before estimate so locations affect pricing) */}
+                {qty >= MIN_QTY && (
                   <div className="mt-6">
                     <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">EMBROIDERY LOCATIONS</Label>
                     <p className="mt-1 text-xs text-muted-foreground">Select where you'd like embroidery. Each location affects per-piece pricing.</p>
