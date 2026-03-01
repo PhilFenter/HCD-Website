@@ -32,12 +32,53 @@ interface BrandTier {
 }
 
 // Per-garment tier definitions (all-in per-piece prices including decoration for polos)
-const GARMENT_TIERS: Record<string, BrandTier[]> = {
-  tshirt: [
-    { value: "budget", label: "Budget", desc: "Gildan G5000, Jerzees 29M — everyday basics.", priceLow: 8, priceHigh: 10 },
-    { value: "mid-range", label: "Mid-Range", desc: "Next Level 6210, Bella Canvas 3001 — softer, modern fit.", priceLow: 10, priceHigh: 15 },
-    { value: "premium", label: "Premium", desc: "Next Level 6010, District Perfect Tri, Comfort Colors — premium feel.", priceLow: 15, priceHigh: 20 },
+// Quantity-tiered pricing for t-shirts (all-in per piece: garment + decoration)
+interface QtyTierPrice {
+  minQty: number;
+  maxQty: number | null;
+  priceLow: number;
+  priceHigh: number;
+}
+
+const TSHIRT_QTY_TIERS: Record<string, QtyTierPrice[]> = {
+  budget: [
+    { minQty: 144, maxQty: null, priceLow: 9, priceHigh: 13 },
+    { minQty: 72, maxQty: 143, priceLow: 12, priceHigh: 16 },
+    { minQty: 24, maxQty: 71, priceLow: 15, priceHigh: 19 },
+    { minQty: 12, maxQty: 23, priceLow: 18, priceHigh: 22 },
   ],
+  "mid-range": [
+    { minQty: 144, maxQty: null, priceLow: 13, priceHigh: 18 },
+    { minQty: 72, maxQty: 143, priceLow: 16, priceHigh: 22 },
+    { minQty: 24, maxQty: 71, priceLow: 19, priceHigh: 25 },
+    { minQty: 12, maxQty: 23, priceLow: 22, priceHigh: 28 },
+  ],
+  premium: [
+    { minQty: 144, maxQty: null, priceLow: 18, priceHigh: 24 },
+    { minQty: 72, maxQty: 143, priceLow: 22, priceHigh: 28 },
+    { minQty: 24, maxQty: 71, priceLow: 25, priceHigh: 32 },
+    { minQty: 12, maxQty: 23, priceLow: 28, priceHigh: 35 },
+  ],
+};
+
+function getTshirtPrice(brandTier: string, qty: number): { low: number; high: number } | null {
+  const tiers = TSHIRT_QTY_TIERS[brandTier];
+  if (!tiers) return null;
+  for (const tier of tiers) {
+    if (qty >= tier.minQty) return { low: tier.priceLow, high: tier.priceHigh };
+  }
+  return null;
+}
+
+// Brand tier labels for t-shirt selection cards (prices shown dynamically)
+const TSHIRT_BRAND_TIERS: BrandTier[] = [
+  { value: "budget", label: "Budget", desc: "Gildan G5000, Jerzees 29M — everyday basics.", priceLow: 9, priceHigh: 22 },
+  { value: "mid-range", label: "Mid-Range", desc: "Next Level 6210, Bella Canvas 3001 — softer, modern fit.", priceLow: 13, priceHigh: 28 },
+  { value: "premium", label: "Premium", desc: "Next Level 6010, District Perfect Tri, Comfort Colors — premium feel.", priceLow: 18, priceHigh: 35 },
+];
+
+const GARMENT_TIERS: Record<string, BrandTier[]> = {
+  tshirt: TSHIRT_BRAND_TIERS,
   hoodie: [
     { value: "budget", label: "Budget", desc: "Gildan, Jerzees — reliable, affordable.", priceLow: 28, priceHigh: 34 },
     { value: "mid-range", label: "Mid-Range", desc: "Bella Canvas, Next Level — softer, modern cut.", priceLow: 35, priceHigh: 38 },
@@ -184,7 +225,24 @@ function calcEstimate(
     const baseLow = tier?.priceLow ?? 10;
     const baseHigh = tier?.priceHigh ?? 20;
 
-    if (garmentType === "polo") {
+    if (garmentType === "tshirt") {
+      // T-shirts use quantity-tiered all-in pricing (garment + decoration included)
+      const tshirtPrice = getTshirtPrice(brandTier, qty);
+      if (!tshirtPrice) return null;
+      const rec = getRecommendedDecoration(garmentType, brandTier, qty);
+      return {
+        garmentPrice: tshirtPrice.low,
+        decorationLow: 0,
+        decorationHigh: 0,
+        perPieceLow: tshirtPrice.low,
+        perPieceHigh: tshirtPrice.high,
+        totalLow: tshirtPrice.low * qty,
+        totalHigh: tshirtPrice.high * qty,
+        recommendedDecoration: rec,
+        qty,
+        showEmbroideryNote: false,
+      };
+    } else if (garmentType === "polo") {
       // Polo tiers are all-in (garment + 1 location embroidery)
       const extraLocs = Math.max(0, embroideryLocationCount - 1);
       const extraCostLow = extraLocs * EMBROIDERY_RANGE.low;
