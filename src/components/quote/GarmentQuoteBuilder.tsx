@@ -24,11 +24,17 @@ const SCREEN_PRINT_MIN_QTY = 72;
 const GARMENT_BASE_COSTS: Record<string, number> = {
   tshirt: 5,
   hoodie: 18,
-  polo: 12,
   jacket: 38,
   safety: 15,
   "not-sure": 10,
 };
+
+// Polo brand tiers — customer-facing prices (embroidery only)
+const POLO_TIERS: { value: string; label: string; desc: string; price: number }[] = [
+  { value: "budget", label: "Budget", desc: "Port & Company — reliable, affordable basics.", price: 36 },
+  { value: "mid-range", label: "Mid-Range", desc: "Sport-Tek, Ogio — moisture-wicking, modern fit.", price: 55 },
+  { value: "premium", label: "Premium", desc: "Nike, Under Armour — top-tier brand recognition.", price: 75 },
+];
 
 const GARMENT_MARKUP = 2; // 200% = cost × 2
 
@@ -85,17 +91,19 @@ function getScreenPrintPrice(qty: number): number | null {
   return null;
 }
 
-type DecorationMethod = "dtf" | "screen-print" | "screen-print-or-dtf" | "";
+type DecorationMethod = "dtf" | "screen-print" | "screen-print-or-dtf" | "embroidery" | "";
 
-// Auto-determine decoration recommendation based on intent + qty
-function getRecommendedDecoration(intent: string, qty: number): DecorationMethod {
+// Auto-determine decoration recommendation based on garment type, intent + qty
+function getRecommendedDecoration(garmentType: string, intent: string, qty: number): DecorationMethod {
+  if (garmentType === "polo") return "embroidery";
   if (qty < SCREEN_PRINT_MIN_QTY) return "dtf";
   if (qty >= SCREEN_PRINT_MIN_QTY) return "screen-print-or-dtf";
   return "dtf";
 }
 
-// Whether embroidery should be mentioned as a premium option
-function shouldShowEmbroideryOption(intent: string, qty: number): boolean {
+// Whether embroidery should be mentioned as an option (non-polo garments)
+function shouldShowEmbroideryOption(garmentType: string, intent: string, qty: number): boolean {
+  if (garmentType === "polo") return true; // always for polos
   return qty >= MIN_QTY && (intent === "work" || intent === "brand");
 }
 
@@ -115,19 +123,30 @@ interface PriceEstimate {
 function calcEstimate(
   garmentType: string,
   intent: string,
-  qty: number
+  qty: number,
+  poloTier: string
 ): PriceEstimate | null {
   if (!garmentType || qty < MIN_QTY) return null;
+  if (garmentType === "polo" && !poloTier) return null;
 
-  const baseCost = GARMENT_BASE_COSTS[garmentType] ?? 10;
-  const garmentPrice = baseCost * GARMENT_MARKUP;
-  const rec = getRecommendedDecoration(intent, qty);
-  const showEmbroideryNote = shouldShowEmbroideryOption(intent, qty);
+  let garmentPrice: number;
+  if (garmentType === "polo") {
+    garmentPrice = POLO_TIERS.find((t) => t.value === poloTier)?.price ?? 55;
+  } else {
+    const baseCost = GARMENT_BASE_COSTS[garmentType] ?? 10;
+    garmentPrice = baseCost * GARMENT_MARKUP;
+  }
+
+  const rec = getRecommendedDecoration(garmentType, intent, qty);
+  const showEmbroideryNote = shouldShowEmbroideryOption(garmentType, intent, qty);
 
   let decorationLow: number;
   let decorationHigh: number;
 
-  if (rec === "screen-print-or-dtf") {
+  if (rec === "embroidery") {
+    decorationLow = EMBROIDERY_RANGE.low;
+    decorationHigh = EMBROIDERY_RANGE.high;
+  } else if (rec === "screen-print-or-dtf") {
     const sp = getScreenPrintPrice(qty);
     const dtf = getDtfPrice(qty);
     decorationLow = Math.min(sp ?? dtf, dtf);
@@ -138,7 +157,7 @@ function calcEstimate(
     decorationHigh = dtf;
   }
 
-  if (showEmbroideryNote) {
+  if (showEmbroideryNote && rec !== "embroidery") {
     decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
   }
 
@@ -163,6 +182,7 @@ function calcEstimate(
 interface GarmentQuoteData {
   intent: string;
   garmentType: string;
+  poloTier: string;
   quantity: string;
   printColors: string;
   printLocations: string[];
@@ -181,6 +201,7 @@ interface GarmentQuoteData {
 const initialData: GarmentQuoteData = {
   intent: "",
   garmentType: "",
+  poloTier: "",
   quantity: "",
   printColors: "",
   printLocations: [],
@@ -217,15 +238,17 @@ const GarmentQuoteBuilder = () => {
     setData((prev) => ({ ...prev, ...fields }));
 
   const qty = Number(data.quantity) || 0;
+  const isPolo = data.garmentType === "polo";
   const estimate = useMemo(
-    () => calcEstimate(data.garmentType, data.intent, qty),
-    [data.garmentType, data.intent, qty]
+    () => calcEstimate(data.garmentType, data.intent, qty, data.poloTier),
+    [data.garmentType, data.intent, qty, data.poloTier]
   );
 
   // Auto-determine if screen print details step should appear
-  // Shows when qty >= 72 (screen print is a viable option)
-  const showScreenPrintDetails = qty >= SCREEN_PRINT_MIN_QTY;
-  const showEmbroideryDetails = shouldShowEmbroideryOption(data.intent, qty);
+  // Polos are embroidery-only, so never show print details for them
+  const showScreenPrintDetails = !isPolo && qty >= SCREEN_PRINT_MIN_QTY;
+  // Show embroidery step for polos always, or for work/brand intents on other garments
+  const showEmbroideryDetails = isPolo || shouldShowEmbroideryOption(data.garmentType, data.intent, qty);
 
   // Build dynamic steps array
   const STEPS = useMemo(() => {
@@ -266,6 +289,7 @@ const GarmentQuoteBuilder = () => {
       case "Intent":
         return !!data.intent;
       case "Garment":
+        if (isPolo) return !!data.garmentType && !!data.poloTier && !!data.quantity && qty >= MIN_QTY;
         return !!data.garmentType && !!data.quantity && qty >= MIN_QTY;
       case "Print Details":
         // Optional — user can skip if they want DTF instead
@@ -300,6 +324,7 @@ const GarmentQuoteBuilder = () => {
       const payload = {
         intent: data.intent,
         garmentType: data.garmentType,
+        poloTier: data.poloTier,
         quantity: qty,
         printColors: data.printColors,
         printLocations: data.printLocations,
@@ -415,13 +440,35 @@ const GarmentQuoteBuilder = () => {
                 <h3 className="font-heading text-xl font-bold text-foreground">WHAT ARE WE DECORATING?</h3>
                 <p className="mt-2 text-sm text-muted-foreground">Choose your garment and quantity. Pricing updates live as you adjust.</p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <OptionCard label="T-Shirt" selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt" })} />
-                  <OptionCard label="Hoodie / Sweatshirt" selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie" })} />
-                  <OptionCard label="Polo" selected={data.garmentType === "polo"} onClick={() => update({ garmentType: "polo" })} />
-                  <OptionCard label="Jacket / Soft Shell" selected={data.garmentType === "jacket"} onClick={() => update({ garmentType: "jacket" })} />
-                  <OptionCard label="Safety Vest / Hi-Vis" selected={data.garmentType === "safety"} onClick={() => update({ garmentType: "safety" })} />
-                  <OptionCard label="Not Sure Yet" selected={data.garmentType === "not-sure"} onClick={() => update({ garmentType: "not-sure" })} />
+                  <OptionCard label="T-Shirt" selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt", poloTier: "" })} />
+                  <OptionCard label="Hoodie / Sweatshirt" selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie", poloTier: "" })} />
+                  <OptionCard label="Polo" description="Embroidery only — choose your brand tier below." selected={data.garmentType === "polo"} onClick={() => update({ garmentType: "polo" })} />
+                  <OptionCard label="Jacket / Soft Shell" selected={data.garmentType === "jacket"} onClick={() => update({ garmentType: "jacket", poloTier: "" })} />
+                  <OptionCard label="Safety Vest / Hi-Vis" selected={data.garmentType === "safety"} onClick={() => update({ garmentType: "safety", poloTier: "" })} />
+                  <OptionCard label="Not Sure Yet" selected={data.garmentType === "not-sure"} onClick={() => update({ garmentType: "not-sure", poloTier: "" })} />
                 </div>
+
+                {/* Polo Brand Tier Selector */}
+                {isPolo && (
+                  <div className="mt-6">
+                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">POLO BRAND TIER</Label>
+                    <p className="mt-1 text-xs text-muted-foreground">Price includes the polo + embroidery decoration.</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {POLO_TIERS.map((tier) => (
+                        <OptionCard
+                          key={tier.value}
+                          label={`${tier.label} — $${tier.price}`}
+                          description={tier.desc}
+                          selected={data.poloTier === tier.value}
+                          onClick={() => update({ poloTier: tier.value })}
+                        />
+                      ))}
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new embroidery logos.
+                    </p>
+                  </div>
+                )}
 
                 <div className="mt-6">
                   <Label htmlFor="garment-qty" className="text-foreground">Quantity</Label>
@@ -455,6 +502,15 @@ const GarmentQuoteBuilder = () => {
                     <div className="mt-4 space-y-2 border-t border-primary/20 pt-4">
                       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Our recommendation</p>
 
+                      {estimate.recommendedDecoration === "embroidery" && (
+                        <div className="flex items-start gap-2">
+                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">Embroidery</span> — The standard for polos. Classic, premium, professional look. We'll ask about locations next.
+                          </p>
+                        </div>
+                      )}
+
                       {estimate.recommendedDecoration === "dtf" && (
                         <div className="flex items-start gap-2">
                           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
@@ -481,7 +537,7 @@ const GarmentQuoteBuilder = () => {
                         </>
                       )}
 
-                      {estimate.showEmbroideryNote && (
+                      {estimate.showEmbroideryNote && estimate.recommendedDecoration !== "embroidery" && (
                         <div className="flex items-start gap-2">
                           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                           <p className="text-xs text-muted-foreground">
@@ -536,7 +592,9 @@ const GarmentQuoteBuilder = () => {
               <div>
                 <h3 className="font-heading text-xl font-bold text-foreground">EMBROIDERY LOCATIONS</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Embroidery is a premium option for your order. Select locations if you'd like embroidery — or skip this step if you prefer print.
+                  {isPolo
+                    ? "Select where you'd like embroidery on your polos. Up to 5 locations available."
+                    : "Embroidery is a premium option for your order. Select locations if you'd like embroidery — or skip this step if you prefer print."}
                 </p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {EMBROIDERY_LOCATIONS.map((loc) => (
