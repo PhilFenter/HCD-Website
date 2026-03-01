@@ -544,9 +544,9 @@ const GarmentQuoteBuilder = () => {
                     <p className="mt-2 text-xs text-muted-foreground">
                       Includes garment + decoration. Final price confirmed within 1 business day.
                     </p>
-                    {(estimate.showEmbroideryNote || data.decorationMethod === "embroidery") && (
+                    {data.decorationMethod === "embroidery" && (
                       <p className="mt-1 text-xs text-muted-foreground">
-                        One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee may apply for new logos.
+                        One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new embroidery logos.
                       </p>
                     )}
                   </motion.div>
