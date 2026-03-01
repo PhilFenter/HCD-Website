@@ -1,0 +1,829 @@
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  Upload,
+  X,
+  DollarSign,
+  AlertTriangle,
+  Info,
+} from "lucide-react";
+import OptionCard from "./OptionCard";
+
+// ── Pricing ────────────────────────────────────────────
+const MIN_QTY = 12;
+const SCREEN_PRINT_MIN_QTY = 72;
+
+const GARMENT_BASE_COSTS: Record<string, number> = {
+  tshirt: 5,
+  hoodie: 18,
+  polo: 12,
+  jacket: 38,
+  safety: 15,
+  "not-sure": 10,
+};
+
+const GARMENT_MARKUP = 2; // 200% = cost × 2
+
+// DTF decoration per piece (left chest 4×4 + back 11×14)
+const DTF_TIERS = [
+  { min: 100, price: 6.0 },
+  { min: 50, price: 7.1 },
+  { min: 15, price: 8.2 },
+  { min: 1, price: 9.5 },
+];
+
+// Embroidery per piece (1 location, range)
+const EMBROIDERY_RANGE = { low: 12, high: 15 };
+const EMBROIDERY_DIGITIZING_FEE = 45;
+
+// Screen print per piece (2-color front + 2-color back)
+const SCREEN_PRINT_TIERS = [
+  { min: 144, price: 3.0 },
+  { min: 72, price: 5.64 },
+];
+
+function getDtfPrice(qty: number): number {
+  for (const tier of DTF_TIERS) {
+    if (qty >= tier.min) return tier.price;
+  }
+  return DTF_TIERS[DTF_TIERS.length - 1].price;
+}
+
+function getScreenPrintPrice(qty: number): number | null {
+  for (const tier of SCREEN_PRINT_TIERS) {
+    if (qty >= tier.min) return tier.price;
+  }
+  return null;
+}
+
+interface PriceEstimate {
+  garmentPrice: number;
+  decorationLow: number;
+  decorationHigh: number;
+  perPieceLow: number;
+  perPieceHigh: number;
+  totalLow: number;
+  totalHigh: number;
+  recommendedDecoration: string;
+  qty: number;
+  showEmbroideryNote: boolean;
+}
+
+function getRecommendedDecoration(intent: string, qty: number): string {
+  if (qty < SCREEN_PRINT_MIN_QTY) return "dtf";
+  if (
+    qty >= SCREEN_PRINT_MIN_QTY &&
+    (intent === "work" || intent === "brand")
+  )
+    return "screen-print-or-dtf";
+  return "dtf";
+}
+
+function calcEstimate(
+  garmentType: string,
+  intent: string,
+  qty: number
+): PriceEstimate | null {
+  if (!garmentType || qty < MIN_QTY) return null;
+
+  const baseCost = GARMENT_BASE_COSTS[garmentType] ?? 10;
+  const garmentPrice = baseCost * GARMENT_MARKUP;
+
+  const rec = getRecommendedDecoration(intent, qty);
+  const showEmbroideryNote =
+    qty >= MIN_QTY && (intent === "work" || intent === "brand");
+
+  let decorationLow: number;
+  let decorationHigh: number;
+
+  if (rec === "screen-print-or-dtf") {
+    const sp = getScreenPrintPrice(qty);
+    const dtf = getDtfPrice(qty);
+    decorationLow = sp ?? dtf;
+    decorationHigh = dtf;
+    // use whichever is cheaper as low
+    if (decorationLow > decorationHigh) {
+      [decorationLow, decorationHigh] = [decorationHigh, decorationLow];
+    }
+  } else {
+    const dtf = getDtfPrice(qty);
+    decorationLow = dtf;
+    decorationHigh = dtf;
+  }
+
+  // If embroidery is relevant, widen the range
+  if (showEmbroideryNote) {
+    decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
+    decorationLow = Math.min(decorationLow, EMBROIDERY_RANGE.low);
+  }
+
+  const perPieceLow = garmentPrice + decorationLow;
+  const perPieceHigh = garmentPrice + decorationHigh;
+
+  return {
+    garmentPrice,
+    decorationLow,
+    decorationHigh,
+    perPieceLow,
+    perPieceHigh,
+    totalLow: perPieceLow * qty,
+    totalHigh: perPieceHigh * qty,
+    recommendedDecoration: rec,
+    qty,
+    showEmbroideryNote,
+  };
+}
+
+// ── Types ──────────────────────────────────────────────
+interface GarmentQuoteData {
+  intent: string;
+  garmentType: string;
+  quantity: string;
+  timeline: string;
+  eventDate: string;
+  artworkFile: File | null;
+  artworkNotes: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  notes: string;
+}
+
+const initialData: GarmentQuoteData = {
+  intent: "",
+  garmentType: "",
+  quantity: "",
+  timeline: "",
+  eventDate: "",
+  artworkFile: null,
+  artworkNotes: "",
+  name: "",
+  email: "",
+  phone: "",
+  company: "",
+  notes: "",
+};
+
+const STEPS = ["Intent", "Garment", "Deadline", "Artwork", "Contact"];
+
+const GARMENT_LABELS: Record<string, string> = {
+  tshirt: "T-Shirt",
+  hoodie: "Hoodie / Sweatshirt",
+  polo: "Polo",
+  jacket: "Jacket / Soft Shell",
+  safety: "Safety Vest / Hi-Vis",
+  "not-sure": "Apparel",
+};
+
+// ── Component ──────────────────────────────────────────
+const GarmentQuoteBuilder = () => {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState<GarmentQuoteData>(initialData);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const update = (fields: Partial<GarmentQuoteData>) =>
+    setData((prev) => ({ ...prev, ...fields }));
+
+  const qty = Number(data.quantity) || 0;
+  const estimate = useMemo(
+    () => calcEstimate(data.garmentType, data.intent, qty),
+    [data.garmentType, data.intent, qty]
+  );
+
+  const canAdvance = (): boolean => {
+    switch (step) {
+      case 0:
+        return !!data.intent;
+      case 1:
+        return !!data.garmentType && !!data.quantity && qty >= MIN_QTY;
+      case 2:
+        return !!data.timeline;
+      case 3:
+        return true; // artwork optional
+      case 4: {
+        const base = !!data.name && !!data.email && !!data.phone;
+        if (data.intent === "brand") return base && !!data.company;
+        return base;
+      }
+      default:
+        return false;
+    }
+  };
+
+  const next = () => {
+    if (step < STEPS.length - 1) setStep(step + 1);
+  };
+  const prev = () => {
+    if (step > 0) setStep(step - 1);
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      // Wire up to Supabase edge function (will be built separately)
+      const payload = {
+        intent: data.intent,
+        garmentType: data.garmentType,
+        quantity: qty,
+        timeline: data.timeline,
+        eventDate: data.eventDate,
+        artworkNotes: data.artworkNotes,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        company: data.company,
+        notes: data.notes,
+        estimatedTotal: estimate
+          ? { low: Math.round(estimate.totalLow), high: Math.round(estimate.totalHigh) }
+          : null,
+        recommendedDecoration: estimate?.recommendedDecoration ?? "",
+      };
+      console.log("Garment quote request:", payload);
+
+      // TODO: uncomment when edge function is deployed
+      // const { data: response, error } = await supabase.functions.invoke("create-quote-action-item", { body: payload });
+      // if (error) throw error;
+
+      setSubmitted(true);
+      toast({
+        title: "Quote Request Submitted!",
+        description:
+          "We'll review your request and get back to you within one business day.",
+      });
+    } catch (err) {
+      console.error("Quote submission error:", err);
+      toast({
+        title: "Something went wrong",
+        description:
+          "Please email us at info@hellscanyondesigns.com",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // ── Success State ──
+  if (submitted) {
+    const garmentLabel = GARMENT_LABELS[data.garmentType] ?? "apparel";
+    return (
+      <div className="mx-auto max-w-2xl rounded-lg border border-primary/30 bg-primary/5 p-10 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary">
+          <Check className="h-8 w-8 text-primary-foreground" />
+        </div>
+        <h3 className="mt-6 font-heading text-2xl font-bold text-foreground">
+          QUOTE REQUEST RECEIVED!
+        </h3>
+        <p className="mt-3 text-muted-foreground">
+          Thanks, {data.name}! We'll review your {garmentLabel} request and send
+          you a detailed quote within one business day.
+        </p>
+        <Button
+          className="mt-8"
+          variant="outline"
+          onClick={() => {
+            setSubmitted(false);
+            setStep(0);
+            setData(initialData);
+          }}
+        >
+          Submit Another Request
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-2xl">
+      {/* Progress bar */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          {STEPS.map((label, i) => (
+            <div key={i} className="flex flex-1 flex-col items-center">
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                  i < step
+                    ? "bg-primary text-primary-foreground"
+                    : i === step
+                    ? "border-2 border-primary bg-primary/20 text-primary"
+                    : "border border-border bg-secondary text-muted-foreground"
+                }`}
+              >
+                {i < step ? <Check className="h-4 w-4" /> : i + 1}
+              </div>
+              <span
+                className={`mt-1.5 hidden text-[10px] font-medium sm:block ${
+                  i <= step ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+          <div
+            className="h-full rounded-full bg-primary transition-all duration-300"
+            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Step content */}
+      <div className="rounded-lg border border-border bg-card p-6 md:p-8">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.25 }}
+          >
+            {/* Step 0: Intent */}
+            {step === 0 && (
+              <div>
+                <h3 className="font-heading text-xl font-bold text-foreground">
+                  WHAT ARE THESE FOR?
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  This helps us recommend the right decoration and garment for
+                  your needs.
+                </p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <OptionCard
+                    label="Work & Crew Gear"
+                    description="Uniforms, jobsite shirts, company polos — durable, professional, and reorderable."
+                    selected={data.intent === "work"}
+                    onClick={() => update({ intent: "work" })}
+                  />
+                  <OptionCard
+                    label="Team & Club"
+                    description="Sports teams, school groups, clubs — matching gear for the whole group."
+                    selected={data.intent === "team"}
+                    onClick={() => update({ intent: "team" })}
+                  />
+                  <OptionCard
+                    label="Event & Celebration"
+                    description="Races, reunions, tournaments — commemorating something that matters."
+                    selected={data.intent === "event"}
+                    onClick={() => update({ intent: "event" })}
+                  />
+                  <OptionCard
+                    label="Brand & Promo"
+                    description="Representing your business, client gifts, trade show swag."
+                    selected={data.intent === "brand"}
+                    onClick={() => update({ intent: "brand" })}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 1: Garment Type & Quantity */}
+            {step === 1 && (
+              <div>
+                <h3 className="font-heading text-xl font-bold text-foreground">
+                  WHAT ARE WE DECORATING?
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Choose your garment and quantity. Pricing updates live as you
+                  adjust.
+                </p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <OptionCard
+                    label="T-Shirt"
+                    selected={data.garmentType === "tshirt"}
+                    onClick={() => update({ garmentType: "tshirt" })}
+                  />
+                  <OptionCard
+                    label="Hoodie / Sweatshirt"
+                    selected={data.garmentType === "hoodie"}
+                    onClick={() => update({ garmentType: "hoodie" })}
+                  />
+                  <OptionCard
+                    label="Polo"
+                    selected={data.garmentType === "polo"}
+                    onClick={() => update({ garmentType: "polo" })}
+                  />
+                  <OptionCard
+                    label="Jacket / Soft Shell"
+                    selected={data.garmentType === "jacket"}
+                    onClick={() => update({ garmentType: "jacket" })}
+                  />
+                  <OptionCard
+                    label="Safety Vest / Hi-Vis"
+                    selected={data.garmentType === "safety"}
+                    onClick={() => update({ garmentType: "safety" })}
+                  />
+                  <OptionCard
+                    label="Not Sure Yet"
+                    selected={data.garmentType === "not-sure"}
+                    onClick={() => update({ garmentType: "not-sure" })}
+                  />
+                </div>
+
+                {/* Quantity */}
+                <div className="mt-6">
+                  <Label htmlFor="garment-qty" className="text-foreground">
+                    Quantity
+                  </Label>
+                  <Input
+                    id="garment-qty"
+                    type="number"
+                    min={MIN_QTY}
+                    placeholder="e.g. 48"
+                    value={data.quantity}
+                    onChange={(e) => update({ quantity: e.target.value })}
+                    className="mt-2 max-w-[180px] text-lg"
+                  />
+                  {data.quantity && qty > 0 && qty < MIN_QTY && (
+                    <p className="mt-2 text-sm text-destructive">
+                      Our minimum order is {MIN_QTY} pieces.
+                    </p>
+                  )}
+                  {data.quantity &&
+                    qty >= MIN_QTY &&
+                    qty < SCREEN_PRINT_MIN_QTY && (
+                      <div className="mt-3 flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600" />
+                        <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                          Screen printing requires 72+ pieces. For smaller
+                          quantities we recommend DTF printing — same great look,
+                          no minimums on design complexity.
+                        </p>
+                      </div>
+                    )}
+                </div>
+
+                {/* Live Price Estimate */}
+                {estimate && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6 rounded-lg border border-primary/30 bg-primary/5 p-5"
+                  >
+                    <div className="mb-3 flex items-center gap-2">
+                      <DollarSign className="h-5 w-5 text-primary" />
+                      <span className="font-heading text-sm font-semibold tracking-wider text-primary">
+                        ESTIMATED PRICE
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+                      <div>
+                        <span className="text-2xl font-bold text-foreground">
+                          ${estimate.perPieceLow.toFixed(2)}–$
+                          {estimate.perPieceHigh.toFixed(2)}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {" "}
+                          /piece
+                        </span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {estimate.qty} pieces × ${estimate.perPieceLow.toFixed(2)}–$
+                        {estimate.perPieceHigh.toFixed(2)} = $
+                        {Math.round(estimate.totalLow).toLocaleString()}–$
+                        {Math.round(estimate.totalHigh).toLocaleString()}{" "}
+                        estimated
+                      </div>
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Includes garment + decoration. Final price confirmed within
+                      1 business day.
+                    </p>
+                    {estimate.showEmbroideryNote && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee may
+                        apply for new logos.
+                      </p>
+                    )}
+
+                    {/* Decoration blurbs */}
+                    <div className="mt-4 space-y-2 border-t border-primary/20 pt-4">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Recommended decoration
+                      </p>
+                      {(estimate.recommendedDecoration === "dtf" ||
+                        estimate.recommendedDecoration ===
+                          "screen-print-or-dtf") && (
+                        <div className="flex items-start gap-2">
+                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                              DTF:
+                            </span>{" "}
+                            Full color, photo-quality prints on any fabric. Great
+                            for complex logos, gradients, and smaller runs.
+                          </p>
+                        </div>
+                      )}
+                      {estimate.recommendedDecoration ===
+                        "screen-print-or-dtf" && (
+                        <div className="flex items-start gap-2">
+                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                              Screen Print:
+                            </span>{" "}
+                            Bold, durable ink — best value for 72+ pieces of the
+                            same design. The more you order, the better the
+                            price.
+                          </p>
+                        </div>
+                      )}
+                      {estimate.showEmbroideryNote && (
+                        <div className="flex items-start gap-2">
+                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                              Embroidery:
+                            </span>{" "}
+                            Classic, premium look for polos, jackets, and
+                            workwear. Priced at a flat rate — simple designs come
+                            in under, complex ones over.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            )}
+
+            {/* Step 2: Event Date / Timeline */}
+            {step === 2 && (
+              <div>
+                <h3 className="font-heading text-xl font-bold text-foreground">
+                  DO YOU HAVE A HARD DEADLINE?
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Rush orders are available — we just want to make sure we can
+                  deliver on time.
+                </p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <OptionCard
+                    label="Yes, I have a date"
+                    description="I need these by a specific date."
+                    selected={data.timeline === "specific-date"}
+                    onClick={() => update({ timeline: "specific-date" })}
+                  />
+                  <OptionCard
+                    label="No firm deadline — flexible"
+                    description="No rush, work me into the schedule."
+                    selected={data.timeline === "flexible"}
+                    onClick={() => update({ timeline: "flexible" })}
+                  />
+                  <OptionCard
+                    label="Standard (2–3 Weeks)"
+                    description="Normal production from artwork approval."
+                    selected={data.timeline === "standard"}
+                    onClick={() => update({ timeline: "standard" })}
+                  />
+                  <OptionCard
+                    label="Rush (1–2 Weeks)"
+                    description="Expedited production, rush fee applies."
+                    selected={data.timeline === "rush"}
+                    onClick={() => update({ timeline: "rush" })}
+                  />
+                </div>
+                {data.timeline === "specific-date" && (
+                  <div className="mt-4">
+                    <Label htmlFor="event-date" className="text-foreground">
+                      Event / Need-by Date
+                    </Label>
+                    <Input
+                      id="event-date"
+                      type="date"
+                      value={data.eventDate}
+                      onChange={(e) => update({ eventDate: e.target.value })}
+                      className="mt-2 max-w-[220px]"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 3: Artwork */}
+            {step === 3 && (
+              <div>
+                <h3 className="font-heading text-xl font-bold text-foreground">
+                  UPLOAD YOUR ARTWORK
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Have your logo ready? Upload it here. We accept AI, EPS, SVG,
+                  PDF, PNG, or JPG.
+                </p>
+
+                <div className="mt-6">
+                  {data.artworkFile ? (
+                    <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 p-4">
+                      <div className="flex items-center gap-3">
+                        <Upload className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {data.artworkFile.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {(data.artworkFile.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => update({ artworkFile: null })}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-secondary/30 p-10 transition-colors hover:border-primary/50 hover:bg-secondary/50">
+                      <Upload className="h-8 w-8 text-muted-foreground" />
+                      <span className="mt-3 text-sm font-medium text-foreground">
+                        Click to upload artwork
+                      </span>
+                      <span className="mt-1 text-xs text-muted-foreground">
+                        AI, EPS, SVG, PDF, PNG, or JPG (max 20MB)
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".ai,.eps,.svg,.pdf,.png,.jpg,.jpeg"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          update({ artworkFile: file });
+                        }}
+                      />
+                    </label>
+                  )}
+                </div>
+
+                {/* Artwork notice */}
+                <div className="mt-4 flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600" />
+                  <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                    <span className="font-semibold">A note on artwork:</span>{" "}
+                    AI-generated images and low-resolution files often require
+                    cleanup or recreation. We'll let you know if an art
+                    preparation fee applies before we start — no surprises.
+                  </p>
+                </div>
+
+                <div className="mt-6">
+                  <Label htmlFor="artwork-notes" className="text-foreground">
+                    Artwork Notes (optional)
+                  </Label>
+                  <Textarea
+                    id="artwork-notes"
+                    placeholder="Describe your design, colors, text, or any special instructions..."
+                    value={data.artworkNotes}
+                    onChange={(e) => update({ artworkNotes: e.target.value })}
+                    className="mt-2"
+                    rows={3}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Contact */}
+            {step === 4 && (
+              <div>
+                <h3 className="font-heading text-xl font-bold text-foreground">
+                  YOUR CONTACT INFO
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Almost done! Tell us how to reach you and we'll send your
+                  custom quote.
+                </p>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
+                    <Label htmlFor="name" className="text-foreground">
+                      Full Name *
+                    </Label>
+                    <Input
+                      id="name"
+                      placeholder="John Smith"
+                      value={data.name}
+                      onChange={(e) => update({ name: e.target.value })}
+                      className="mt-2"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-foreground">
+                      Email *
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="john@company.com"
+                      value={data.email}
+                      onChange={(e) => update({ email: e.target.value })}
+                      className="mt-2"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="text-foreground">
+                      Phone *
+                    </Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="(208) 555-1234"
+                      value={data.phone}
+                      onChange={(e) => update({ phone: e.target.value })}
+                      className="mt-2"
+                      required
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Label htmlFor="company" className="text-foreground">
+                      Company / Organization
+                      {data.intent === "brand" ? (
+                        <span className="ml-1 text-xs text-primary">
+                          * (required for business orders)
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </Label>
+                    <Input
+                      id="company"
+                      placeholder={
+                        data.intent === "brand"
+                          ? "Your business name"
+                          : "Your business name (optional)"
+                      }
+                      value={data.company}
+                      onChange={(e) => update({ company: e.target.value })}
+                      className="mt-2"
+                      required={data.intent === "brand"}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Label htmlFor="notes" className="text-foreground">
+                      Anything Else?
+                    </Label>
+                    <Textarea
+                      id="notes"
+                      placeholder="Special requests, questions, or anything we should know..."
+                      value={data.notes}
+                      onChange={(e) => update({ notes: e.target.value })}
+                      className="mt-2"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation */}
+        <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
+          <Button
+            variant="ghost"
+            onClick={prev}
+            disabled={step === 0}
+            className="font-heading tracking-wide"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+
+          {step < STEPS.length - 1 ? (
+            <Button
+              onClick={next}
+              disabled={!canAdvance()}
+              className="font-heading tracking-wide"
+            >
+              Next
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={!canAdvance() || submitting}
+              className="font-heading tracking-wide"
+            >
+              {submitting ? "Submitting..." : "Submit Quote Request"}
+              {!submitting && <Check className="ml-2 h-4 w-4" />}
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GarmentQuoteBuilder;
