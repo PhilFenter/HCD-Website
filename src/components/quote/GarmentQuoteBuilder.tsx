@@ -21,20 +21,47 @@ import OptionCard from "./OptionCard";
 const MIN_QTY = 12;
 const SCREEN_PRINT_MIN_QTY = 72;
 
+// Brand tier structure used by all tiered garments
+interface BrandTier {
+  value: string;
+  label: string;
+  desc: string;
+  priceLow: number;
+  priceHigh: number;
+}
+
+// Per-garment tier definitions (all-in per-piece prices including decoration for polos)
+const GARMENT_TIERS: Record<string, BrandTier[]> = {
+  tshirt: [
+    { value: "budget", label: "Budget", desc: "Gildan G5000, Jerzees 29M — everyday basics.", priceLow: 8, priceHigh: 10 },
+    { value: "mid-range", label: "Mid-Range", desc: "Next Level 6210, Bella Canvas 3001 — softer, modern fit.", priceLow: 10, priceHigh: 15 },
+    { value: "premium", label: "Premium", desc: "Next Level 6010, District Perfect Tri, Comfort Colors — premium feel.", priceLow: 15, priceHigh: 20 },
+  ],
+  hoodie: [
+    { value: "budget", label: "Budget", desc: "Gildan, Jerzees — reliable, affordable.", priceLow: 28, priceHigh: 34 },
+    { value: "mid-range", label: "Mid-Range", desc: "Bella Canvas, Next Level — softer, modern cut.", priceLow: 35, priceHigh: 38 },
+    { value: "premium", label: "Premium", desc: "Comfort Colors, Independent Trading — heavyweight, premium.", priceLow: 39, priceHigh: 48 },
+  ],
+  polo: [
+    { value: "budget", label: "Budget", desc: "Port & Company — reliable, affordable basics.", priceLow: 35, priceHigh: 55 },
+    { value: "mid-range", label: "Mid-Range", desc: "Sport-Tek, Ogio — moisture-wicking, modern fit.", priceLow: 55, priceHigh: 75 },
+    { value: "premium", label: "Premium", desc: "Nike, Under Armour — top-tier brand recognition.", priceLow: 75, priceHigh: 125 },
+  ],
+  jacket: [
+    { value: "budget", label: "Budget", desc: "Port Authority, Harriton — solid workwear staples.", priceLow: 45, priceHigh: 65 },
+    { value: "mid-range", label: "Mid-Range", desc: "Eddie Bauer, The North Face — modern, professional.", priceLow: 65, priceHigh: 85 },
+    { value: "premium", label: "Premium", desc: "Patagonia, Arc'teryx — top-tier outdoor brands.", priceLow: 85, priceHigh: 125 },
+  ],
+};
+
+// Garments that use tier selection
+const TIERED_GARMENTS = new Set(Object.keys(GARMENT_TIERS));
+
+// Fallback base costs for non-tiered garments
 const GARMENT_BASE_COSTS: Record<string, number> = {
-  tshirt: 5,
-  hoodie: 18,
-  jacket: 38,
   safety: 15,
   "not-sure": 10,
 };
-
-// Polo brand tiers — all-in per-piece prices (garment + embroidery, 1 location)
-const POLO_TIERS: { value: string; label: string; desc: string; priceLow: number; priceHigh: number }[] = [
-  { value: "budget", label: "Budget", desc: "Port & Company — reliable, affordable basics.", priceLow: 35, priceHigh: 55 },
-  { value: "mid-range", label: "Mid-Range", desc: "Sport-Tek, Ogio — moisture-wicking, modern fit.", priceLow: 55, priceHigh: 75 },
-  { value: "premium", label: "Premium", desc: "Nike, Under Armour — top-tier brand recognition.", priceLow: 75, priceHigh: 125 },
-];
 
 const GARMENT_MARKUP = 2; // 200% = cost × 2
 
@@ -138,7 +165,8 @@ function calcEstimate(
   embroideryLocationCount: number = 1
 ): PriceEstimate | null {
   if (!garmentType || qty < MIN_QTY) return null;
-  if (garmentType === "polo" && !poloTier) return null;
+  const isTiered = TIERED_GARMENTS.has(garmentType);
+  if (isTiered && !poloTier) return null;
 
   const qtyDiscount = getQtyDiscount(qty);
   const multiplier = 1 - qtyDiscount;
@@ -146,22 +174,29 @@ function calcEstimate(
   let garmentPriceLow: number;
   let garmentPriceHigh: number;
 
-  if (garmentType === "polo") {
-    const tier = POLO_TIERS.find((t) => t.value === poloTier);
-    // Polo tiers are all-in (garment + 1 location embroidery)
-    const baseLow = tier?.priceLow ?? 55;
-    const baseHigh = tier?.priceHigh ?? 75;
-    // Extra locations add embroidery cost
-    const extraLocs = Math.max(0, embroideryLocationCount - 1);
-    const extraCostLow = extraLocs * EMBROIDERY_RANGE.low;
-    const extraCostHigh = extraLocs * EMBROIDERY_RANGE.high;
-    garmentPriceLow = (baseLow + extraCostLow) * multiplier;
-    garmentPriceHigh = (baseHigh + extraCostHigh) * multiplier;
+  if (isTiered) {
+    const tiers = GARMENT_TIERS[garmentType];
+    const tier = tiers?.find((t) => t.value === poloTier);
+    const baseLow = tier?.priceLow ?? 10;
+    const baseHigh = tier?.priceHigh ?? 20;
+
+    if (garmentType === "polo") {
+      // Polo tiers are all-in (garment + 1 location embroidery)
+      const extraLocs = Math.max(0, embroideryLocationCount - 1);
+      const extraCostLow = extraLocs * EMBROIDERY_RANGE.low;
+      const extraCostHigh = extraLocs * EMBROIDERY_RANGE.high;
+      garmentPriceLow = (baseLow + extraCostLow) * multiplier;
+      garmentPriceHigh = (baseHigh + extraCostHigh) * multiplier;
+    } else {
+      // Non-polo tiered garments: tier is garment-only price, decoration added separately
+      garmentPriceLow = baseLow * multiplier;
+      garmentPriceHigh = baseHigh * multiplier;
+    }
   } else {
     const baseCost = GARMENT_BASE_COSTS[garmentType] ?? 10;
     const garmentBase = baseCost * GARMENT_MARKUP;
-    garmentPriceLow = garmentBase;
-    garmentPriceHigh = garmentBase;
+    garmentPriceLow = garmentBase * multiplier;
+    garmentPriceHigh = garmentBase * multiplier;
   }
 
   const rec = getRecommendedDecoration(garmentType, intent, qty);
@@ -193,10 +228,6 @@ function calcEstimate(
     if (showEmbroideryNote && rec !== "embroidery") {
       decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
     }
-
-    // Apply quantity discount to non-polo garment + decoration
-    garmentPriceLow *= multiplier;
-    garmentPriceHigh *= multiplier;
   }
 
   const perPieceLow = garmentPriceLow + decorationLow;
@@ -327,9 +358,11 @@ const GarmentQuoteBuilder = () => {
     switch (key) {
       case "Intent":
         return !!data.intent;
-      case "Garment":
-        if (isPolo) return !!data.garmentType && !!data.poloTier && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
-        return !!data.garmentType && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
+      case "Garment": {
+        const needsTier = TIERED_GARMENTS.has(data.garmentType);
+        const tierOk = !needsTier || !!data.poloTier;
+        return !!data.garmentType && tierOk && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
+      }
       case "Print Details":
         // Optional — user can skip if they want DTF instead
         return true;
@@ -480,21 +513,23 @@ const GarmentQuoteBuilder = () => {
                 <h3 className="font-heading text-xl font-bold text-foreground">WHAT ARE WE DECORATING?</h3>
                 <p className="mt-2 text-sm text-muted-foreground">Choose your garment and quantity. Pricing updates live as you adjust.</p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <OptionCard label="T-Shirt" selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt", poloTier: "" })} />
-                  <OptionCard label="Hoodie / Sweatshirt" selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie", poloTier: "" })} />
-                  <OptionCard label="Polo" description="Embroidery only — choose your brand tier below." selected={data.garmentType === "polo"} onClick={() => update({ garmentType: "polo" })} />
-                  <OptionCard label="Jacket / Soft Shell" selected={data.garmentType === "jacket"} onClick={() => update({ garmentType: "jacket", poloTier: "" })} />
+                  <OptionCard label="T-Shirt" description="Choose your brand tier below." selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt", poloTier: "" })} />
+                  <OptionCard label="Hoodie / Sweatshirt" description="Choose your brand tier below." selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie", poloTier: "" })} />
+                  <OptionCard label="Polo" description="Embroidery only — choose your brand tier below." selected={data.garmentType === "polo"} onClick={() => update({ garmentType: "polo", poloTier: "" })} />
+                  <OptionCard label="Jacket / Soft Shell" description="Choose your brand tier below." selected={data.garmentType === "jacket"} onClick={() => update({ garmentType: "jacket", poloTier: "" })} />
                   <OptionCard label="Safety Vest / Hi-Vis" selected={data.garmentType === "safety"} onClick={() => update({ garmentType: "safety", poloTier: "" })} />
                   <OptionCard label="Not Sure Yet" selected={data.garmentType === "not-sure"} onClick={() => update({ garmentType: "not-sure", poloTier: "" })} />
                 </div>
 
-                {/* Polo Brand Tier Selector */}
-                {isPolo && (
+                {/* Brand Tier Selector — for all tiered garments */}
+                {TIERED_GARMENTS.has(data.garmentType) && (
                   <div className="mt-6">
-                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">POLO BRAND TIER</Label>
-                    <p className="mt-1 text-xs text-muted-foreground">Price includes the polo + embroidery decoration.</p>
+                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">BRAND TIER</Label>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {isPolo ? "Price includes the polo + embroidery decoration." : "Choose your garment quality level. Decoration costs are added on top."}
+                    </p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                      {POLO_TIERS.map((tier) => (
+                      {(GARMENT_TIERS[data.garmentType] ?? []).map((tier) => (
                         <OptionCard
                           key={tier.value}
                           label={`${tier.label} — $${tier.priceLow}–$${tier.priceHigh}`}
@@ -504,9 +539,11 @@ const GarmentQuoteBuilder = () => {
                         />
                       ))}
                     </div>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new embroidery logos.
-                    </p>
+                    {isPolo && (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new embroidery logos.
+                      </p>
+                    )}
                   </div>
                 )}
 
