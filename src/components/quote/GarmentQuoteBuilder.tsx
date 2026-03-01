@@ -130,18 +130,20 @@ function getScreenPrintPrice(qty: number): number | null {
 
 type DecorationMethod = "dtf" | "screen-print" | "screen-print-or-dtf" | "embroidery" | "";
 
-// Auto-determine decoration recommendation based on garment type, intent + qty
-function getRecommendedDecoration(garmentType: string, intent: string, qty: number): DecorationMethod {
-  if (garmentType === "polo") return "embroidery";
+// Determine if a garment+tier combo is embroidery-only
+function isEmbroideryOnly(garmentType: string, brandTier: string): boolean {
+  if (garmentType === "polo") return true;
+  if (garmentType === "jacket") return true;
+  if (garmentType === "hoodie" && brandTier === "premium") return true;
+  return false;
+}
+
+// Auto-determine decoration recommendation based on garment type, tier + qty
+function getRecommendedDecoration(garmentType: string, brandTier: string, qty: number): DecorationMethod {
+  if (isEmbroideryOnly(garmentType, brandTier)) return "embroidery";
   if (qty < SCREEN_PRINT_MIN_QTY) return "dtf";
   if (qty >= SCREEN_PRINT_MIN_QTY) return "screen-print-or-dtf";
   return "dtf";
-}
-
-// Whether embroidery should be mentioned as an option (non-polo garments)
-function shouldShowEmbroideryOption(garmentType: string, intent: string, qty: number): boolean {
-  if (garmentType === "polo") return true; // always for polos
-  return qty >= MIN_QTY && (intent === "work" || intent === "brand");
 }
 
 interface PriceEstimate {
@@ -159,24 +161,25 @@ interface PriceEstimate {
 
 function calcEstimate(
   garmentType: string,
-  intent: string,
   qty: number,
-  poloTier: string,
-  embroideryLocationCount: number = 1
+  brandTier: string,
+  embroideryLocationCount: number = 1,
+  printLocationCount: number = 1
 ): PriceEstimate | null {
   if (!garmentType || qty < MIN_QTY) return null;
   const isTiered = TIERED_GARMENTS.has(garmentType);
-  if (isTiered && !poloTier) return null;
+  if (isTiered && !brandTier) return null;
 
   const qtyDiscount = getQtyDiscount(qty);
   const multiplier = 1 - qtyDiscount;
+  const embOnly = isEmbroideryOnly(garmentType, brandTier);
 
   let garmentPriceLow: number;
   let garmentPriceHigh: number;
 
   if (isTiered) {
     const tiers = GARMENT_TIERS[garmentType];
-    const tier = tiers?.find((t) => t.value === poloTier);
+    const tier = tiers?.find((t) => t.value === brandTier);
     const baseLow = tier?.priceLow ?? 10;
     const baseHigh = tier?.priceHigh ?? 20;
 
@@ -188,7 +191,6 @@ function calcEstimate(
       garmentPriceLow = (baseLow + extraCostLow) * multiplier;
       garmentPriceHigh = (baseHigh + extraCostHigh) * multiplier;
     } else {
-      // Non-polo tiered garments: tier is garment-only price, decoration added separately
       garmentPriceLow = baseLow * multiplier;
       garmentPriceHigh = baseHigh * multiplier;
     }
@@ -199,35 +201,27 @@ function calcEstimate(
     garmentPriceHigh = garmentBase * multiplier;
   }
 
-  const rec = getRecommendedDecoration(garmentType, intent, qty);
-  const showEmbroideryNote = shouldShowEmbroideryOption(garmentType, intent, qty);
+  const rec = getRecommendedDecoration(garmentType, brandTier, qty);
 
   let decorationLow: number;
   let decorationHigh: number;
 
   if (garmentType === "polo") {
-    // Decoration is already included in polo tier pricing
     decorationLow = 0;
     decorationHigh = 0;
-  } else {
+  } else if (embOnly) {
     const locCount = Math.max(1, embroideryLocationCount);
-    if (rec === "embroidery") {
-      decorationLow = EMBROIDERY_RANGE.low * locCount * multiplier;
-      decorationHigh = EMBROIDERY_RANGE.high * locCount * multiplier;
-    } else if (rec === "screen-print-or-dtf") {
-      const sp = getScreenPrintPrice(qty);
-      const dtf = getDtfPrice(qty);
-      decorationLow = Math.min(sp ?? dtf, dtf);
-      decorationHigh = Math.max(sp ?? dtf, dtf);
-    } else {
-      const dtf = getDtfPrice(qty);
-      decorationLow = dtf;
-      decorationHigh = dtf;
-    }
-
-    if (showEmbroideryNote && rec !== "embroidery") {
-      decorationHigh = Math.max(decorationHigh, EMBROIDERY_RANGE.high);
-    }
+    decorationLow = EMBROIDERY_RANGE.low * locCount * multiplier;
+    decorationHigh = EMBROIDERY_RANGE.high * locCount * multiplier;
+  } else if (rec === "screen-print-or-dtf") {
+    const sp = getScreenPrintPrice(qty);
+    const dtf = getDtfPrice(qty);
+    decorationLow = Math.min(sp ?? dtf, dtf);
+    decorationHigh = Math.max(sp ?? dtf, dtf);
+  } else {
+    const dtf = getDtfPrice(qty);
+    decorationLow = dtf;
+    decorationHigh = dtf;
   }
 
   const perPieceLow = garmentPriceLow + decorationLow;
@@ -243,7 +237,7 @@ function calcEstimate(
     totalHigh: perPieceHigh * qty,
     recommendedDecoration: rec,
     qty,
-    showEmbroideryNote,
+    showEmbroideryNote: embOnly,
   };
 }
 
@@ -309,15 +303,17 @@ const GarmentQuoteBuilder = () => {
   const qty = Number(data.quantity) || 0;
   const isPolo = data.garmentType === "polo";
   const embLocCount = data.embroideryLocations.length;
+  const printLocCount = data.printLocations.length;
+  const embOnly = isEmbroideryOnly(data.garmentType, data.poloTier);
   const estimate = useMemo(
-    () => calcEstimate(data.garmentType, data.intent, qty, data.poloTier, embLocCount),
-    [data.garmentType, data.intent, qty, data.poloTier, embLocCount]
+    () => calcEstimate(data.garmentType, qty, data.poloTier, embLocCount, printLocCount),
+    [data.garmentType, qty, data.poloTier, embLocCount, printLocCount]
   );
 
   // Auto-determine if screen print details step should appear
-  // Polos are embroidery-only, so never show print details for them
-  const showScreenPrintDetails = !isPolo && qty >= SCREEN_PRINT_MIN_QTY;
-  // Embroidery locations are now embedded in the Garment step for all types
+  // Embroidery-only garments never show print details
+  const showScreenPrintDetails = !embOnly && qty >= SCREEN_PRINT_MIN_QTY;
+  // Embroidery/print locations are now embedded in the Garment step
   const showEmbroideryDetails = false;
 
   // Build dynamic steps array
@@ -361,7 +357,10 @@ const GarmentQuoteBuilder = () => {
       case "Garment": {
         const needsTier = TIERED_GARMENTS.has(data.garmentType);
         const tierOk = !needsTier || !!data.poloTier;
-        return !!data.garmentType && tierOk && !!data.quantity && qty >= MIN_QTY && data.embroideryLocations.length > 0;
+        const locOk = embOnly
+          ? data.embroideryLocations.length > 0
+          : data.printLocations.length > 0;
+        return !!data.garmentType && tierOk && !!data.quantity && qty >= MIN_QTY && locOk;
       }
       case "Print Details":
         // Optional — user can skip if they want DTF instead
@@ -513,12 +512,12 @@ const GarmentQuoteBuilder = () => {
                 <h3 className="font-heading text-xl font-bold text-foreground">WHAT ARE WE DECORATING?</h3>
                 <p className="mt-2 text-sm text-muted-foreground">Choose your garment and quantity. Pricing updates live as you adjust.</p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <OptionCard label="T-Shirt" description="Choose your brand tier below." selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt", poloTier: "" })} />
-                  <OptionCard label="Hoodie / Sweatshirt" description="Choose your brand tier below." selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie", poloTier: "" })} />
-                  <OptionCard label="Polo" description="Embroidery only — choose your brand tier below." selected={data.garmentType === "polo"} onClick={() => update({ garmentType: "polo", poloTier: "" })} />
-                  <OptionCard label="Jacket / Soft Shell" description="Choose your brand tier below." selected={data.garmentType === "jacket"} onClick={() => update({ garmentType: "jacket", poloTier: "" })} />
-                  <OptionCard label="Safety Vest / Hi-Vis" selected={data.garmentType === "safety"} onClick={() => update({ garmentType: "safety", poloTier: "" })} />
-                  <OptionCard label="Not Sure Yet" selected={data.garmentType === "not-sure"} onClick={() => update({ garmentType: "not-sure", poloTier: "" })} />
+                  <OptionCard label="T-Shirt" description="Choose your brand tier below." selected={data.garmentType === "tshirt"} onClick={() => update({ garmentType: "tshirt", poloTier: "", embroideryLocations: [], printLocations: [] })} />
+                  <OptionCard label="Hoodie / Sweatshirt" description="Choose your brand tier below." selected={data.garmentType === "hoodie"} onClick={() => update({ garmentType: "hoodie", poloTier: "", embroideryLocations: [], printLocations: [] })} />
+                  <OptionCard label="Polo" description="Embroidery only — choose your brand tier below." selected={data.garmentType === "polo"} onClick={() => update({ garmentType: "polo", poloTier: "", embroideryLocations: [], printLocations: [] })} />
+                  <OptionCard label="Jacket / Soft Shell" description="Embroidery only — choose your brand tier below." selected={data.garmentType === "jacket"} onClick={() => update({ garmentType: "jacket", poloTier: "", embroideryLocations: [], printLocations: [] })} />
+                  <OptionCard label="Safety Vest / Hi-Vis" selected={data.garmentType === "safety"} onClick={() => update({ garmentType: "safety", poloTier: "", embroideryLocations: [], printLocations: [] })} />
+                  <OptionCard label="Not Sure Yet" selected={data.garmentType === "not-sure"} onClick={() => update({ garmentType: "not-sure", poloTier: "", embroideryLocations: [], printLocations: [] })} />
                 </div>
 
                 {/* Brand Tier Selector — for all tiered garments */}
@@ -526,7 +525,10 @@ const GarmentQuoteBuilder = () => {
                   <div className="mt-6">
                     <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">BRAND TIER</Label>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {isPolo ? "Price includes the polo + embroidery decoration." : "Choose your garment quality level. Decoration costs are added on top."}
+                      {isPolo ? "Price includes the polo + embroidery decoration." 
+                        : data.garmentType === "jacket" ? "Embroidery only. Decoration costs are added on top."
+                        : data.garmentType === "hoodie" ? "Budget & Mid-Range: DTF/screen print. Premium: embroidery only (DWR-coated fabrics)."
+                        : "Choose your garment quality level. Decoration costs are added on top."}
                     </p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-3">
                       {(GARMENT_TIERS[data.garmentType] ?? []).map((tier) => (
@@ -535,11 +537,11 @@ const GarmentQuoteBuilder = () => {
                           label={`${tier.label} — $${tier.priceLow}–$${tier.priceHigh}`}
                           description={tier.desc}
                           selected={data.poloTier === tier.value}
-                          onClick={() => update({ poloTier: tier.value })}
+                          onClick={() => update({ poloTier: tier.value, embroideryLocations: [], printLocations: [] })}
                         />
                       ))}
                     </div>
-                    {isPolo && (
+                    {isEmbroideryOnly(data.garmentType, data.poloTier) && (
                       <p className="mt-2 text-xs text-muted-foreground">
                         One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new embroidery logos.
                       </p>
@@ -555,8 +557,8 @@ const GarmentQuoteBuilder = () => {
                   )}
                 </div>
 
-                {/* Embroidery Locations — all garments (before estimate so locations affect pricing) */}
-                {qty >= MIN_QTY && (
+                {/* Decoration Locations — embroidery or print depending on garment/tier */}
+                {qty >= MIN_QTY && data.poloTier && embOnly && (
                   <div className="mt-6">
                     <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">EMBROIDERY LOCATIONS</Label>
                     <p className="mt-1 text-xs text-muted-foreground">Select where you'd like embroidery. Each location affects per-piece pricing.</p>
@@ -581,6 +583,26 @@ const GarmentQuoteBuilder = () => {
                           Full back embroidery is a large-format piece that requires custom pricing. We'll include a detailed quote for this location.
                         </p>
                       </div>
+                    )}
+                  </div>
+                )}
+
+                {qty >= MIN_QTY && !embOnly && (
+                  <div className="mt-6">
+                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">DECORATION LOCATIONS</Label>
+                    <p className="mt-1 text-xs text-muted-foreground">Select where you'd like your design printed (DTF or screen print).</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {SCREEN_PRINT_LOCATIONS.map((loc) => (
+                        <OptionCard
+                          key={loc}
+                          label={loc}
+                          selected={data.printLocations.includes(loc)}
+                          onClick={() => togglePrintLocation(loc)}
+                        />
+                      ))}
+                    </div>
+                    {data.printLocations.length > 0 && (
+                      <p className="mt-3 text-sm text-muted-foreground">{data.printLocations.length} location{data.printLocations.length !== 1 ? "s" : ""} selected</p>
                     )}
                   </div>
                 )}
