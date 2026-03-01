@@ -7,13 +7,16 @@ import HatQuoteBuilder from "@/components/quote/HatQuoteBuilder";
 import EmbroideryQuoteBuilder from "@/components/quote/EmbroideryQuoteBuilder";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import DTFQuoteBuilder from "@/components/quote/DTFQuoteBuilder";
+import GarmentQuoteBuilder from "@/components/quote/GarmentQuoteBuilder";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceEmbroidery from "@/assets/gallery-embroidery-machine.jpg";
 import serviceScreenprint from "@/assets/gallery-screenprint-press.jpg";
 import serviceDtf from "@/assets/gallery-dtf-primal.jpg";
+// TODO: swap placeholder image for garment hero image
+import serviceGarments from "@/assets/gallery-screenprint-shirt.jpg";
 
-type ServiceKey = "hats" | "embroidery" | "screen-printing" | "dtf";
+type ServiceKey = "hats" | "embroidery" | "screen-printing" | "dtf" | "garments";
 
 const services: {
   key: ServiceKey;
@@ -50,6 +53,13 @@ const services: {
     image: serviceDtf,
     minimum: "No minimum on sheets",
   },
+  {
+    key: "garments",
+    title: "Custom Apparel & Garments",
+    subtitle: "T-shirts, hoodies, polos, jackets & safety gear",
+    image: serviceGarments,
+    minimum: "12 piece minimum",
+  },
 ];
 
 const builderMap: Record<ServiceKey, React.ReactNode> = {
@@ -57,6 +67,7 @@ const builderMap: Record<ServiceKey, React.ReactNode> = {
   embroidery: <EmbroideryQuoteBuilder />,
   "screen-printing": <ScreenPrintQuoteBuilder />,
   dtf: <DTFQuoteBuilder />,
+  garments: <GarmentQuoteBuilder />,
 };
 
 const Quote = () => {
