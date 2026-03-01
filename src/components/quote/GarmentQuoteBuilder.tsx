@@ -16,6 +16,7 @@ import {
   Info,
 } from "lucide-react";
 import OptionCard from "./OptionCard";
+import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
 
 // ── Pricing ────────────────────────────────────────────
 const MIN_QTY = 12;
@@ -254,6 +255,7 @@ interface GarmentQuoteData {
   eventDate: string;
   artworkFile: File | null;
   artworkNotes: string;
+  artworkRights: boolean;
   name: string;
   email: string;
   phone: string;
@@ -273,6 +275,7 @@ const initialData: GarmentQuoteData = {
   eventDate: "",
   artworkFile: null,
   artworkNotes: "",
+  artworkRights: false,
   name: "",
   email: "",
   phone: "",
@@ -807,6 +810,7 @@ const GarmentQuoteBuilder = () => {
                     <span className="font-semibold">A note on artwork:</span> AI-generated images and low-resolution files often require cleanup or recreation. We'll let you know if an art preparation fee applies before we start — no surprises.
                   </p>
                 </div>
+                <ArtworkRightsCheckbox checked={data.artworkRights} onCheckedChange={(val) => update({ artworkRights: val })} />
                 <div className="mt-6">
                   <Label htmlFor="artwork-notes" className="text-foreground">Artwork Notes (optional)</Label>
                   <Textarea id="artwork-notes" placeholder="Describe your design, colors, text, or any special instructions..." value={data.artworkNotes} onChange={(e) => update({ artworkNotes: e.target.value })} className="mt-2" rows={3} />
