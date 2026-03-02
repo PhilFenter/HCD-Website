@@ -27,9 +27,18 @@ export interface QuoteSubmission {
  * Creates a customer, quote, and action item automatically.
  */
 export async function submitQuoteRequest(submission: QuoteSubmission) {
+  // Map frontend field names to what the edge function expects
+  const payload = {
+    ...submission,
+    customer_name: submission.name,
+    customer_email: submission.email,
+    customer_phone: submission.phone,
+    customer_company: submission.company,
+  };
+
   const { data, error } = await supabase.functions.invoke(
     "create-quote-action-item",
-    { body: submission }
+    { body: payload }
   );
 
   if (error) throw error;
