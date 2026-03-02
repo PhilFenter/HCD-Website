@@ -19,6 +19,7 @@ const services: {
   subtitle: string;
   image: string;
   minimum: string;
+  imagePosition?: string;
 }[] = [
   {
     key: "hats",
@@ -33,6 +34,7 @@ const services: {
     subtitle: "T-shirts, hoodies, polos, jackets & safety gear — screen print, DTF, or embroidery",
     image: serviceGarments,
     minimum: "12 piece minimum",
+    imagePosition: "object-bottom",
   },
   {
     key: "dtf",
@@ -92,7 +94,7 @@ const Quote = () => {
                         <img
                           src={svc.image}
                           alt={svc.title}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${svc.imagePosition || ""}`}
                         />
                       </div>
                       <div className="p-5">
