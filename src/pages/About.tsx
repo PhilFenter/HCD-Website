@@ -90,7 +90,7 @@ const About = () => {
                 it.
               </p>
               <Button asChild className="mt-8">
-                <Link to="/custom-hats#quote">
+                <Link to="/quote">
                   Start Your Project
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
