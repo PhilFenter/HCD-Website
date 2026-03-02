@@ -75,7 +75,7 @@ const Quote = () => {
                     REQUEST A FREE QUOTE
                   </h1>
                   <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                    Pick what you're looking for and we'll walk you through it — quick, easy, no pressure. You'll have a quote in your inbox within one business day.
+                    Answer a few quick questions and we'll give you a ballpark estimate right here — so you can see if we're a good fit before we even get on the phone. Your final quote lands in your inbox within one business day.
                   </p>
                 </div>
 
