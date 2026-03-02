@@ -31,6 +31,18 @@ const milestones = [
     desc: "Installed our ROQ P-14XL — a 10-color, 14-platen automatic press. Combined with dual Stampinators, we deliver matte and soft-hand finishes that feel as good as they look.",
   },
   {
+    year: "2023",
+    icon: Sparkles,
+    title: "DTF Begins — Epson F2100",
+    desc: "Started our DTF journey with the Epson F2100. Learned the craft, dialed in our processes, and began serving local businesses with full-color transfers.",
+  },
+  {
+    year: "2024",
+    icon: Sparkles,
+    title: "Mimaki TXF-150",
+    desc: "Upgraded to the Mimaki TXF-150 in August — industrial-grade DTF quality with faster speeds, sharper detail, and the reliability to take on bigger orders.",
+  },
+  {
     year: "2025",
     icon: Cpu,
     title: "UV Flatbed Printing",
@@ -39,8 +51,8 @@ const milestones = [
   {
     year: "2025",
     icon: Sparkles,
-    title: "DTF Transfers",
-    desc: "Our latest addition: the Super Gamut Hydra — a 6-head, 9-color expanded gamut DTF printer. Brand-accurate color on any fabric, with 24–48 hour turnaround.",
+    title: "Super Gamut Hydra",
+    desc: "Our flagship DTF machine — a 6-head, 9-color expanded gamut printer. Brand-accurate color on any fabric, with 24–48 hour turnaround. The culmination of our DTF evolution.",
   },
 ];
 
