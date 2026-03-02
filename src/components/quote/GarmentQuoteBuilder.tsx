@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import OptionCard from "./OptionCard";
 import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 // ── Pricing ────────────────────────────────────────────
 const MIN_QTY = 12;
@@ -835,10 +837,29 @@ const GarmentQuoteBuilder = () => {
                   <OptionCard label="Rush (1–2 Weeks)" description="Expedited production, rush fee applies." selected={data.timeline === "rush"} onClick={() => update({ timeline: "rush" })} />
                 </div>
                 {data.timeline === "specific-date" && (
-                  <div className="mt-4">
-                    <Label htmlFor="event-date" className="text-foreground">Event / Need-by Date</Label>
-                    <Input id="event-date" type="date" value={data.eventDate} onChange={(e) => update({ eventDate: e.target.value })} className="mt-2 max-w-[220px]" />
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="mt-4 overflow-hidden"
+                  >
+                    <Label className="text-foreground">Event / Need-by Date</Label>
+                    <div className="mt-2 inline-block rounded-lg border border-border bg-card">
+                      <Calendar
+                        mode="single"
+                        selected={data.eventDate ? new Date(data.eventDate + "T00:00:00") : undefined}
+                        onSelect={(date) => update({ eventDate: date ? format(date, "yyyy-MM-dd") : "" })}
+                        disabled={(date) => date < new Date()}
+                        className="pointer-events-auto"
+                      />
+                    </div>
+                    {data.eventDate && (
+                      <p className="mt-2 text-sm font-medium text-primary">
+                        Selected: {format(new Date(data.eventDate + "T00:00:00"), "MMMM d, yyyy")}
+                      </p>
+                    )}
+                  </motion.div>
                 )}
               </div>
             )}
