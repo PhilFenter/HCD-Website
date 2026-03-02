@@ -65,11 +65,11 @@ const Header = () => {
         {/* Desktop CTA */}
         <div className="hidden items-center gap-4 lg:flex">
           <a
-            href="tel:+12083057498"
+            href="tel:+12087486242"
             className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <Phone className="h-4 w-4" />
-            (208) 305-7498
+            (208) 748-6242
           </a>
           <Button onClick={handleQuoteClick}>
             Get a Free Quote
@@ -106,11 +106,11 @@ const Header = () => {
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-4">
               <a
-                href="tel:+12083057498"
+                href="tel:+12087486242"
                 className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground"
               >
                 <Phone className="h-4 w-4" />
-                (208) 305-7498
+                (208) 748-6242
               </a>
               <Button className="mx-4" onClick={handleQuoteClick}>
                 Get a Free Quote

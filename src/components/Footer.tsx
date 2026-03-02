@@ -62,9 +62,9 @@ const Footer = () => {
               CONTACT
             </h5>
             <div className="mt-3 flex flex-col gap-3">
-              <a href="tel:+12083057498" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="tel:+12087486242" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Phone className="h-4 w-4 shrink-0" />
-                (208) 305-7498
+                (208) 748-6242
               </a>
               <a href="mailto:info@hellscanyondesigns.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="h-4 w-4 shrink-0" />
