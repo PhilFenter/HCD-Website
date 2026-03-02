@@ -85,9 +85,8 @@ const GARMENT_TIERS: Record<string, BrandTier[]> = {
     { value: "premium", label: "Premium", desc: "Comfort Colors, Independent Trading — heavyweight, premium.", priceLow: 39, priceHigh: 48 },
   ],
   polo: [
-    { value: "budget", label: "Budget", desc: "Port & Company — reliable, affordable basics.", priceLow: 35, priceHigh: 55 },
-    { value: "mid-range", label: "Mid-Range", desc: "Sport-Tek, Ogio — moisture-wicking, modern fit.", priceLow: 55, priceHigh: 75 },
-    { value: "premium", label: "Premium", desc: "Nike, Under Armour — top-tier brand recognition.", priceLow: 75, priceHigh: 125 },
+    { value: "standard", label: "Standard", desc: "Port Authority, Sport-Tek — reliable, moisture-wicking polos.", priceLow: 33, priceHigh: 52 },
+    { value: "premium", label: "Premium", desc: "Nike Dri-FIT — top-tier brand recognition & performance.", priceLow: 90, priceHigh: 99 },
   ],
   jacket: [
     { value: "budget", label: "Budget", desc: "Port Authority, Harriton — solid workwear staples.", priceLow: 45, priceHigh: 65 },
