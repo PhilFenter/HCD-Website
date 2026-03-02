@@ -9,7 +9,7 @@ import GarmentQuoteBuilder from "@/components/quote/GarmentQuoteBuilder";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceDtf from "@/assets/gallery-dtf-primal.jpg";
-import serviceGarments from "@/assets/gallery-screenprint-thunder.jpg";
+import serviceGarments from "@/assets/quote-garments.jpg";
 
 type ServiceKey = "hats" | "dtf" | "garments";
 
