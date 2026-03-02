@@ -90,7 +90,7 @@ const Quote = () => {
                       onClick={() => setSelected(svc.key)}
                       className="group relative overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:border-primary hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     >
-                      <div className="aspect-[4/3] overflow-hidden">
+                      <div className="aspect-square overflow-hidden">
                         <img
                           src={svc.image}
                           alt={svc.title}
