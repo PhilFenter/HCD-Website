@@ -9,8 +9,7 @@ import GarmentQuoteBuilder from "@/components/quote/GarmentQuoteBuilder";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceDtf from "@/assets/gallery-dtf-primal.jpg";
-// TODO: swap placeholder image for garment hero image
-import serviceGarments from "@/assets/gallery-screenprint-shirt.jpg";
+import serviceGarments from "@/assets/gallery-screenprint-thunder.jpg";
 
 type ServiceKey = "hats" | "dtf" | "garments";
 
