@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, ArrowLeft, Check, Upload, X } from "lucide-react";
 import OptionCard from "./OptionCard";
 import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
+import { submitQuoteRequest } from "@/lib/submitQuote";
 
 interface DTFQuoteData {
   orderType: string;
@@ -65,13 +66,41 @@ const DTFQuoteBuilder = () => {
   const next = () => { if (step < STEPS.length - 1) setStep(step + 1); };
   const prev = () => { if (step > 0) setStep(step - 1); };
 
-  const handleSubmit = () => {
-    console.log("DTF quote request:", data);
-    setSubmitted(true);
-    toast({
-      title: "Quote Request Submitted!",
-      description: "We'll review your DTF request and get back to you within one business day.",
-    });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      await submitQuoteRequest({
+        serviceType: "dtf",
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        company: data.company,
+        notes: data.notes,
+        timeline: data.timeline,
+        quantity: data.quantity,
+        artworkNotes: data.artworkNotes,
+        details: {
+          orderType: data.orderType,
+          garmentType: data.garmentType,
+        },
+      });
+      setSubmitted(true);
+      toast({
+        title: "Quote Request Submitted!",
+        description: "We'll review your DTF request and get back to you within one business day.",
+      });
+    } catch (err) {
+      console.error("Quote submission error:", err);
+      toast({
+        title: "Something went wrong",
+        description: "Please email us at info@hellscanyondesigns.com",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {

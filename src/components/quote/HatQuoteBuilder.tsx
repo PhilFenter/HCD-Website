@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, ArrowLeft, Check, Upload, X, DollarSign } from "lucide-react";
+import { submitQuoteRequest } from "@/lib/submitQuote";
 import OptionCard from "./OptionCard";
 import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
 
@@ -138,15 +139,44 @@ const HatQuoteBuilder = () => {
     if (step > 0) setStep(step - 1);
   };
 
-  const handleSubmit = () => {
-    // For now, just log and show success. Ready for backend integration.
-    console.log("Hat quote request:", data);
-    setSubmitted(true);
-    toast({
-      title: "Quote Request Submitted!",
-      description:
-        "We'll review your request and get back to you within one business day.",
-    });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      const est = estimate;
+      await submitQuoteRequest({
+        serviceType: "custom_hats",
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        company: data.company,
+        notes: data.notes,
+        timeline: data.timeline,
+        quantity: data.quantity,
+        artworkNotes: data.artworkNotes,
+        details: {
+          patchType: data.patchType,
+          hatStyle: data.hatStyle,
+          hatColors: data.hatColors,
+        },
+        estimate: est ? { low: Math.round(est.total), high: Math.round(est.total) } : null,
+      });
+      setSubmitted(true);
+      toast({
+        title: "Quote Request Submitted!",
+        description: "We'll review your request and get back to you within one business day.",
+      });
+    } catch (err) {
+      console.error("Quote submission error:", err);
+      toast({
+        title: "Something went wrong",
+        description: "Please email us at info@hellscanyondesigns.com",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // ── Success State ──

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, ArrowLeft, Check, Upload, X } from "lucide-react";
 import OptionCard from "./OptionCard";
+import { submitQuoteRequest } from "@/lib/submitQuote";
 
 interface ScreenPrintQuoteData {
   garmentType: string;
@@ -76,13 +77,42 @@ const ScreenPrintQuoteBuilder = () => {
   const next = () => { if (step < STEPS.length - 1) setStep(step + 1); };
   const prev = () => { if (step > 0) setStep(step - 1); };
 
-  const handleSubmit = () => {
-    console.log("Screen printing quote request:", data);
-    setSubmitted(true);
-    toast({
-      title: "Quote Request Submitted!",
-      description: "We'll review your screen printing request and get back to you within one business day.",
-    });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      await submitQuoteRequest({
+        serviceType: "screen_print",
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        company: data.company,
+        notes: data.notes,
+        timeline: data.timeline,
+        quantity: data.quantity,
+        artworkNotes: data.artworkNotes,
+        details: {
+          garmentType: data.garmentType,
+          printColors: data.printColors,
+          locations: data.locations,
+        },
+      });
+      setSubmitted(true);
+      toast({
+        title: "Quote Request Submitted!",
+        description: "We'll review your screen printing request and get back to you within one business day.",
+      });
+    } catch (err) {
+      console.error("Quote submission error:", err);
+      toast({
+        title: "Something went wrong",
+        description: "Please email us at info@hellscanyondesigns.com",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
