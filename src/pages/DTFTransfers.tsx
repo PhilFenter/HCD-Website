@@ -32,6 +32,7 @@ const DTFTransfers = () => {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {[
+                  "24–48 Hour Turnaround",
                   "9-Color Expanded Gamut",
                   "22\" Wide Sheets",
                   "9-Sec Instant Peel",
@@ -161,8 +162,8 @@ const DTFTransfers = () => {
               },
               {
                 icon: Zap,
-                title: "9-Second Instant Peel",
-                desc: "Press, peel, done. Lightning-fast 9-second instant peel with a 4-second post press means faster production and faster turnarounds.",
+                title: "24–48 Hour Turnaround",
+                desc: "Need transfers fast? We offer 24–48 hour turnaround on most DTF orders. Rush production so you're never waiting on your prints.",
               },
               {
                 icon: Shield,
