@@ -19,6 +19,7 @@ import OptionCard from "./OptionCard";
 import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { submitQuoteRequest } from "@/lib/submitQuote";
 
 // ── Pricing ────────────────────────────────────────────
 const MIN_QTY = 12;
@@ -455,32 +456,30 @@ const GarmentQuoteBuilder = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const payload = {
-        intent: data.intent,
-        garmentType: data.garmentType,
-        poloTier: data.poloTier,
-        quantity: qty,
-        printColors: data.printColors,
-        printLocations: data.printLocations,
-        embroideryLocations: data.embroideryLocations,
-        timeline: data.timeline,
-        eventDate: data.eventDate,
-        artworkNotes: data.artworkNotes,
+      await submitQuoteRequest({
+        serviceType: data.garmentType === "polos" ? "embroidery" : "screen_print",
         name: data.name,
         email: data.email,
         phone: data.phone,
         company: data.company,
         notes: data.notes,
-        estimatedTotal: estimate
+        timeline: data.timeline,
+        quantity: String(qty),
+        artworkNotes: data.artworkNotes,
+        details: {
+          intent: data.intent,
+          garmentType: data.garmentType,
+          poloTier: data.poloTier,
+          printColors: data.printColors,
+          printLocations: data.printLocations,
+          embroideryLocations: data.embroideryLocations,
+          eventDate: data.eventDate,
+          recommendedDecoration: estimate?.recommendedDecoration ?? "",
+        },
+        estimate: estimate
           ? { low: Math.round(estimate.totalLow), high: Math.round(estimate.totalHigh) }
           : null,
-        recommendedDecoration: estimate?.recommendedDecoration ?? "",
-      };
-      console.log("Garment quote request:", payload);
-
-      // TODO: uncomment when edge function is deployed
-      // const { data: response, error } = await supabase.functions.invoke("create-quote-action-item", { body: payload });
-      // if (error) throw error;
+      });
 
       setSubmitted(true);
       toast({
