@@ -25,16 +25,16 @@ const milestones = [
     desc: "Added our 6-head Barudan embroidery machine — industrial-grade, production-speed embroidery with the precision and consistency that cheaper machines can't touch.",
   },
   {
-    year: "2023",
-    icon: Cpu,
-    title: "UV Flatbed Printing",
-    desc: "Brought in the Mimaki UJF-6042 MkII e — a UV flatbed printer that lets us print directly on rigid materials, patches, and specialty items with photographic detail.",
-  },
-  {
-    year: "2024",
+    year: "2022",
     icon: Printer,
     title: "Screen Printing",
     desc: "Installed our ROQ P-14XL — a 10-color, 14-platen automatic press. Combined with dual Stampinators, we deliver matte and soft-hand finishes that feel as good as they look.",
+  },
+  {
+    year: "2025",
+    icon: Cpu,
+    title: "UV Flatbed Printing",
+    desc: "Brought in the Mimaki UJF-6042 MkII e — a UV flatbed printer that lets us print directly on rigid materials, patches, and specialty items with photographic detail.",
   },
   {
     year: "2025",
