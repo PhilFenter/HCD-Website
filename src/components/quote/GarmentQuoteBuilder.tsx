@@ -740,6 +740,14 @@ const GarmentQuoteBuilder = () => {
                         </div>
                       )}
                     </div>
+
+                    {/* Extended size upcharge note */}
+                    <div className="mt-4 flex items-start gap-2 rounded-md bg-secondary/50 px-3 py-2">
+                      <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground">
+                        <span className="font-semibold text-foreground">Extended sizes:</span> 2XL and above carry an upcharge (+$2 for 2XL, +$4 for 3XL, +$6 for 4XL+). We'll confirm exact pricing in your quote.
+                      </p>
+                    </div>
                   </motion.div>
                 )}
               </div>
