@@ -34,7 +34,7 @@ const services: {
     subtitle: "T-shirts, hoodies, polos, jackets & safety gear — screen print, DTF, or embroidery",
     image: serviceGarments,
     minimum: "12 piece minimum",
-    imagePosition: "object-bottom",
+    imagePosition: "object-top",
   },
   {
     key: "dtf",
