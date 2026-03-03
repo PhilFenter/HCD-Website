@@ -23,7 +23,7 @@ const Footer = () => {
       </div>
 
       <div className="container py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div>
             <h4 className="font-heading text-lg font-bold text-primary">
@@ -75,6 +75,30 @@ const Footer = () => {
                 Lewiston, Idaho
               </div>
             </div>
+          </div>
+
+          {/* Service Areas */}
+          <div>
+            <h5 className="font-heading text-sm font-semibold tracking-wider text-foreground">
+              SERVICE AREAS
+            </h5>
+            <nav className="mt-3 flex flex-col gap-2">
+              <Link to="/screen-printing-lewiston-id" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Screen Printing – Lewiston, ID
+              </Link>
+              <Link to="/screen-printing-clarkston-wa" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Screen Printing – Clarkston, WA
+              </Link>
+              <Link to="/embroidery-lewiston-id" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Embroidery – Lewiston, ID
+              </Link>
+              <Link to="/embroidery-clarkston-wa" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Embroidery – Clarkston, WA
+              </Link>
+              <Link to="/custom-hats-lc-valley" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Custom Hats – LC Valley
+              </Link>
+            </nav>
           </div>
 
           {/* Social */}
