@@ -98,8 +98,8 @@ const ScreenPrinting = () => {
               },
               {
                 title: "Quality Inks",
-                desc: "Premium plastisol and water-based inks for vibrant, durable prints that hold up wash after wash.",
-                features: ["Vibrant colors", "Wash-durable", "Eco-friendly options"],
+                desc: "Premium plastisol and low-cure inks for vibrant, durable prints. Low-cure inks require less heat and energy, making them gentler on fabrics and more eco-friendly.",
+                features: ["Vibrant colors", "Wash-durable", "Low-cure eco-friendly option"],
               },
             ].map((tech, i) => (
               <motion.div
