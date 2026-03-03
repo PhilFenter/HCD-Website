@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
 import CustomHats from "./pages/CustomHats";
 import Embroidery from "./pages/Embroidery";
@@ -20,30 +21,32 @@ import CustomHatsLCValley from "./pages/CustomHatsLCValley";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/custom-hats" element={<CustomHats />} />
-          <Route path="/embroidery" element={<Embroidery />} />
-          <Route path="/screen-printing" element={<ScreenPrinting />} />
-          <Route path="/dtf-transfers" element={<DTFTransfers />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/quote" element={<Quote />} />
-          <Route path="/screen-printing-lewiston-id" element={<ScreenPrintingLewiston />} />
-          <Route path="/screen-printing-clarkston-wa" element={<ScreenPrintingClarkston />} />
-          <Route path="/embroidery-lewiston-id" element={<EmbroideryLewiston />} />
-          <Route path="/embroidery-clarkston-wa" element={<EmbroideryClarkston />} />
-          <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/custom-hats" element={<CustomHats />} />
+            <Route path="/embroidery" element={<Embroidery />} />
+            <Route path="/screen-printing" element={<ScreenPrinting />} />
+            <Route path="/dtf-transfers" element={<DTFTransfers />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/quote" element={<Quote />} />
+            <Route path="/screen-printing-lewiston-id" element={<ScreenPrintingLewiston />} />
+            <Route path="/screen-printing-clarkston-wa" element={<ScreenPrintingClarkston />} />
+            <Route path="/embroidery-lewiston-id" element={<EmbroideryLewiston />} />
+            <Route path="/embroidery-clarkston-wa" element={<EmbroideryClarkston />} />
+            <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;
