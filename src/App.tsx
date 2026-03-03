@@ -11,6 +11,11 @@ import DTFTransfers from "./pages/DTFTransfers";
 import About from "./pages/About";
 import Quote from "./pages/Quote";
 import NotFound from "./pages/NotFound";
+import ScreenPrintingLewiston from "./pages/ScreenPrintingLewiston";
+import ScreenPrintingClarkston from "./pages/ScreenPrintingClarkston";
+import EmbroideryLewiston from "./pages/EmbroideryLewiston";
+import EmbroideryClarkston from "./pages/EmbroideryClarkston";
+import CustomHatsLCValley from "./pages/CustomHatsLCValley";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +33,11 @@ const App = () => (
           <Route path="/dtf-transfers" element={<DTFTransfers />} />
           <Route path="/about" element={<About />} />
           <Route path="/quote" element={<Quote />} />
+          <Route path="/screen-printing-lewiston-id" element={<ScreenPrintingLewiston />} />
+          <Route path="/screen-printing-clarkston-wa" element={<ScreenPrintingClarkston />} />
+          <Route path="/embroidery-lewiston-id" element={<EmbroideryLewiston />} />
+          <Route path="/embroidery-clarkston-wa" element={<EmbroideryClarkston />} />
+          <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

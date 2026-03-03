@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,11 @@ const Quote = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Get a Custom Apparel Quote (LC Valley) | HCD"
+        description="Get a ballpark quote fast. We confirm details and send a final quote within one business day."
+        canonicalPath="/quote"
+      />
       <section className="py-20 md:py-28">
         <div className="container">
           <AnimatePresence mode="wait">
@@ -76,6 +82,9 @@ const Quote = () => {
                   </h1>
                   <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
                     Answer a few quick questions and we'll give you a ballpark estimate right here — so you can see if we're a good fit before we even get on the phone. Your final quote lands in your inbox within one business day.
+                  </p>
+                  <p className="mx-auto mt-3 max-w-xl text-sm font-medium text-primary">
+                    LC Valley local shop. We review every request and respond within one business day.
                   </p>
                 </div>
 

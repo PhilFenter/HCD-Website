@@ -1,6 +1,7 @@
 import AnnouncementBar from "./AnnouncementBar";
 import Header from "./Header";
 import Footer from "./Footer";
+import LocalBusinessJsonLd from "./LocalBusinessJsonLd";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex min-h-screen flex-col">
+      <LocalBusinessJsonLd />
       <AnnouncementBar />
       <Header />
       <main className="flex-1">{children}</main>
