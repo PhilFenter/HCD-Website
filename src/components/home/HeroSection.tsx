@@ -65,7 +65,7 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.35 }}
             className="mt-3 text-sm font-medium tracking-wide text-primary"
           >
-            Serving Lewiston, Idaho and Clarkston, Washington — the LC Valley.
+            Serving the LC Valley, the Palouse & the Camas Prairie.
           </motion.p>
 
           <motion.p
