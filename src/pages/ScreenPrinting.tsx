@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
+import ServiceJsonLd from "@/components/ServiceJsonLd";
 import { motion } from "framer-motion";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import ScreenPrintingGallery from "@/components/screen-printing/ScreenPrintingGallery";
@@ -7,6 +9,16 @@ import galleryScreenprintPress from "@/assets/gallery-screenprint-press.jpg";
 const ScreenPrinting = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Screen Printing in Lewiston & Clarkston (LC Valley) | HCD"
+        description="Fast turnaround screen printing for LC Valley businesses, teams, and events. In-house production and consistent quality."
+        canonicalPath="/screen-printing"
+      />
+      <ServiceJsonLd
+        name="Screen Printing"
+        description="Custom screen printing services for businesses, teams, and events in Lewiston, ID and Clarkston, WA."
+        url="https://hcd-web-new.lovable.app/screen-printing"
+      />
       <section className="relative py-20 md:py-28">
         <div className="container">
           <div className="grid gap-12 items-center md:grid-cols-2">

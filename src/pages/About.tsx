@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -59,6 +60,11 @@ const milestones = [
 const About = () => {
   return (
     <Layout>
+      <SEOHead
+        title="About Hells Canyon Designs | LC Valley Custom Apparel Shop"
+        description="Hells Canyon Designs is a full-service custom apparel shop based in Lewiston, Idaho, serving the LC Valley with screen printing, embroidery, hats, and DTF transfers since 2017."
+        canonicalPath="/about"
+      />
       <section className="relative py-20 md:py-28">
         <div className="container">
           <div className="grid gap-12 items-center md:grid-cols-2">

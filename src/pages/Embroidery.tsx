@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
+import ServiceJsonLd from "@/components/ServiceJsonLd";
 import { motion } from "framer-motion";
 import EmbroideryQuoteBuilder from "@/components/quote/EmbroideryQuoteBuilder";
 import EmbroideryGallery from "@/components/embroidery/EmbroideryGallery";
@@ -7,6 +9,16 @@ import galleryEmbroideryMachine from "@/assets/gallery-embroidery-machine.jpg";
 const Embroidery = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Embroidery in Lewiston & Clarkston (LC Valley) | HCD"
+        description="Professional embroidery for uniforms, hats, and apparel across the LC Valley. Clean stitching, fast service, local support."
+        canonicalPath="/embroidery"
+      />
+      <ServiceJsonLd
+        name="Custom Embroidery"
+        description="Professional embroidery services for uniforms, hats, and apparel in Lewiston, ID and Clarkston, WA."
+        url="https://hcd-web-new.lovable.app/embroidery"
+      />
       <section className="relative py-20 md:py-28">
         <div className="container">
           <div className="grid gap-12 items-center md:grid-cols-2">

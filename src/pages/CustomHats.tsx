@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
+import ServiceJsonLd from "@/components/ServiceJsonLd";
 import { motion } from "framer-motion";
 import HatQuoteBuilder from "@/components/quote/HatQuoteBuilder";
 import heroHats from "@/assets/hero-sewing-patch.jpg";
@@ -6,6 +8,16 @@ import heroHats from "@/assets/hero-sewing-patch.jpg";
 const CustomHats = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Custom Hats & Leather Patch Hats in the LC Valley | HCD"
+        description="Custom hats and leather patch hats made locally for LC Valley businesses and brands. Great-better-best options and fast turnaround."
+        canonicalPath="/custom-hats"
+      />
+      <ServiceJsonLd
+        name="Custom Leather Patch Hats"
+        description="Custom hats with laser-engraved leather patches, UV printed patches, and embroidered patches in Lewiston, ID and Clarkston, WA."
+        url="https://hcd-web-new.lovable.app/custom-hats"
+      />
       {/* Hero */}
       <section className="relative py-20 md:py-28">
         <div className="container">

@@ -59,6 +59,24 @@ const HeroSection = () => {
             transfers — crafted in Idaho, shipped to your door anywhere in the U.S.
           </motion.p>
 
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="mt-3 text-sm font-medium tracking-wide text-primary"
+          >
+            Serving Lewiston, Idaho and Clarkston, Washington — the LC Valley.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.37 }}
+            className="mt-2 text-sm text-muted-foreground"
+          >
+            Uniforms • Contractor workwear • School spirit wear • Branded hats
+          </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

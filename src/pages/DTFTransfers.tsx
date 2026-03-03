@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
+import ServiceJsonLd from "@/components/ServiceJsonLd";
 import { motion } from "framer-motion";
 import { ExternalLink, Zap, Palette, Shield, Clock, Shirt } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +11,16 @@ import galleryDtfPrimal from "@/assets/gallery-dtf-primal.jpg";
 const DTFTransfers = () => {
   return (
     <Layout>
+      <SEOHead
+        title="DTF Transfers in the LC Valley | HCD"
+        description="High quality DTF transfers for local brands and businesses in the LC Valley. Vibrant color, durable press results."
+        canonicalPath="/dtf-transfers"
+      />
+      <ServiceJsonLd
+        name="DTF Transfers"
+        description="Full-color DTF transfers for any fabric, serving businesses in Lewiston, ID and Clarkston, WA."
+        url="https://hcd-web-new.lovable.app/dtf-transfers"
+      />
       {/* Hero */}
       <section className="relative py-20 md:py-28">
         <div className="container">
