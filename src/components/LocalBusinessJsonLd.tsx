@@ -11,16 +11,16 @@ const localBusinessData = {
   email: "info@hellscanyondesigns.com",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "UPDATE_WITH_STREET_ADDRESS",
+    streetAddress: "904 D St",
     addressLocality: "Lewiston",
     addressRegion: "ID",
-    postalCode: "UPDATE_WITH_ZIP",
+    postalCode: "83501",
     addressCountry: "US",
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: "UPDATE_LATITUDE",
-    longitude: "UPDATE_LONGITUDE",
+    latitude: 46.4165,
+    longitude: -117.0177,
   },
   areaServed: [
     { "@type": "City", name: "Lewiston", containedInPlace: { "@type": "State", name: "Idaho" } },
