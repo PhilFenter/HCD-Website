@@ -21,7 +21,7 @@ const photos = [
   { src: galleryDtfPrimal, alt: "DTF printed Primal design" },
 ];
 
-const INSTAGRAM_URL = "https://www.instagram.com/hellscanyondesigns";
+const INSTAGRAM_URL = "https://www.instagram.com/hellscanyon.designs/";
 
 const InstagramFeed = () => {
   return (
@@ -37,7 +37,7 @@ const InstagramFeed = () => {
           <div className="mb-3 flex items-center justify-center gap-2">
             <Instagram className="h-5 w-5 text-primary" />
             <span className="font-heading text-sm font-semibold uppercase tracking-widest text-primary">
-              @hellscanyondesigns
+              @hellscanyon.designs
             </span>
           </div>
           <h2 className="font-brand text-3xl tracking-wide text-foreground md:text-4xl">
