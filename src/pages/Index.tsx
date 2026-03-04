@@ -5,6 +5,7 @@ import ServiceCards from "@/components/home/ServiceCards";
 import SocialProof from "@/components/home/SocialProof";
 import HowItWorks from "@/components/home/HowItWorks";
 import PortfolioGallery from "@/components/home/PortfolioGallery";
+import InstagramFeed from "@/components/home/InstagramFeed";
 import FAQ from "@/components/home/FAQ";
 
 const Index = () => {
@@ -20,6 +21,7 @@ const Index = () => {
       <SocialProof />
       <HowItWorks />
       <PortfolioGallery />
+      <InstagramFeed />
       <FAQ />
     </Layout>
   );
