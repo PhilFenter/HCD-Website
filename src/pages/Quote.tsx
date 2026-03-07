@@ -4,62 +4,58 @@ import SEOHead from "@/components/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import HatQuoteBuilder from "@/components/quote/HatQuoteBuilder";
-import DTFQuoteBuilder from "@/components/quote/DTFQuoteBuilder";
-import GarmentQuoteBuilder from "@/components/quote/GarmentQuoteBuilder";
+import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
+import WholesalePatchForm from "@/components/quote/WholesalePatchForm";
+import CustomApparelForm from "@/components/quote/CustomApparelForm";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
-import serviceDtf from "@/assets/gallery-dtf-primal.jpg";
+import servicePatches from "@/assets/gallery-leather-patch-flag.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
-type ServiceKey = "hats" | "dtf" | "garments";
+type ProductKey = "hats" | "patches" | "apparel";
 
-const services: {
-  key: ServiceKey;
+const products: {
+  key: ProductKey;
   title: string;
   subtitle: string;
   image: string;
-  minimum: string;
   imagePosition?: string;
 }[] = [
   {
     key: "hats",
-    title: "Custom Leather Patch Hats",
-    subtitle: "Laser engraved, UV printed & embroidered patches",
+    title: "Leather Patch Hats",
+    subtitle: "Custom leather patches on premium hat brands — laser engraved, UV printed, or embroidered.",
     image: serviceHats,
-    minimum: "12 piece minimum",
   },
   {
-    key: "garments",
-    title: "Custom Apparel & Garments",
-    subtitle: "T-shirts, hoodies, polos, jackets & safety gear — screen print, DTF, or embroidery",
+    key: "patches",
+    title: "Wholesale Leather Patches",
+    subtitle: "Loose leather patches for hat makers, retailers, and brands. No hat included.",
+    image: servicePatches,
+  },
+  {
+    key: "apparel",
+    title: "Custom Apparel",
+    subtitle: "T-shirts, hoodies, polos, jackets & workwear — screen print, DTF, or embroidery.",
     image: serviceGarments,
-    minimum: "12 piece minimum",
     imagePosition: "object-top",
-  },
-  {
-    key: "dtf",
-    title: "DTF Transfers",
-    subtitle: "Full-color photo-quality transfers on any fabric",
-    image: serviceDtf,
-    minimum: "No minimum on sheets",
   },
 ];
 
-const builderMap: Record<ServiceKey, React.ReactNode> = {
-  hats: <HatQuoteBuilder />,
-  dtf: <DTFQuoteBuilder />,
-  garments: <GarmentQuoteBuilder />,
+const formMap: Record<ProductKey, React.ReactNode> = {
+  hats: <LeatherPatchHatForm />,
+  patches: <WholesalePatchForm />,
+  apparel: <CustomApparelForm />,
 };
 
 const Quote = () => {
-  const [selected, setSelected] = useState<ServiceKey | null>(null);
+  const [selected, setSelected] = useState<ProductKey | null>(null);
 
   return (
     <Layout>
       <SEOHead
-        title="Get a Custom Apparel Quote (LC Valley) | HCD"
-        description="Get a ballpark quote fast. We confirm details and send a final quote within one business day."
+        title="Get a Custom Quote — Hats, Patches & Apparel | HCD"
+        description="Request a free quote for leather patch hats, wholesale patches, or custom decorated apparel. We respond within one business day."
         canonicalPath="/quote"
       />
       <section className="py-20 md:py-28">
@@ -78,43 +74,38 @@ const Quote = () => {
                     GET STARTED
                   </p>
                   <h1 className="mt-4 font-heading text-4xl font-bold text-foreground md:text-5xl">
-                    REQUEST A FREE QUOTE
+                    WHAT ARE YOU LOOKING FOR?
                   </h1>
                   <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                    Answer a few quick questions and we'll give you a ballpark estimate right here — so you can see if we're a good fit before we even get on the phone. Your final quote lands in your inbox within one business day.
-                  </p>
-                  <p className="mx-auto mt-3 max-w-xl text-sm font-medium text-primary">
-                    LC Valley local shop. We review every request and respond within one business day.
+                    Pick a product and fill out the details. We'll send you a
+                    quote within one business day — no back-and-forth emails needed.
                   </p>
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {services.map((svc, i) => (
+                  {products.map((product, i) => (
                     <motion.button
-                      key={svc.key}
+                      key={product.key}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.08 }}
-                      onClick={() => setSelected(svc.key)}
+                      onClick={() => setSelected(product.key)}
                       className="group relative overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:border-primary hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     >
-                      <div className="aspect-square overflow-hidden">
+                      <div className="aspect-[4/3] overflow-hidden">
                         <img
-                          src={svc.image}
-                          alt={svc.title}
-                          className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${svc.imagePosition || ""}`}
+                          src={product.image}
+                          alt={product.title}
+                          className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${product.imagePosition || ""}`}
                         />
                       </div>
                       <div className="p-5">
                         <h3 className="font-heading text-lg font-semibold text-foreground">
-                          {svc.title}
+                          {product.title}
                         </h3>
                         <p className="mt-1.5 text-sm text-muted-foreground">
-                          {svc.subtitle}
+                          {product.subtitle}
                         </p>
-                        <span className="mt-3 inline-block rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-                          {svc.minimum}
-                        </span>
                       </div>
                     </motion.button>
                   ))}
@@ -122,7 +113,7 @@ const Quote = () => {
               </motion.div>
             ) : (
               <motion.div
-                key="builder"
+                key="form"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -134,20 +125,20 @@ const Quote = () => {
                   className="mb-6 gap-2 text-muted-foreground hover:text-foreground"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  Back to services
+                  Back to products
                 </Button>
 
                 <div className="mb-10 text-center">
                   <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
-                    {services.find((s) => s.key === selected)?.title.toUpperCase()}
+                    {products.find((p) => p.key === selected)?.title.toUpperCase()}
                   </h2>
                   <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                    Walk through a few quick steps and we'll send you a custom
-                    quote within one business day.
+                    Fill in the details below and we'll send you a quote within
+                    one business day.
                   </p>
                 </div>
 
-                {builderMap[selected]}
+                {formMap[selected]}
               </motion.div>
             )}
           </AnimatePresence>
