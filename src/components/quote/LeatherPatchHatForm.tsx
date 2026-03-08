@@ -119,8 +119,8 @@ const LeatherPatchHatForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
+  const [hatBrand, setHatBrand] = useState("");
   const [hatModel, setHatModel] = useState("");
-  const [hatColor, setHatColor] = useState("");
   const [patchShape, setPatchShape] = useState("");
   const [patchSize, setPatchSize] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
