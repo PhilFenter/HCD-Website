@@ -78,8 +78,8 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            Custom leather patch hats, embroidery, screen printing & DTF
-            transfers — crafted in Idaho, shipped to your door anywhere in the U.S.
+            Custom hats, wholesale patches & decorated apparel — designed and
+            crafted in Idaho, shipped nationwide.
           </motion.p>
 
           <motion.p
