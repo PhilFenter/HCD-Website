@@ -373,20 +373,12 @@ const GarmentQuoteBuilder = () => {
     [data.garmentType, qty, data.poloTier, embLocCount, printLocCount]
   );
 
-  // Auto-determine if screen print details step should appear
-  // Embroidery-only garments never show print details
-  const showScreenPrintDetails = !embOnly && qty >= SCREEN_PRINT_MIN_QTY;
-  // Embroidery/print locations are now embedded in the Garment step
-  const showEmbroideryDetails = false;
-
   // Build dynamic steps array
   const STEPS = useMemo(() => {
     const steps = ["Intent", "Garment"];
-    if (showScreenPrintDetails) steps.push("Print Details");
-    if (showEmbroideryDetails) steps.push("Embroidery");
     steps.push("Deadline", "Artwork", "Contact");
     return steps;
-  }, [showScreenPrintDetails, showEmbroideryDetails]);
+  }, []);
 
   const getStepKey = (s: number): string => STEPS[s] ?? "";
 
@@ -648,10 +640,10 @@ const GarmentQuoteBuilder = () => {
                   </div>
                 )}
 
-                {qty >= MIN_QTY && !embOnly && (
+                {qty >= MIN_QTY && !embOnly && (data.garmentType === "not-sure" || data.garmentType === "safety" || data.poloTier) && (
                   <div className="mt-6">
-                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">DECORATION LOCATIONS</Label>
-                    <p className="mt-1 text-xs text-muted-foreground">Select where you'd like your design printed (DTF or screen print).</p>
+                    <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">PRINT LOCATIONS</Label>
+                    <p className="mt-1 text-xs text-muted-foreground">Select where you'd like your design placed. We'll determine the best decoration method for your order.</p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       {SCREEN_PRINT_LOCATIONS.map((loc) => (
                         <OptionCard
@@ -691,56 +683,6 @@ const GarmentQuoteBuilder = () => {
                       {getQtyDiscount(qty) > 0 && ` (${Math.round(getQtyDiscount(qty) * 100)}% volume discount applied)`}
                     </p>
 
-                    {/* Decoration recommendations */}
-                    <div className="mt-4 space-y-2 border-t border-primary/20 pt-4">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Our recommendation</p>
-
-                        {estimate.recommendedDecoration === "embroidery" && (
-                        <div className="flex items-start gap-2">
-                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                          <p className="text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">Embroidery</span> — {embLocCount} location{embLocCount !== 1 ? "s" : ""}.
-                            {isPolo ? " Price includes garment + embroidery." : ` $${EMBROIDERY_RANGE.low}–$${EMBROIDERY_RANGE.high}/ea per location on top of garment cost.`}
-                            {getQtyDiscount(qty) > 0 && ` ${Math.round(getQtyDiscount(qty) * 100)}% quantity discount applied.`}
-                          </p>
-                        </div>
-                      )}
-
-                      {estimate.recommendedDecoration === "dtf" && (
-                        <div className="flex items-start gap-2">
-                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                          <p className="text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">DTF Printing</span> — Full color, photo-quality prints on any fabric. Great for complex logos, gradients, and smaller runs.
-                          </p>
-                        </div>
-                      )}
-
-                      {estimate.recommendedDecoration === "screen-print-or-dtf" && (
-                        <>
-                          <div className="flex items-start gap-2">
-                            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-semibold text-foreground">Screen Printing</span> — Bold, durable ink — best value for 72+ pieces of the same design. We'll ask about colors and locations next.
-                            </p>
-                          </div>
-                          <div className="flex items-start gap-2">
-                            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-semibold text-foreground">DTF Printing</span> — Also a great option if your design has gradients or many colors.
-                            </p>
-                          </div>
-                        </>
-                      )}
-
-                      {estimate.showEmbroideryNote && estimate.recommendedDecoration !== "embroidery" && (
-                        <div className="flex items-start gap-2">
-                          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                          <p className="text-xs text-muted-foreground">
-                            <span className="font-semibold text-foreground">Embroidery</span> — Classic, premium look for polos, jackets, and workwear. One-time ${EMBROIDERY_DIGITIZING_FEE} digitizing fee applies for new logos.
-                          </p>
-                        </div>
-                      )}
-                    </div>
 
                     {/* Extended size upcharge note */}
                     <div className="mt-4 flex items-start gap-2 rounded-md bg-secondary/50 px-3 py-2">
@@ -754,75 +696,6 @@ const GarmentQuoteBuilder = () => {
               </div>
             )}
 
-            {/* Step: Screen Print Details (auto-shown when qty >= 72) */}
-            {stepKey === "Print Details" && (
-              <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">SCREEN PRINT DETAILS</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Since you're ordering {qty}+ pieces, screen printing may be your best value. Fill in the details below — or skip this step if you'd prefer DTF.
-                </p>
-
-                <div className="mt-6">
-                  <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">PRINT COLORS</Label>
-                  <p className="mt-1 text-xs text-muted-foreground">More colors = more detail, but affects pricing. We'll help optimize.</p>
-                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                    {[
-                      { value: "1-color", label: "1 Color", desc: "Simple, bold, cost-effective." },
-                      { value: "2-color", label: "2 Colors", desc: "Add dimension with a second color." },
-                      { value: "3-color", label: "3 Colors", desc: "More detail and visual impact." },
-                      { value: "4-plus", label: "4+ Colors", desc: "Full creative freedom." },
-                      { value: "not-sure", label: "Not Sure", desc: "We'll recommend based on your artwork." },
-                    ].map((opt) => (
-                      <OptionCard key={opt.value} label={opt.label} description={opt.desc} selected={data.printColors === opt.value} onClick={() => update({ printColors: opt.value })} />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <Label className="text-foreground font-heading text-sm font-semibold tracking-wider">PRINT LOCATIONS</Label>
-                  <p className="mt-1 text-xs text-muted-foreground">Select all locations where you'd like printing.</p>
-                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                    {SCREEN_PRINT_LOCATIONS.map((loc) => (
-                      <OptionCard key={loc} label={loc} selected={data.printLocations.includes(loc)} onClick={() => togglePrintLocation(loc)} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step: Embroidery Details (auto-shown for work/brand intents) */}
-            {stepKey === "Embroidery" && (
-              <div>
-                <h3 className="font-heading text-xl font-bold text-foreground">EMBROIDERY LOCATIONS</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {isPolo
-                    ? "Select where you'd like embroidery on your polos. Up to 5 locations available."
-                    : "Embroidery is a premium option for your order. Select locations if you'd like embroidery — or skip this step if you prefer print."}
-                </p>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {EMBROIDERY_LOCATIONS.map((loc) => (
-                    <OptionCard
-                      key={loc}
-                      label={loc}
-                      description={loc === "Full Back" ? "Large back piece — requires custom pricing" : undefined}
-                      selected={data.embroideryLocations.includes(loc)}
-                      onClick={() => toggleEmbroideryLocation(loc)}
-                    />
-                  ))}
-                </div>
-                {data.embroideryLocations.length > 0 && (
-                  <p className="mt-3 text-sm text-muted-foreground">{data.embroideryLocations.length} of 5 locations selected</p>
-                )}
-                {hasFullBackEmbroidery && (
-                  <div className="mt-3 flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3">
-                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600" />
-                    <p className="text-sm text-yellow-700 dark:text-yellow-400">
-                      Full back embroidery is a large-format piece that requires custom pricing. We'll include a detailed quote for this location.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* Step: Deadline */}
             {stepKey === "Deadline" && (
