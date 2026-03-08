@@ -53,10 +53,20 @@ function calcEstimate(hatModel: string, qty: number) {
 }
 
 // ── Options ────────────────────────────────────────────
+const HAT_BRANDS = [
+  { value: "richardson", label: "Richardson" },
+  { value: "yp-classics", label: "YP Classics (Yupoong)" },
+  { value: "legacy", label: "Legacy" },
+  { value: "pacific-headwear", label: "Pacific Headwear" },
+  { value: "outdoor-cap", label: "Outdoor Cap" },
+  { value: "other", label: "Other / Not Sure" },
+];
+
 const HAT_MODELS = [
   { value: "richardson-112", label: "Richardson 112 (Trucker Snapback)", upcharge: "" },
   { value: "richardson-112pfp", label: "Richardson 112PFP (Five Panel)", upcharge: "+$1.50" },
   { value: "richardson-110", label: "Richardson 110 (R-Flex Fitted)", upcharge: "+$1.25" },
+  { value: "richardson-115", label: "Richardson 115 (Low Pro Trucker)", upcharge: "" },
   { value: "yp-classics-6606", label: "YP Classics 6606 (Retro Trucker)", upcharge: "+$1.05" },
   { value: "legacy-ofa", label: "Legacy OFA (Unstructured)", upcharge: "+$2.00" },
   { value: "other", label: "Other / Not Sure", upcharge: "" },
