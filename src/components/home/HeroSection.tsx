@@ -8,8 +8,8 @@ import serviceGarments from "@/assets/quote-garments.jpg";
 const products = [
   {
     key: "hats",
-    title: "Leather Patch Hats",
-    subtitle: "Custom leather patches on premium hat brands.",
+    title: "Custom Hats",
+    subtitle: "Leather patches, UV patches, embroidered patches, or traditional embroidery. Designed and decorated in-house.",
     image: serviceHats,
   },
   {
