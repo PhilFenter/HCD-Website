@@ -37,7 +37,7 @@ const products: {
   {
     key: "apparel",
     title: "Custom Apparel",
-    subtitle: "T-shirts, hoodies, polos, jackets & workwear — screen print, DTF, or embroidery.",
+    subtitle: "T-shirts, hoodies, work & team wear, and outerwear.",
     image: serviceGarments,
     imagePosition: "object-top",
   },
