@@ -121,6 +121,7 @@ const LeatherPatchHatForm = () => {
 
   const [hatBrand, setHatBrand] = useState("");
   const [hatModel, setHatModel] = useState("");
+  const [hatColor, setHatColor] = useState("");
   const [patchShape, setPatchShape] = useState("");
   const [patchSize, setPatchSize] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
@@ -153,6 +154,7 @@ const LeatherPatchHatForm = () => {
         quantity,
         estimate: estimate ? { low: estimate.subtotal, high: estimate.subtotal } : null,
         details: {
+          hatBrand,
           hatModel,
           hatColor,
           patchShape,
@@ -196,6 +198,7 @@ const LeatherPatchHatForm = () => {
           variant="outline"
           onClick={() => {
             setSubmitted(false);
+            setHatBrand("");
             setHatModel("");
             setHatColor("");
             setPatchShape("");
@@ -224,7 +227,22 @@ const LeatherPatchHatForm = () => {
           HAT DETAILS
         </h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">
+          <div>
+            <Label className="text-foreground">Hat Brand</Label>
+            <Select value={hatBrand} onValueChange={setHatBrand}>
+              <SelectTrigger className="mt-1.5">
+                <SelectValue placeholder="Select brand..." />
+              </SelectTrigger>
+              <SelectContent>
+                {HAT_BRANDS.map((b) => (
+                  <SelectItem key={b.value} value={b.value}>
+                    {b.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
             <Label className="text-foreground">Hat Model</Label>
             <Select value={hatModel} onValueChange={setHatModel}>
               <SelectTrigger className="mt-1.5">
