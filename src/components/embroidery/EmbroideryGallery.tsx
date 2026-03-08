@@ -5,13 +5,19 @@ import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
 import galleryHotshotsEmbroidery from "@/assets/gallery-hotshots-embroidery.jpg";
 import galleryEmbroideredBaseballHat from "@/assets/gallery-embroidered-baseball-hat.jpg";
 import galleryEmbroideredHillcrest from "@/assets/gallery-embroidered-hillcrest.jpg";
+import galleryEmbroideredWHat from "@/assets/gallery-embroidered-w-hat.jpg";
+import galleryEmbroideredColoradoParks from "@/assets/gallery-embroidered-colorado-parks.jpg";
+import galleryEmbroideredNorthernRockies from "@/assets/gallery-embroidered-northern-rockies.jpg";
 
 const galleryItems = [
   { src: galleryEmbroideryMachine, alt: "Barudan multi-head embroidery machine in production", span: "md:col-span-2" },
+  { src: galleryEmbroideredWHat, alt: "Custom embroidered W logo on Richardson 112 trucker hat", span: "" },
   { src: galleryEmbroideredHat, alt: "Custom 3D puff embroidered hat with flag detail", span: "" },
-  { src: galleryEmbroideredPatch, alt: "Custom embroidered crest patch in gold and black", span: "" },
+  { src: galleryEmbroideredColoradoParks, alt: "Colorado Parks & Wildlife embroidered patch on Richardson 112 hat", span: "" },
   { src: galleryEmbroideredBaseballHat, alt: "LC Baseball embroidered Richardson 112 trucker hat", span: "" },
   { src: galleryHotshotsEmbroidery, alt: "Hot Shots embroidered logo on red jacket", span: "md:col-span-2" },
+  { src: galleryEmbroideredNorthernRockies, alt: "Northern Rockies Incident Management Team 3 embroidered hat", span: "" },
+  { src: galleryEmbroideredPatch, alt: "Custom embroidered crest patch in gold and black", span: "" },
   { src: galleryEmbroideredHillcrest, alt: "Hillcrest Aircraft embroidered rope hat", span: "" },
 ];
 
