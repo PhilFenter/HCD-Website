@@ -15,7 +15,7 @@ const products = [
   {
     key: "patches",
     title: "Wholesale Patches",
-    subtitle: "Loose patches for hat makers, retailers & brands.",
+    subtitle: "Genuine leather and UV printed patches for hat makers, retailers, and apparel brands. Precision cut and production-ready.",
     image: servicePatches,
   },
   {
