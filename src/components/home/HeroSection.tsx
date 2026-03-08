@@ -65,18 +65,39 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-5xl"
+            className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-6xl"
           >
-            BUILD YOUR ORDER
+            YOUR BRAND,
+            <br />
+            <span className="text-gradient-gold">OUR CRAFT</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-4 max-w-lg text-lg leading-relaxed text-muted-foreground"
+            className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            Pick a product, fill out the details, and we'll get to work.
+            Custom leather patch hats, embroidery, screen printing & DTF
+            transfers — crafted in Idaho, shipped to your door anywhere in the U.S.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="mt-3 text-sm font-medium tracking-wide text-primary"
+          >
+            Serving the LC Valley, the Palouse & the Camas Prairie.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.37 }}
+            className="mt-2 text-sm text-muted-foreground"
+          >
+            Uniforms • Contractor workwear • School spirit wear • Branded hats
           </motion.p>
 
           {/* Product cards */}
@@ -95,7 +116,7 @@ const HeroSection = () => {
               >
                 <Link
                   to={`/quote?product=${product.key}`}
-                  className="group block overflow-hidden rounded-lg border border-border bg-card/80 backdrop-blur-sm text-left transition-all hover:border-primary hover:shadow-lg"
+                  className="group block overflow-hidden rounded-lg border border-border bg-card/80 backdrop-blur-sm text-center transition-all hover:border-primary hover:shadow-lg"
                 >
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
