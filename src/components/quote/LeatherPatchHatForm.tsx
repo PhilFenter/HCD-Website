@@ -57,7 +57,7 @@ const HAT_BRANDS = [
   { value: "richardson", label: "Richardson" },
   { value: "yp-classics", label: "YP Classics (Yupoong)" },
   { value: "legacy", label: "Legacy" },
-  { value: "pacific-headwear", label: "Pacific Headwear" },
+  
   { value: "outdoor-cap", label: "Outdoor Cap" },
   { value: "other", label: "Other / Not Sure" },
 ];
