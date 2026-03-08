@@ -513,7 +513,7 @@ const LeatherPatchHatForm = () => {
           </div>
           <div>
             <Label className="text-foreground">Hat Model</Label>
-            <Select value={hatModel} onValueChange={setHatModel}>
+            <Select value={hatModel} onValueChange={(val) => { setHatModel(val); setHatColor(""); }}>
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select model..." />
               </SelectTrigger>
