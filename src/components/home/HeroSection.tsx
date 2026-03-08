@@ -21,7 +21,7 @@ const products = [
   {
     key: "apparel",
     title: "Custom Apparel",
-    subtitle: "T-shirts, hoodies, work & team wear, and outerwear.",
+    subtitle: "T-shirts, hoodies, workwear, and team apparel decorated in-house. Clean, professional results with fast turnaround.",
     image: serviceGarments,
     imagePosition: "object-top",
   },
