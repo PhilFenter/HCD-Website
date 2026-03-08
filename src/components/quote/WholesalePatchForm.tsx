@@ -20,7 +20,7 @@ const PATCH_TYPES = [
   { value: "leather", label: "Genuine Leather", desc: "Laser engraved on real leather — classic, premium feel." },
   { value: "leatherette", label: "Leatherette", desc: "Synthetic leather with a similar look — more color options, budget-friendly." },
   { value: "uv-printed", label: "UV Printed", desc: "Full-color prints on leather or leatherette — photos, gradients, unlimited colors." },
-  { value: "other", label: "Other / Not Sure", desc: "We'll help you pick the best option." },
+  
 ];
 
 // ── Patch Shapes ───────────────────────────────────────
