@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Upload, X } from "lucide-react";
+import { Check, Upload, X, DollarSign } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -14,6 +14,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+// ── Patch Types ────────────────────────────────────────
+const PATCH_TYPES = [
+  { value: "leather", label: "Genuine Leather", desc: "Laser engraved on real leather — classic, premium feel." },
+  { value: "leatherette", label: "Leatherette", desc: "Synthetic leather with a similar look — more color options, budget-friendly." },
+  { value: "uv-printed", label: "UV Printed", desc: "Full-color prints directly on leather or leatherette — photos, gradients, unlimited colors." },
+  { value: "embroidered", label: "Embroidered Patch", desc: "Traditional thread-stitched patches — vibrant, textured, classic look." },
+  { value: "other", label: "Other / Not Sure", desc: "We'll help you pick the best option." },
+];
 
 const PATCH_SHAPES = [
   { value: "rectangle", label: "Rectangle" },
@@ -41,11 +50,62 @@ const LEATHER_COLORS = [
   { value: "other", label: "Other" },
 ];
 
+// ── Pricing (placeholder — user will provide exact tiers) ──
+const MIN_QTY = 25;
+
+// Rough wholesale patch pricing tiers per piece
+const PATCH_PRICE_TIERS: Record<string, { min: number; price: number }[]> = {
+  leather: [
+    { min: 500, price: 3.50 },
+    { min: 250, price: 4.00 },
+    { min: 100, price: 5.00 },
+    { min: 50, price: 6.00 },
+    { min: 25, price: 7.50 },
+  ],
+  leatherette: [
+    { min: 500, price: 2.50 },
+    { min: 250, price: 3.00 },
+    { min: 100, price: 3.75 },
+    { min: 50, price: 4.50 },
+    { min: 25, price: 5.50 },
+  ],
+  "uv-printed": [
+    { min: 500, price: 4.00 },
+    { min: 250, price: 4.75 },
+    { min: 100, price: 5.50 },
+    { min: 50, price: 6.50 },
+    { min: 25, price: 8.00 },
+  ],
+  embroidered: [
+    { min: 500, price: 3.00 },
+    { min: 250, price: 3.50 },
+    { min: 100, price: 4.25 },
+    { min: 50, price: 5.25 },
+    { min: 25, price: 6.50 },
+  ],
+};
+
+function getPatchPrice(patchType: string, qty: number): number | null {
+  const tiers = PATCH_PRICE_TIERS[patchType];
+  if (!tiers || qty < MIN_QTY) return null;
+  for (const tier of tiers) {
+    if (qty >= tier.min) return tier.price;
+  }
+  return null;
+}
+
+function calcPatchEstimate(patchType: string, qty: number) {
+  const perPatch = getPatchPrice(patchType, qty);
+  if (!perPatch) return null;
+  return { perPatch, subtotal: perPatch * qty, qty };
+}
+
 const WholesalePatchForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
+  const [patchType, setPatchType] = useState("");
   const [patchShape, setPatchShape] = useState("");
   const [patchSize, setPatchSize] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
@@ -58,8 +118,14 @@ const WholesalePatchForm = () => {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
 
+  const qty = Number(quantity) || 0;
+  const estimate = useMemo(() => calcPatchEstimate(patchType, qty), [patchType, qty]);
+
+  // Get tiers for the selected patch type (for clickable buttons)
+  const currentTiers = PATCH_PRICE_TIERS[patchType] || [];
+
   const isValid =
-    !!patchShape && !!quantity && Number(quantity) >= 1 && !!name && !!email && !!phone;
+    !!patchType && !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +140,9 @@ const WholesalePatchForm = () => {
         company,
         notes,
         quantity,
+        estimate: estimate ? { low: estimate.subtotal, high: estimate.subtotal } : null,
         details: {
+          patchType,
           patchShape,
           patchSize,
           leatherColor,
@@ -117,6 +185,7 @@ const WholesalePatchForm = () => {
           variant="outline"
           onClick={() => {
             setSubmitted(false);
+            setPatchType("");
             setPatchShape("");
             setPatchSize("");
             setLeatherColor("");
@@ -138,6 +207,30 @@ const WholesalePatchForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-8">
+      {/* Patch Type */}
+      <div className="rounded-lg border border-border bg-card p-6">
+        <h3 className="font-heading text-lg font-bold text-foreground">
+          PATCH TYPE *
+        </h3>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {PATCH_TYPES.map((pt) => (
+            <button
+              key={pt.value}
+              type="button"
+              onClick={() => setPatchType(pt.value)}
+              className={`rounded-lg border p-4 text-left transition-all ${
+                patchType === pt.value
+                  ? "border-primary bg-primary/5 ring-1 ring-primary"
+                  : "border-border hover:border-muted-foreground/50"
+              }`}
+            >
+              <span className="text-sm font-semibold text-foreground">{pt.label}</span>
+              <p className="mt-1 text-xs text-muted-foreground">{pt.desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Patch Details */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h3 className="font-heading text-lg font-bold text-foreground">
@@ -175,7 +268,7 @@ const WholesalePatchForm = () => {
             </Select>
           </div>
           <div>
-            <Label className="text-foreground">Leather Color</Label>
+            <Label className="text-foreground">Color</Label>
             <Select value={leatherColor} onValueChange={setLeatherColor}>
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select color..." />
@@ -197,31 +290,93 @@ const WholesalePatchForm = () => {
             checked={sewingChannel}
             onCheckedChange={setSewingChannel}
           />
-          <Label htmlFor="sewing-channel" className="text-foreground cursor-pointer">
+          <Label htmlFor="sewing-channel" className="cursor-pointer text-foreground">
             Include sewing channel (heat-seal border for easy application)
           </Label>
         </div>
       </div>
 
-      {/* Quantity */}
+      {/* Quantity & Pricing */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h3 className="font-heading text-lg font-bold text-foreground">
-          QUANTITY
+          QUANTITY & PRICING
         </h3>
-        <div className="mt-4 max-w-[200px]">
+        <div className="mt-4">
           <Label htmlFor="qty" className="text-foreground">
-            How many patches? *
+            How many patches? * (minimum {MIN_QTY})
           </Label>
           <Input
             id="qty"
             type="number"
-            min={1}
+            min={MIN_QTY}
             placeholder="e.g. 100"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="mt-1.5 text-lg"
+            className="mt-1.5 max-w-[200px] text-lg"
           />
+          {qty > 0 && qty < MIN_QTY && (
+            <p className="mt-2 text-sm text-destructive">
+              Minimum order is {MIN_QTY} patches.
+            </p>
+          )}
         </div>
+
+        {/* Clickable pricing tiers */}
+        {currentTiers.length > 0 && (
+          <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Volume Pricing — click a tier or enter a custom quantity
+            </p>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+              {currentTiers.slice().reverse().map((tier) => {
+                const isActive =
+                  qty >= tier.min &&
+                  currentTiers.find((t) => qty >= t.min)?.min === tier.min;
+                return (
+                  <button
+                    key={tier.min}
+                    type="button"
+                    onClick={() => setQuantity(String(tier.min))}
+                    className={`rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
+                      isActive
+                        ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
+                        : "border-border text-muted-foreground"
+                    }`}
+                  >
+                    <span className="block text-xs">{tier.min}+</span>
+                    <span className="block text-sm font-bold">${tier.price.toFixed(2)}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Prices shown per patch. Final price confirmed within 1 business day.
+            </p>
+          </div>
+        )}
+
+        {/* Live estimate */}
+        {estimate && (
+          <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+              <DollarSign className="h-4 w-4" />
+              ESTIMATED PRICING
+            </div>
+            <div className="mt-3 flex items-baseline gap-1 text-2xl font-bold text-foreground">
+              ${estimate.perPatch.toFixed(2)}
+              <span className="text-sm font-normal text-muted-foreground">/patch</span>
+            </div>
+            <div className="mt-2 text-sm text-muted-foreground">
+              {estimate.qty} patches × ${estimate.perPatch.toFixed(2)} ={" "}
+              <span className="font-semibold text-foreground">
+                ${estimate.subtotal.toFixed(2)}
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Final price confirmed within 1 business day.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Artwork */}
@@ -352,7 +507,11 @@ const WholesalePatchForm = () => {
         disabled={!isValid || submitting}
         className="w-full font-heading text-base tracking-wide"
       >
-        {submitting ? "Submitting..." : "Submit Quote Request"}
+        {submitting
+          ? "Submitting..."
+          : estimate
+            ? `Submit Quote Request — Est. $${estimate.subtotal.toFixed(2)}`
+            : "Submit Quote Request"}
       </Button>
     </form>
   );

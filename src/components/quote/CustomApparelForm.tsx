@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Upload, X } from "lucide-react";
+import { Check, Upload, X, DollarSign } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import {
   Select,
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// ── Garment Types ──────────────────────────────────────
 const GARMENT_TYPES = [
   { value: "tshirts", label: "T-Shirts" },
   { value: "hoodies", label: "Hoodies / Sweatshirts" },
@@ -25,6 +26,122 @@ const GARMENT_TYPES = [
   { value: "other", label: "Other / Multiple" },
 ];
 
+// ── Brand Tiers ────────────────────────────────────────
+interface BrandTier {
+  value: string;
+  label: string;
+  desc: string;
+  priceLow: number;
+  priceHigh: number;
+}
+
+interface QtyTierPrice {
+  minQty: number;
+  maxQty: number | null;
+  priceLow: number;
+  priceHigh: number;
+}
+
+const TSHIRT_QTY_TIERS: Record<string, QtyTierPrice[]> = {
+  budget: [
+    { minQty: 144, maxQty: null, priceLow: 9, priceHigh: 13 },
+    { minQty: 72, maxQty: 143, priceLow: 12, priceHigh: 16 },
+    { minQty: 24, maxQty: 71, priceLow: 15, priceHigh: 19 },
+    { minQty: 12, maxQty: 23, priceLow: 18, priceHigh: 22 },
+  ],
+  "mid-range": [
+    { minQty: 144, maxQty: null, priceLow: 13, priceHigh: 18 },
+    { minQty: 72, maxQty: 143, priceLow: 16, priceHigh: 22 },
+    { minQty: 24, maxQty: 71, priceLow: 19, priceHigh: 25 },
+    { minQty: 12, maxQty: 23, priceLow: 22, priceHigh: 28 },
+  ],
+  premium: [
+    { minQty: 144, maxQty: null, priceLow: 18, priceHigh: 24 },
+    { minQty: 72, maxQty: 143, priceLow: 22, priceHigh: 28 },
+    { minQty: 24, maxQty: 71, priceLow: 25, priceHigh: 32 },
+    { minQty: 12, maxQty: 23, priceLow: 28, priceHigh: 35 },
+  ],
+};
+
+const TSHIRT_BRAND_TIERS: BrandTier[] = [
+  { value: "budget", label: "Budget", desc: "Gildan G5000, Jerzees 29M — everyday basics.", priceLow: 9, priceHigh: 22 },
+  { value: "mid-range", label: "Mid-Range", desc: "Next Level 6210, Bella Canvas 3001 — softer, modern fit.", priceLow: 13, priceHigh: 28 },
+  { value: "premium", label: "Premium", desc: "Comfort Colors, District Perfect Tri — premium feel.", priceLow: 18, priceHigh: 35 },
+];
+
+const GARMENT_TIERS: Record<string, BrandTier[]> = {
+  tshirts: TSHIRT_BRAND_TIERS,
+  longsleeves: TSHIRT_BRAND_TIERS,
+  tanks: TSHIRT_BRAND_TIERS,
+  hoodies: [
+    { value: "budget", label: "Budget", desc: "Gildan, Jerzees — reliable, affordable.", priceLow: 28, priceHigh: 34 },
+    { value: "mid-range", label: "Mid-Range", desc: "Bella Canvas, Next Level — softer, modern cut.", priceLow: 35, priceHigh: 38 },
+    { value: "premium", label: "Premium", desc: "Comfort Colors, Independent Trading — heavyweight.", priceLow: 39, priceHigh: 48 },
+  ],
+  polos: [
+    { value: "standard", label: "Standard", desc: "Port Authority, Sport-Tek — moisture-wicking polos.", priceLow: 33, priceHigh: 52 },
+    { value: "premium", label: "Premium", desc: "Nike Dri-FIT — top-tier brand & performance.", priceLow: 90, priceHigh: 99 },
+  ],
+  jackets: [
+    { value: "budget", label: "Budget", desc: "Port Authority, Harriton — solid workwear.", priceLow: 45, priceHigh: 65 },
+    { value: "mid-range", label: "Mid-Range", desc: "Eddie Bauer, The North Face — modern, professional.", priceLow: 65, priceHigh: 85 },
+    { value: "premium", label: "Premium", desc: "Patagonia, Arc'teryx — top-tier outdoor brands.", priceLow: 85, priceHigh: 125 },
+  ],
+};
+
+const TIERED_GARMENTS = new Set(Object.keys(GARMENT_TIERS));
+
+function getTshirtPrice(brandTier: string, qty: number): { low: number; high: number } | null {
+  const tiers = TSHIRT_QTY_TIERS[brandTier];
+  if (!tiers) return null;
+  for (const tier of tiers) {
+    if (qty >= tier.minQty) return { low: tier.priceLow, high: tier.priceHigh };
+  }
+  return null;
+}
+
+// For non-tshirt tiered garments, return the tier's price range
+function getTieredPrice(garmentType: string, brandTier: string): { low: number; high: number } | null {
+  const tiers = GARMENT_TIERS[garmentType];
+  if (!tiers) return null;
+  const tier = tiers.find((t) => t.value === brandTier);
+  if (!tier) return null;
+  return { low: tier.priceLow, high: tier.priceHigh };
+}
+
+const MIN_QTY = 12;
+
+function calcApparelEstimate(garmentType: string, brandTier: string, qty: number) {
+  if (qty < MIN_QTY) return null;
+
+  // T-shirts (and long sleeves / tanks) use qty-tiered all-in pricing
+  if (garmentType === "tshirts" || garmentType === "longsleeves" || garmentType === "tanks") {
+    const price = getTshirtPrice(brandTier, qty);
+    if (!price) return null;
+    return {
+      perPieceLow: price.low,
+      perPieceHigh: price.high,
+      totalLow: price.low * qty,
+      totalHigh: price.high * qty,
+      qty,
+      isRange: true,
+    };
+  }
+
+  // Other tiered garments
+  const price = getTieredPrice(garmentType, brandTier);
+  if (!price) return null;
+  return {
+    perPieceLow: price.low,
+    perPieceHigh: price.high,
+    totalLow: price.low * qty,
+    totalHigh: price.high * qty,
+    qty,
+    isRange: true,
+  };
+}
+
+// ── Decoration ─────────────────────────────────────────
 const DECORATION_METHODS = [
   { value: "screen-print", label: "Screen Printing" },
   { value: "dtf", label: "DTF (Direct to Film)" },
@@ -50,12 +167,14 @@ const COLOR_COUNTS = [
   { value: "not-sure", label: "Not Sure" },
 ];
 
+// ── Component ──────────────────────────────────────────
 const CustomApparelForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
   const [garmentType, setGarmentType] = useState("");
+  const [brandTier, setBrandTier] = useState("");
   const [garmentBrandStyle, setGarmentBrandStyle] = useState("");
   const [quantity, setQuantity] = useState("");
   const [decorationMethod, setDecorationMethod] = useState("");
@@ -68,16 +187,33 @@ const CustomApparelForm = () => {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
 
+  const qty = Number(quantity) || 0;
+  const tiers = GARMENT_TIERS[garmentType] || [];
+  const hasTiers = TIERED_GARMENTS.has(garmentType);
+  const estimate = useMemo(
+    () => calcApparelEstimate(garmentType, brandTier, qty),
+    [garmentType, brandTier, qty]
+  );
+
+  // T-shirt qty tier buttons
+  const isTshirtType = garmentType === "tshirts" || garmentType === "longsleeves" || garmentType === "tanks";
+  const qtyTiers = isTshirtType && brandTier ? TSHIRT_QTY_TIERS[brandTier] : null;
+
   const toggleLocation = (loc: string) => {
     setPrintLocations((prev) =>
       prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc]
     );
   };
 
+  // Reset brand tier when garment type changes
+  const handleGarmentTypeChange = (val: string) => {
+    setGarmentType(val);
+    setBrandTier("");
+  };
+
   const isValid =
     !!garmentType &&
-    !!quantity &&
-    Number(quantity) >= 1 &&
+    qty >= MIN_QTY &&
     !!name &&
     !!email &&
     !!phone;
@@ -95,8 +231,12 @@ const CustomApparelForm = () => {
         company,
         notes,
         quantity,
+        estimate: estimate
+          ? { low: estimate.totalLow, high: estimate.totalHigh }
+          : null,
         details: {
           garmentType,
+          brandTier,
           garmentBrandStyle,
           decorationMethod,
           printLocations,
@@ -140,6 +280,7 @@ const CustomApparelForm = () => {
           onClick={() => {
             setSubmitted(false);
             setGarmentType("");
+            setBrandTier("");
             setGarmentBrandStyle("");
             setQuantity("");
             setDecorationMethod("");
@@ -169,7 +310,7 @@ const CustomApparelForm = () => {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <Label className="text-foreground">Garment Type *</Label>
-            <Select value={garmentType} onValueChange={setGarmentType}>
+            <Select value={garmentType} onValueChange={handleGarmentTypeChange}>
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select type..." />
               </SelectTrigger>
@@ -184,7 +325,7 @@ const CustomApparelForm = () => {
           </div>
           <div>
             <Label htmlFor="brand-style" className="text-foreground">
-              Brand / Style (optional)
+              Specific Brand / Style (optional)
             </Label>
             <Input
               id="brand-style"
@@ -195,20 +336,122 @@ const CustomApparelForm = () => {
             />
           </div>
         </div>
-        <div className="mt-4 max-w-[200px]">
+
+        {/* Brand Tier Selection */}
+        {hasTiers && tiers.length > 0 && (
+          <div className="mt-6">
+            <Label className="text-foreground">Brand Tier</Label>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Pick a tier to see estimated pricing. All-in price includes garment + decoration.
+            </p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              {tiers.map((tier) => (
+                <button
+                  key={tier.value}
+                  type="button"
+                  onClick={() => setBrandTier(tier.value)}
+                  className={`rounded-lg border p-4 text-left transition-all ${
+                    brandTier === tier.value
+                      ? "border-primary bg-primary/5 ring-1 ring-primary"
+                      : "border-border hover:border-muted-foreground/50"
+                  }`}
+                >
+                  <span className="text-sm font-semibold text-foreground">{tier.label}</span>
+                  <p className="mt-1 text-xs text-muted-foreground">{tier.desc}</p>
+                  <p className="mt-2 text-sm font-bold text-primary">
+                    ${tier.priceLow}–${tier.priceHigh}
+                    <span className="font-normal text-muted-foreground"> /piece</span>
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Quantity & Pricing */}
+      <div className="rounded-lg border border-border bg-card p-6">
+        <h3 className="font-heading text-lg font-bold text-foreground">
+          QUANTITY & PRICING
+        </h3>
+        <div className="mt-4">
           <Label htmlFor="qty" className="text-foreground">
-            Quantity *
+            How many pieces? * (minimum {MIN_QTY})
           </Label>
           <Input
             id="qty"
             type="number"
-            min={1}
+            min={MIN_QTY}
             placeholder="e.g. 72"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="mt-1.5 text-lg"
+            className="mt-1.5 max-w-[200px] text-lg"
           />
+          {qty > 0 && qty < MIN_QTY && (
+            <p className="mt-2 text-sm text-destructive">
+              Minimum order is {MIN_QTY} pieces.
+            </p>
+          )}
         </div>
+
+        {/* Clickable qty tiers for t-shirts */}
+        {qtyTiers && (
+          <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Volume Pricing — click a tier or enter a custom quantity
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {qtyTiers.slice().reverse().map((tier) => {
+                const isActive =
+                  qty >= tier.minQty &&
+                  qtyTiers.find((t) => qty >= t.minQty)?.minQty === tier.minQty;
+                return (
+                  <button
+                    key={tier.minQty}
+                    type="button"
+                    onClick={() => setQuantity(String(tier.minQty))}
+                    className={`rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
+                      isActive
+                        ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
+                        : "border-border text-muted-foreground"
+                    }`}
+                  >
+                    <span className="block text-xs">{tier.minQty}+</span>
+                    <span className="block text-sm font-bold">
+                      ${tier.priceLow}–${tier.priceHigh}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              All-in per piece: garment + decoration + free shipping. Size upcharges: +$2 (2XL), +$4 (3XL), +$6 (4XL+).
+            </p>
+          </div>
+        )}
+
+        {/* Live estimate */}
+        {estimate && (
+          <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+              <DollarSign className="h-4 w-4" />
+              ESTIMATED PRICING
+            </div>
+            <div className="mt-3 flex items-baseline gap-1 text-2xl font-bold text-foreground">
+              ${estimate.perPieceLow}–${estimate.perPieceHigh}
+              <span className="text-sm font-normal text-muted-foreground">/piece</span>
+            </div>
+            <div className="mt-2 text-sm text-muted-foreground">
+              {estimate.qty} pieces → estimated total{" "}
+              <span className="font-semibold text-foreground">
+                ${estimate.totalLow.toLocaleString()}–${estimate.totalHigh.toLocaleString()}
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              All-in pricing includes garment + decoration. Final price confirmed within 1 business day.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Decoration */}
@@ -403,7 +646,11 @@ const CustomApparelForm = () => {
         disabled={!isValid || submitting}
         className="w-full font-heading text-base tracking-wide"
       >
-        {submitting ? "Submitting..." : "Submit Quote Request"}
+        {submitting
+          ? "Submitting..."
+          : estimate
+            ? `Submit Quote Request — Est. $${estimate.totalLow.toLocaleString()}–$${estimate.totalHigh.toLocaleString()}`
+            : "Submit Quote Request"}
       </Button>
     </form>
   );
