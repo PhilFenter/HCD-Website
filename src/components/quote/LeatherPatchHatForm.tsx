@@ -58,7 +58,7 @@ const HAT_BRANDS = [
   { value: "yp-classics", label: "YP Classics (Yupoong)" },
   { value: "legacy", label: "Legacy" },
   
-  { value: "outdoor-cap", label: "Outdoor Cap" },
+  
   { value: "other", label: "Other / Not Sure" },
 ];
 
