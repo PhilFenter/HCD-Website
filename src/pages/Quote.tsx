@@ -132,10 +132,6 @@ const Quote = () => {
                   <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
                     {products.find((p) => p.key === selected)?.title.toUpperCase()}
                   </h2>
-                  <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                    Fill in the details below and we'll send you a quote within
-                    one business day.
-                  </p>
                 </div>
 
                 {formMap[selected]}
