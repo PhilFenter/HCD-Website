@@ -72,7 +72,10 @@ const HAT_MODELS = [
   { value: "other", label: "Other / Not Sure", upcharge: "" },
 ];
 
-const HAT_COLORS = [
+// ── Model-specific colorways ──────────────────────────
+type ColorOption = { value: string; label: string };
+
+const COLORS_112: ColorOption[] = [
   // ── Split Colors ──
   { value: "caramel-black", label: "Caramel / Black" },
   { value: "chocolate-chip-birch", label: "Chocolate Chip / Birch" },
@@ -188,7 +191,169 @@ const HAT_COLORS = [
   { value: "realtree-edge-white", label: "Realtree Edge Camo / White" },
   { value: "mossy-oak-black", label: "Mossy Oak / Black" },
   { value: "multicam-black", label: "MultiCam / Black" },
-  // ── Other ──
+  { value: "other", label: "Other — specify in notes" },
+];
+
+const COLORS_112PFP: ColorOption[] = [
+  // ── Duck Camo ──
+  { value: "admiral-duck-camo-black", label: "Admiral Duck Camo / Black" },
+  { value: "americana-duck-camo-white", label: "Americana Duck Camo / White" },
+  { value: "bark-duck-camo-brown", label: "Bark Duck Camo / Brown" },
+  { value: "blaze-duck-camo-blaze", label: "Blaze Duck Camo / Blaze" },
+  { value: "blizzard-duck-camo-white", label: "Blizzard Duck Camo / White" },
+  { value: "harvest-duck-camo-light-tan", label: "Harvest Duck Camo / Light Tan" },
+  { value: "marsh-duck-camo-loden", label: "Marsh Duck Camo / Loden" },
+  { value: "sable-duck-camo-black", label: "Sable Duck Camo / Black" },
+  { value: "saltwater-duck-camo-charcoal", label: "Saltwater Duck Camo / Charcoal" },
+  { value: "sienna-duck-camo-loden", label: "Sienna Duck Camo / Loden" },
+  // ── Realtree / Mossy Oak / Kryptek ──
+  { value: "realtree-edge-brown", label: "Realtree Edge / Brown" },
+  { value: "realtree-edge-neon-orange", label: "Realtree Edge / Neon Orange" },
+  { value: "realtree-edge-neon-pink", label: "Realtree Edge / Neon Pink" },
+  { value: "realtree-excape-black", label: "Realtree Excape / Black" },
+  { value: "realtree-fishing", label: "Realtree Fishing" },
+  { value: "realtree-original-black", label: "Realtree Original / Black" },
+  { value: "realtree-max-1", label: "Realtree Max 1" },
+  { value: "realtree-max-7", label: "Realtree Max 7" },
+  { value: "realtree-timber-black", label: "Realtree Timber / Black" },
+  { value: "mossy-oak-bottomland-loden", label: "Mossy Oak Bottomland / Loden" },
+  { value: "mossy-oak-country-dna-black", label: "Mossy Oak Country DNA / Black" },
+  { value: "mossy-oak-bonefish-light-grey", label: "Mossy Oak Elements Bonefish / Light Grey" },
+  { value: "kryptek-highlander-buck", label: "Kryptek Highlander / Buck" },
+  { value: "kryptek-inferno-blaze", label: "Kryptek Inferno / Blaze Orange" },
+  { value: "kryptek-pontus-white", label: "Kryptek Pontus / White" },
+  { value: "kryptek-typhon-blaze", label: "Kryptek Typhon / Blaze Orange" },
+  // ── Other Prints ──
+  { value: "black-tonal-stars-stripes", label: "Black / Tonal Stars and Stripes" },
+  { value: "loden-tonal-stars-stripes", label: "Loden / Tonal Stars and Stripes" },
+  { value: "desert-camo-brown", label: "Desert Camo / Brown" },
+  { value: "digital-camo-light-green", label: "Digital Camo / Light Green" },
+  { value: "green-camo-black", label: "Green Camo / Black" },
+  { value: "green-camo-white", label: "Green Camo / White" },
+  { value: "typhon-black", label: "Typhon / Black" },
+  { value: "other", label: "Other — specify in notes" },
+];
+
+const COLORS_110: ColorOption[] = [
+  // ── Solid ──
+  { value: "solid-black", label: "Black (Solid)" },
+  { value: "solid-navy", label: "Navy (Solid)" },
+  { value: "solid-white", label: "White (Solid)" },
+  // ── Split ──
+  { value: "black-white", label: "Black / White" },
+  { value: "charcoal-black", label: "Charcoal / Black" },
+  { value: "charcoal-neon-blue", label: "Charcoal / Neon Blue" },
+  { value: "charcoal-neon-green", label: "Charcoal / Neon Green" },
+  { value: "charcoal-neon-orange", label: "Charcoal / Neon Orange" },
+  { value: "charcoal-neon-yellow", label: "Charcoal / Neon Yellow" },
+  { value: "dark-green-white", label: "Dark Green / White" },
+  { value: "dark-orange-khaki", label: "Dark Orange / Khaki" },
+  { value: "green-camo-black", label: "Green Camo / Black" },
+  { value: "heather-grey-black", label: "Heather Grey / Black" },
+  { value: "heather-grey-dark-green", label: "Heather Grey / Dark Green" },
+  { value: "heather-grey-navy", label: "Heather Grey / Navy" },
+  { value: "heather-grey-royal", label: "Heather Grey / Royal" },
+  { value: "heather-grey-white", label: "Heather Grey / White" },
+  { value: "khaki-coffee", label: "Khaki / Coffee" },
+  { value: "loden-black", label: "Loden / Black" },
+  { value: "navy-white", label: "Navy / White" },
+  { value: "royal-white", label: "Royal / White" },
+  { value: "other", label: "Other — specify in notes" },
+];
+
+const COLORS_115: ColorOption[] = [
+  // ── Solid ──
+  { value: "solid-black", label: "Black (Solid)" },
+  { value: "solid-loden", label: "Loden (Solid)" },
+  { value: "solid-navy", label: "Navy (Solid)" },
+  { value: "solid-white", label: "White (Solid)" },
+  // ── Split ──
+  { value: "aruba-blue-birch", label: "Aruba Blue / Birch" },
+  { value: "black-charcoal", label: "Black / Charcoal" },
+  { value: "black-neon-pink", label: "Black / Neon Pink" },
+  { value: "black-white", label: "Black / White" },
+  { value: "brown-dk-khaki", label: "Brown / Dk Khaki" },
+  { value: "caramel-birch", label: "Caramel / Birch" },
+  { value: "caramel-black", label: "Caramel / Black" },
+  { value: "charcoal-black", label: "Charcoal / Black" },
+  { value: "charcoal-red", label: "Charcoal / Red" },
+  { value: "charcoal-white", label: "Charcoal / White" },
+  { value: "chocolate-chip-birch", label: "Chocolate Chip / Birch" },
+  { value: "chocolate-chip-grey-brown", label: "Chocolate Chip / Grey Brown" },
+  { value: "coffee-claret", label: "Coffee / Claret" },
+  { value: "cyan-black", label: "Cyan / Black" },
+  { value: "dark-loden-jaffa-orange", label: "Dark Loden / Jaffa Orange" },
+  { value: "dk-green-heather-light-grey", label: "Dk Green Heather / Light Grey" },
+  { value: "heather-grey-dark-charcoal", label: "Heather Grey / Dark Charcoal" },
+  { value: "hot-pink-black", label: "Hot Pink / Black" },
+  { value: "lilac-birch", label: "Lilac / Birch" },
+  { value: "loden-black", label: "Loden / Black" },
+  { value: "navy-dk-khaki", label: "Navy / Dk Khaki" },
+  { value: "navy-heather-light-grey", label: "Navy Heather / Light Grey" },
+  { value: "navy-white", label: "Navy / White" },
+  { value: "patina-green-birch", label: "Patina Green / Birch" },
+  { value: "peach-birch", label: "Peach / Birch" },
+  { value: "red-heather-light-grey", label: "Red Heather / Light Grey" },
+  { value: "red-white", label: "Red / White" },
+  { value: "royal-heather-light-grey", label: "Royal Heather / Light Grey" },
+  { value: "royal-white", label: "Royal / White" },
+  { value: "smoke-blue-aluminum", label: "Smoke Blue / Aluminum" },
+  // ── Tri-Color ──
+  { value: "blue-teal-birch-navy", label: "Blue Teal / Birch / Navy" },
+  { value: "cream-loden-dark-orange", label: "Cream / Loden / Dark Orange" },
+  { value: "dark-orange-birch-patriot-blue", label: "Dark Orange / Birch / Patriot Blue" },
+  { value: "hgrey-birch-amber-gold", label: "Heather Grey / Birch / Amber Gold" },
+  { value: "hgrey-birch-army-olive", label: "Heather Grey / Birch / Army Olive" },
+  { value: "hgrey-birch-cardinal", label: "Heather Grey / Birch / Cardinal" },
+  { value: "spruce-birch-light-navy", label: "Spruce / Birch / Light Navy" },
+  { value: "tan-loden-brown", label: "Tan / Loden / Brown" },
+  { value: "white-col-blue-brown", label: "White / Columbia Blue / Brown" },
+  { value: "white-hawaiian-blue-pale-orange", label: "White / Hawaiian Blue / Pale Orange" },
+  { value: "other", label: "Other — specify in notes" },
+];
+
+const COLORS_6606: ColorOption[] = [
+  // ── Solid ──
+  { value: "solid-black", label: "Black (Solid)" },
+  { value: "solid-caramel", label: "Caramel (Solid)" },
+  { value: "solid-charcoal", label: "Charcoal (Solid)" },
+  { value: "solid-cranberry", label: "Cranberry (Solid)" },
+  { value: "solid-dark-heather", label: "Dark Heather (Solid)" },
+  { value: "solid-evergreen", label: "Evergreen (Solid)" },
+  { value: "solid-khaki", label: "Khaki (Solid)" },
+  { value: "solid-navy", label: "Navy (Solid)" },
+  { value: "solid-pink", label: "Pink (Solid)" },
+  { value: "solid-red", label: "Red (Solid)" },
+  { value: "solid-silver", label: "Silver (Solid)" },
+  { value: "solid-white", label: "White (Solid)" },
+  // ── Two-Tone (6606T) ──
+  { value: "black-loden", label: "Black / Loden" },
+  { value: "brown-khaki", label: "Brown / Khaki" },
+  { value: "buck-white", label: "Buck / White" },
+  { value: "caramel-black", label: "Caramel / Black" },
+  { value: "charcoal-navy", label: "Charcoal / Navy" },
+  { value: "charcoal-neon-green", label: "Charcoal / Neon Green" },
+  { value: "coyote-brown-black", label: "Coyote Brown / Black" },
+  { value: "evergreen-white", label: "Evergreen / White" },
+  { value: "heather-black", label: "Heather / Black" },
+  { value: "maroon-grey", label: "Maroon / Grey" },
+  { value: "navy-silver", label: "Navy / Silver" },
+  { value: "steel-blue-silver", label: "Steel Blue / Silver" },
+  { value: "turquoise-white", label: "Turquoise / White" },
+  { value: "other", label: "Other — specify in notes" },
+];
+
+const HAT_COLORS_BY_MODEL: Record<string, ColorOption[]> = {
+  "richardson-112": COLORS_112,
+  "richardson-112pfp": COLORS_112PFP,
+  "richardson-110": COLORS_110,
+  "richardson-115": COLORS_115,
+  "yp-classics-6606": COLORS_6606,
+};
+
+// Fallback for legacy/other/unknown models
+const DEFAULT_COLORS: ColorOption[] = [
+  ...COLORS_112.filter((c) => c.value !== "other"),
   { value: "other", label: "Other — specify in notes" },
 ];
 
