@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,14 +49,35 @@ const formMap: Record<ProductKey, React.ReactNode> = {
   apparel: <CustomApparelForm />,
 };
 
+const validKeys: ProductKey[] = ["hats", "patches", "apparel"];
+
 const Quote = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selected, setSelected] = useState<ProductKey | null>(null);
+
+  // Read ?product= on mount
+  useEffect(() => {
+    const param = searchParams.get("product") as ProductKey | null;
+    if (param && validKeys.includes(param)) {
+      setSelected(param);
+    }
+  }, []);
+
+  const handleSelect = (key: ProductKey) => {
+    setSelected(key);
+    setSearchParams({ product: key });
+  };
+
+  const handleBack = () => {
+    setSelected(null);
+    setSearchParams({});
+  };
 
   return (
     <Layout>
       <SEOHead
-        title="Get a Custom Quote — Hats, Patches & Apparel | HCD"
-        description="Request a free quote for leather patch hats, wholesale patches, or custom decorated apparel. We respond within one business day."
+        title="Build Your Order — Hats, Patches & Apparel | HCD"
+        description="Pick a product and build your order. Custom leather patch hats, wholesale patches, or decorated apparel — crafted in Idaho."
         canonicalPath="/quote"
       />
       <section className="py-20 md:py-28">
@@ -74,11 +96,10 @@ const Quote = () => {
                     GET STARTED
                   </p>
                   <h1 className="mt-4 font-heading text-4xl font-bold text-foreground md:text-5xl">
-                    WHAT ARE YOU LOOKING FOR?
+                    BUILD YOUR ORDER
                   </h1>
                   <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-                    Pick a product and fill out the details. We'll send you a
-                    quote within one business day — no back-and-forth emails needed.
+                    Pick a product and fill out the details — we'll get to work.
                   </p>
                 </div>
 
@@ -89,7 +110,7 @@ const Quote = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.08 }}
-                      onClick={() => setSelected(product.key)}
+                      onClick={() => handleSelect(product.key)}
                       className="group relative overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:border-primary hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <div className="aspect-[4/3] overflow-hidden">
@@ -121,7 +142,7 @@ const Quote = () => {
               >
                 <Button
                   variant="ghost"
-                  onClick={() => setSelected(null)}
+                  onClick={handleBack}
                   className="mb-6 gap-2 text-muted-foreground hover:text-foreground"
                 >
                   <ArrowLeft className="h-4 w-4" />
