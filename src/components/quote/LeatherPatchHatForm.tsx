@@ -530,10 +530,10 @@ const LeatherPatchHatForm = () => {
             <Label className="text-foreground">Hat Color</Label>
             <Select value={hatColor} onValueChange={setHatColor}>
               <SelectTrigger className="mt-1.5">
-                <SelectValue placeholder="Select color..." />
+                <SelectValue placeholder={hatModel ? "Select color..." : "Select a model first..."} />
               </SelectTrigger>
               <SelectContent>
-                {HAT_COLORS.map((c) => (
+                {(HAT_COLORS_BY_MODEL[hatModel] || DEFAULT_COLORS).map((c) => (
                   <SelectItem key={c.value} value={c.value}>
                     {c.label}
                   </SelectItem>
