@@ -555,6 +555,9 @@ const LeatherPatchHatForm = () => {
         <h3 className="font-heading text-lg font-bold text-foreground">
           PATCH DETAILS
         </h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Max patch height is 2.25″. Circle patches are 2.25″ diameter.
+        </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
             <Label className="text-foreground">Patch Shape *</Label>
