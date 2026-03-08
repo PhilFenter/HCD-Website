@@ -1,8 +1,31 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-leather-patches.jpg";
+import serviceHats from "@/assets/hero-sewing-patch.jpg";
+import servicePatches from "@/assets/gallery-leather-patch-flag.jpg";
+import serviceGarments from "@/assets/quote-garments.jpg";
+
+const products = [
+  {
+    key: "hats",
+    title: "Leather Patch Hats",
+    subtitle: "Custom leather patches on premium hat brands.",
+    image: serviceHats,
+  },
+  {
+    key: "patches",
+    title: "Wholesale Patches",
+    subtitle: "Loose patches for hat makers, retailers & brands.",
+    image: servicePatches,
+  },
+  {
+    key: "apparel",
+    title: "Custom Apparel",
+    subtitle: "Screen print, DTF, or embroidery on any garment.",
+    image: serviceGarments,
+    imagePosition: "object-top",
+  },
+];
 
 const HeroSection = () => {
   return (
@@ -42,56 +65,56 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-6xl"
+            className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-5xl"
           >
-            YOUR BRAND,
-            <br />
-            <span className="text-gradient-gold">OUR CRAFT</span>
+            BUILD YOUR ORDER
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
+            className="mt-4 max-w-lg text-lg leading-relaxed text-muted-foreground"
           >
-            Custom leather patch hats, embroidery, screen printing & DTF
-            transfers — crafted in Idaho, shipped to your door anywhere in the U.S.
+            Pick a product, fill out the details, and we'll get to work.
           </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="mt-3 text-sm font-medium tracking-wide text-primary"
-          >
-            Serving the LC Valley, the Palouse & the Camas Prairie.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.37 }}
-            className="mt-2 text-sm text-muted-foreground"
-          >
-            Uniforms • Contractor workwear • School spirit wear • Branded hats
-          </motion.p>
-
+          {/* Product cards */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-8 flex flex-col gap-4 sm:flex-row"
+            className="mt-10 grid w-full max-w-4xl gap-5 sm:grid-cols-3"
           >
-            <Button size="lg" asChild className="text-base font-heading tracking-wide">
-              <Link to="/quote">
-                Get a Free Quote
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="text-base font-heading tracking-wide">
-              <Link to="/about">Our Story</Link>
-            </Button>
+            {products.map((product, i) => (
+              <motion.div
+                key={product.key}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 + i * 0.08 }}
+              >
+                <Link
+                  to={`/quote?product=${product.key}`}
+                  className="group block overflow-hidden rounded-lg border border-border bg-card/80 backdrop-blur-sm text-left transition-all hover:border-primary hover:shadow-lg"
+                >
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${product.imagePosition || ""}`}
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-base font-semibold text-foreground">
+                      {product.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {product.subtitle}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </div>
