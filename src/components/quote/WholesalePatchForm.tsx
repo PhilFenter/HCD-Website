@@ -161,6 +161,7 @@ const WholesalePatchForm = () => {
   const [patchType, setPatchType] = useState("");
   const [patchLength, setPatchLength] = useState("");
   const [patchWidth, setPatchWidth] = useState("");
+  const [patchShape, setPatchShape] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
   const [quantity, setQuantity] = useState("");
   const [backing, setBacking] = useState("");
@@ -171,14 +172,19 @@ const WholesalePatchForm = () => {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
 
+  const patchLenNum = parseFloat(patchLength) || 0;
+  const patchWidNum = parseFloat(patchWidth) || 0;
+  const calculatedSize = (patchLenNum + patchWidNum) / 2;
+  const patchSize = calcSizeTier(patchLenNum, patchWidNum);
+
   const qty = Number(quantity) || 0;
-  const estimate = useMemo(() => calcPatchEstimate(patchType, patchSize, qty), [patchType, patchSize, qty]);
+  const estimate = useMemo(() => patchSize ? calcPatchEstimate(patchType, patchSize, qty) : null, [patchType, patchSize, qty]);
   const tierPrices = useMemo(
-    () => (PATCH_TYPE_MULTIPLIERS[patchType] ? getTierPricesForSize(patchType, patchSize) : []),
+    () => (PATCH_TYPE_MULTIPLIERS[patchType] && patchSize ? getTierPricesForSize(patchType, patchSize) : []),
     [patchType, patchSize]
   );
 
-  const hasLivePricing = !!PATCH_TYPE_MULTIPLIERS[patchType] && patchSize && patchSize !== "custom";
+  const hasLivePricing = !!PATCH_TYPE_MULTIPLIERS[patchType] && !!patchSize;
 
   const isValid =
     !!patchType && !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
