@@ -578,7 +578,7 @@ const LeatherPatchHatForm = () => {
                 <SelectValue placeholder="Select size..." />
               </SelectTrigger>
               <SelectContent>
-                {PATCH_SIZES.map((s) => (
+                {(PATCH_SIZES[patchShape] || PATCH_SIZES.default).map((s) => (
                   <SelectItem key={s.value} value={s.value}>
                     {s.label}
                   </SelectItem>
