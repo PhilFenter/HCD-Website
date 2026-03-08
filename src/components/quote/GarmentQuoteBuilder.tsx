@@ -418,11 +418,8 @@ const GarmentQuoteBuilder = () => {
         return !!data.garmentType && tierOk && !!data.quantity && qty >= MIN_QTY && locOk;
       }
       case "Print Details":
-        // Optional — user can skip if they want DTF instead
         return true;
       case "Embroidery":
-        // Required for polos (embroidery-only), optional for other garments
-        if (isPolo) return data.embroideryLocations.length > 0;
         return true;
       case "Deadline":
         return !!data.timeline;
