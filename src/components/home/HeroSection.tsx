@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-leather-patches.jpg";
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
-import servicePatches from "@/assets/gallery-leather-patch-flag.jpg";
+import servicePatches from "@/assets/hero-leather-patches.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
 const products = [
