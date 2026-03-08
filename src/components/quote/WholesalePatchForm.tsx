@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Check, Upload, X, DollarSign } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
-import { Switch } from "@/components/ui/switch";
+
 import {
   Select,
   SelectContent,
