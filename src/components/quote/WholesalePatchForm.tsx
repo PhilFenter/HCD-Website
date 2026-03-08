@@ -249,7 +249,8 @@ const WholesalePatchForm = () => {
             setSubmitted(false);
             setPatchType("");
             setPatchShape("");
-            setPatchSize("");
+            setPatchLength("");
+            setPatchWidth("");
             setLeatherColor("");
             setQuantity("");
             setBacking("");
