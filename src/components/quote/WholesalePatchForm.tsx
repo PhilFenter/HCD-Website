@@ -167,11 +167,11 @@ const WholesalePatchForm = () => {
   const qty = Number(quantity) || 0;
   const estimate = useMemo(() => calcPatchEstimate(patchType, patchSize, qty), [patchType, patchSize, qty]);
   const tierPrices = useMemo(
-    () => (patchType === "leather" ? getTierPricesForSize(patchSize) : []),
+    () => (PATCH_TYPE_MULTIPLIERS[patchType] ? getTierPricesForSize(patchType, patchSize) : []),
     [patchType, patchSize]
   );
 
-  const hasLivePricing = patchType === "leather" && patchSize && patchSize !== "custom";
+  const hasLivePricing = !!PATCH_TYPE_MULTIPLIERS[patchType] && patchSize && patchSize !== "custom";
 
   const isValid =
     !!patchType && !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
