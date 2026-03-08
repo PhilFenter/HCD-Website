@@ -19,11 +19,12 @@ import {
 const PATCH_TYPES = [
   { value: "leather", label: "Genuine Leather", desc: "Laser engraved on real leather — classic, premium feel." },
   { value: "leatherette", label: "Leatherette", desc: "Synthetic leather with a similar look — more color options, budget-friendly." },
-  { value: "uv-printed", label: "UV Printed", desc: "Full-color prints directly on leather or leatherette — photos, gradients, unlimited colors." },
+  { value: "uv-printed", label: "UV Printed", desc: "Full-color prints on leather or leatherette — photos, gradients, unlimited colors." },
   { value: "embroidered", label: "Embroidered Patch", desc: "Traditional thread-stitched patches — vibrant, textured, classic look." },
   { value: "other", label: "Other / Not Sure", desc: "We'll help you pick the best option." },
 ];
 
+// ── Patch Shapes ───────────────────────────────────────
 const PATCH_SHAPES = [
   { value: "rectangle", label: "Rectangle" },
   { value: "rounded-rectangle", label: "Rounded Rectangle" },
@@ -34,12 +35,15 @@ const PATCH_SHAPES = [
   { value: "other", label: "Other / Not Sure" },
 ];
 
+// ── Patch Sizes (based on supplier Size = (L+W)/2 ) ───
 const PATCH_SIZES = [
-  { value: "2x3", label: '2" × 3"' },
-  { value: "2.5x3.5", label: '2.5" × 3.5"' },
-  { value: "3x3", label: '3" × 3"' },
-  { value: "3x4", label: '3" × 4"' },
-  { value: "custom", label: "Custom Size" },
+  { value: "up-to-1.5", label: 'Up to 1.5"' },
+  { value: "1.51-2.0", label: '1.51"–2.0"' },
+  { value: "2.01-2.5", label: '2.01"–2.5"' },
+  { value: "2.51-3.0", label: '2.51"–3.0"' },
+  { value: "3.01-3.5", label: '3.01"–3.5"' },
+  { value: "3.51-4.0", label: '3.51"–4.0"' },
+  { value: "custom", label: "Custom / Not Sure" },
 ];
 
 const LEATHER_COLORS = [
@@ -50,56 +54,89 @@ const LEATHER_COLORS = [
   { value: "other", label: "Other" },
 ];
 
-// ── Pricing (placeholder — user will provide exact tiers) ──
-const MIN_QTY = 25;
+// ── Leather Patch Pricing Matrix (size × quantity) ─────
+// Size = (Length + Width) / 2
+// Columns: up-to-1.5, 1.51-2.0, 2.01-2.5, 2.51-3.0, 3.01-3.5, 3.51-4.0
+const LEATHER_QTY_TIERS = [
+  { min: 10000, max: 24999, label: "10,000+" },
+  { min: 5000, max: 9999, label: "5,000+" },
+  { min: 2500, max: 4999, label: "2,500+" },
+  { min: 1000, max: 2499, label: "1,000+" },
+  { min: 500, max: 999, label: "500+" },
+  { min: 250, max: 499, label: "250+" },
+  { min: 100, max: 249, label: "100+" },
+  { min: 50, max: 99, label: "50+" },
+  { min: 25, max: 49, label: "25+" },
+  { min: 12, max: 24, label: "12+" },
+];
 
-// Rough wholesale patch pricing tiers per piece
-const PATCH_PRICE_TIERS: Record<string, { min: number; price: number }[]> = {
-  leather: [
-    { min: 500, price: 3.50 },
-    { min: 250, price: 4.00 },
-    { min: 100, price: 5.00 },
-    { min: 50, price: 6.00 },
-    { min: 25, price: 7.50 },
-  ],
-  leatherette: [
-    { min: 500, price: 2.50 },
-    { min: 250, price: 3.00 },
-    { min: 100, price: 3.75 },
-    { min: 50, price: 4.50 },
-    { min: 25, price: 5.50 },
-  ],
-  "uv-printed": [
-    { min: 500, price: 4.00 },
-    { min: 250, price: 4.75 },
-    { min: 100, price: 5.50 },
-    { min: 50, price: 6.50 },
-    { min: 25, price: 8.00 },
-  ],
-  embroidered: [
-    { min: 500, price: 3.00 },
-    { min: 250, price: 3.50 },
-    { min: 100, price: 4.25 },
-    { min: 50, price: 5.25 },
-    { min: 25, price: 6.50 },
-  ],
+// prices[qtyTierIndex][sizeIndex]
+const LEATHER_PRICES: number[][] = [
+  // 10000+
+  [1.10, 1.61, 1.65, 1.75, 1.86, 2.11],
+  // 5000+
+  [1.18, 1.68, 1.75, 1.82, 1.97, 2.24],
+  // 2500+
+  [1.22, 1.79, 1.82, 1.92, 2.04, 2.35],
+  // 1000+
+  [1.29, 1.82, 2.04, 2.21, 2.35, 2.65],
+  // 500+
+  [1.36, 1.90, 2.27, 2.43, 2.54, 2.97],
+  // 250+
+  [1.50, 2.04, 2.89, 3.08, 3.24, 3.64],
+  // 100+
+  [1.97, 2.50, 3.34, 3.88, 4.02, 4.31],
+  // 50+
+  [2.72, 3.27, 3.91, 4.81, 5.41, 5.69],
+  // 25+
+  [4.31, 4.81, 5.41, 5.98, 6.47, 7.06],
+  // 12+
+  [5.17, 5.77, 6.49, 7.18, 7.76, 8.47],
+];
+
+const ART_SETUP_FEE = 30;
+const MIN_QTY = 12;
+
+const SIZE_INDEX: Record<string, number> = {
+  "up-to-1.5": 0,
+  "1.51-2.0": 1,
+  "2.01-2.5": 2,
+  "2.51-3.0": 3,
+  "3.01-3.5": 4,
+  "3.51-4.0": 5,
 };
 
-function getPatchPrice(patchType: string, qty: number): number | null {
-  const tiers = PATCH_PRICE_TIERS[patchType];
-  if (!tiers || qty < MIN_QTY) return null;
-  for (const tier of tiers) {
-    if (qty >= tier.min) return tier.price;
+function getLeatherPrice(size: string, qty: number): number | null {
+  const sizeIdx = SIZE_INDEX[size];
+  if (sizeIdx === undefined || qty < MIN_QTY) return null;
+  for (let i = 0; i < LEATHER_QTY_TIERS.length; i++) {
+    if (qty >= LEATHER_QTY_TIERS[i].min) {
+      return LEATHER_PRICES[i][sizeIdx];
+    }
   }
   return null;
 }
 
-function calcPatchEstimate(patchType: string, qty: number) {
-  const perPatch = getPatchPrice(patchType, qty);
+function calcPatchEstimate(patchType: string, size: string, qty: number) {
+  if (patchType !== "leather") return null;
+  const perPatch = getLeatherPrice(size, qty);
   if (!perPatch) return null;
-  return { perPatch, subtotal: perPatch * qty, qty };
+  const subtotal = perPatch * qty;
+  return { perPatch, subtotal, setupFee: ART_SETUP_FEE, total: subtotal + ART_SETUP_FEE, qty };
 }
 
+// Get tier prices for a given size (for clickable tier buttons)
+function getTierPricesForSize(size: string): { min: number; label: string; price: number }[] {
+  const sizeIdx = SIZE_INDEX[size];
+  if (sizeIdx === undefined) return [];
+  return LEATHER_QTY_TIERS.map((tier, i) => ({
+    min: tier.min,
+    label: tier.label,
+    price: LEATHER_PRICES[i][sizeIdx],
+  }));
+}
+
+// ── Component ──────────────────────────────────────────
 const WholesalePatchForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -119,10 +156,13 @@ const WholesalePatchForm = () => {
   const [company, setCompany] = useState("");
 
   const qty = Number(quantity) || 0;
-  const estimate = useMemo(() => calcPatchEstimate(patchType, qty), [patchType, qty]);
+  const estimate = useMemo(() => calcPatchEstimate(patchType, patchSize, qty), [patchType, patchSize, qty]);
+  const tierPrices = useMemo(
+    () => (patchType === "leather" ? getTierPricesForSize(patchSize) : []),
+    [patchType, patchSize]
+  );
 
-  // Get tiers for the selected patch type (for clickable buttons)
-  const currentTiers = PATCH_PRICE_TIERS[patchType] || [];
+  const hasLivePricing = patchType === "leather" && patchSize && patchSize !== "custom";
 
   const isValid =
     !!patchType && !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
@@ -140,7 +180,7 @@ const WholesalePatchForm = () => {
         company,
         notes,
         quantity,
-        estimate: estimate ? { low: estimate.subtotal, high: estimate.subtotal } : null,
+        estimate: estimate ? { low: estimate.total, high: estimate.total } : null,
         details: {
           patchType,
           patchShape,
@@ -253,7 +293,7 @@ const WholesalePatchForm = () => {
             </Select>
           </div>
           <div>
-            <Label className="text-foreground">Patch Size</Label>
+            <Label className="text-foreground">Patch Size *</Label>
             <Select value={patchSize} onValueChange={setPatchSize}>
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select size..." />
@@ -266,6 +306,11 @@ const WholesalePatchForm = () => {
                 ))}
               </SelectContent>
             </Select>
+            {patchType === "leather" && (
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Size = (Length + Width) ÷ 2
+              </p>
+            )}
           </div>
           <div>
             <Label className="text-foreground">Color</Label>
@@ -321,17 +366,17 @@ const WholesalePatchForm = () => {
           )}
         </div>
 
-        {/* Clickable pricing tiers */}
-        {currentTiers.length > 0 && (
+        {/* Clickable pricing tiers (leather only, when size is selected) */}
+        {hasLivePricing && tierPrices.length > 0 && (
           <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Volume Pricing — click a tier or enter a custom quantity
             </p>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-              {currentTiers.slice().reverse().map((tier) => {
+              {tierPrices.slice().reverse().slice(0, 8).map((tier) => {
                 const isActive =
                   qty >= tier.min &&
-                  currentTiers.find((t) => qty >= t.min)?.min === tier.min;
+                  tierPrices.find((t) => qty >= t.min)?.min === tier.min;
                 return (
                   <button
                     key={tier.min}
@@ -343,19 +388,29 @@ const WholesalePatchForm = () => {
                         : "border-border text-muted-foreground"
                     }`}
                   >
-                    <span className="block text-xs">{tier.min}+</span>
+                    <span className="block text-xs">{tier.label}</span>
                     <span className="block text-sm font-bold">${tier.price.toFixed(2)}</span>
                   </button>
                 );
               })}
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Prices shown per patch. Final price confirmed within 1 business day.
+              Prices per patch. Includes heat-applied or pressure-sensitive backing. $30 art setup fee applies.
             </p>
           </div>
         )}
 
-        {/* Live estimate */}
+        {/* "Request quote" note for non-leather types */}
+        {patchType && patchType !== "leather" && patchType !== "other" && (
+          <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
+            <p className="text-sm text-muted-foreground">
+              Pricing for <span className="font-medium text-foreground">{PATCH_TYPES.find(p => p.value === patchType)?.label}</span> patches
+              varies by design complexity. We'll include a detailed quote within one business day.
+            </p>
+          </div>
+        )}
+
+        {/* Live estimate (leather only) */}
         {estimate && (
           <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
@@ -366,14 +421,25 @@ const WholesalePatchForm = () => {
               ${estimate.perPatch.toFixed(2)}
               <span className="text-sm font-normal text-muted-foreground">/patch</span>
             </div>
-            <div className="mt-2 text-sm text-muted-foreground">
-              {estimate.qty} patches × ${estimate.perPatch.toFixed(2)} ={" "}
-              <span className="font-semibold text-foreground">
-                ${estimate.subtotal.toFixed(2)}
-              </span>
+            <div className="mt-2 space-y-1 text-sm text-muted-foreground">
+              <div>
+                {estimate.qty} patches × ${estimate.perPatch.toFixed(2)} ={" "}
+                <span className="font-semibold text-foreground">
+                  ${estimate.subtotal.toFixed(2)}
+                </span>
+              </div>
+              <div>
+                Art setup fee:{" "}
+                <span className="font-semibold text-foreground">
+                  ${estimate.setupFee.toFixed(2)}
+                </span>
+              </div>
+              <div className="border-t border-border pt-1 text-base font-bold text-foreground">
+                Estimated Total: ${estimate.total.toFixed(2)}
+              </div>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
-              Final price confirmed within 1 business day.
+              Includes backing + digital pre-production sample. Final price confirmed within 1 business day.
             </p>
           </div>
         )}
@@ -510,7 +576,7 @@ const WholesalePatchForm = () => {
         {submitting
           ? "Submitting..."
           : estimate
-            ? `Submit Quote Request — Est. $${estimate.subtotal.toFixed(2)}`
+            ? `Submit Quote Request — Est. $${estimate.total.toFixed(2)}`
             : "Submit Quote Request"}
       </Button>
     </form>
