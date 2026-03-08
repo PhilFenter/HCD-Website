@@ -337,15 +337,34 @@ const WholesalePatchForm = () => {
           </div>
         </div>
 
-        <div className="mt-6 flex items-center gap-3">
-          <Switch
-            id="sewing-channel"
-            checked={sewingChannel}
-            onCheckedChange={setSewingChannel}
-          />
-          <Label htmlFor="sewing-channel" className="cursor-pointer text-foreground">
-            Include sewing channel (heat-seal border for easy application)
-          </Label>
+        <div className="mt-6">
+          <Label className="text-foreground">Backing *</Label>
+          <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => setBacking("heat-seal")}
+              className={`rounded-lg border p-4 text-left transition-all ${
+                backing === "heat-seal"
+                  ? "border-primary bg-primary/5 ring-1 ring-primary"
+                  : "border-border hover:border-muted-foreground/50"
+              }`}
+            >
+              <span className="text-sm font-semibold text-foreground">Heat Seal Backing</span>
+              <p className="mt-1 text-xs text-muted-foreground">Iron-on adhesive for easy application with a heat press.</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => setBacking("natural")}
+              className={`rounded-lg border p-4 text-left transition-all ${
+                backing === "natural"
+                  ? "border-primary bg-primary/5 ring-1 ring-primary"
+                  : "border-border hover:border-muted-foreground/50"
+              }`}
+            >
+              <span className="text-sm font-semibold text-foreground">Natural Leather</span>
+              <p className="mt-1 text-xs text-muted-foreground">No backing — raw leather, ready to sew or attach manually.</p>
+            </button>
+          </div>
         </div>
       </div>
 
