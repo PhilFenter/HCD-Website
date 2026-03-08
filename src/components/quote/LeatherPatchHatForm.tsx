@@ -558,7 +558,7 @@ const LeatherPatchHatForm = () => {
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
             <Label className="text-foreground">Patch Shape *</Label>
-            <Select value={patchShape} onValueChange={setPatchShape}>
+            <Select value={patchShape} onValueChange={(val) => { setPatchShape(val); setPatchSize(""); }}>
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select shape..." />
               </SelectTrigger>
