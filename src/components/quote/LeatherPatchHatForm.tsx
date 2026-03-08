@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Upload, X } from "lucide-react";
+import { Check, Upload, X, DollarSign } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import {
   Select,
@@ -14,23 +14,68 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const HAT_BRANDS = [
-  { value: "richardson", label: "Richardson" },
-  { value: "yp-classics", label: "YP Classics (Yupoong)" },
-  { value: "legacy", label: "Legacy" },
-  { value: "pacific-headwear", label: "Pacific Headwear" },
-  { value: "outdoor-cap", label: "Outdoor Cap" },
-  { value: "other", label: "Other / Not Sure" },
+// ── Pricing (mirrors HatQuoteBuilder) ──────────────────
+const HAT_PRICE_TIERS = [
+  { min: 100, price: 19 },
+  { min: 72, price: 21 },
+  { min: 60, price: 22 },
+  { min: 48, price: 23 },
+  { min: 24, price: 26 },
+  { min: 12, price: 27 },
 ];
 
+const HAT_UPCHARGES: Record<string, number> = {
+  "richardson-112": 0,
+  "richardson-110": 1.25,
+  "richardson-112pfp": 1.50,
+  "yp-classics-6606": 1.05,
+  "legacy-ofa": 2.00,
+};
+
+const EMBROIDERY_DIGITIZING_FEE = 45;
+const MIN_QTY = 12;
+
+function getPerHatPrice(qty: number): number | null {
+  if (qty < MIN_QTY) return null;
+  for (const tier of HAT_PRICE_TIERS) {
+    if (qty >= tier.min) return tier.price;
+  }
+  return null;
+}
+
+function calcEstimate(hatModel: string, qty: number) {
+  const base = getPerHatPrice(qty);
+  if (!base) return null;
+  const upcharge = HAT_UPCHARGES[hatModel] ?? 0;
+  const perHat = base + upcharge;
+  const subtotal = perHat * qty;
+  return { perHat, base, upcharge, subtotal, qty };
+}
+
+// ── Options ────────────────────────────────────────────
 const HAT_MODELS = [
-  { value: "112", label: "Richardson 112 (Trucker Snapback)" },
-  { value: "112pfp", label: "Richardson 112PFP (Five Panel)" },
-  { value: "110", label: "Richardson 110 (R-Flex Fitted)" },
-  { value: "115", label: "Richardson 115 (Low Pro Trucker)" },
-  { value: "6606", label: "YP Classics 6606 (Retro Trucker)" },
-  { value: "ofa", label: "Legacy OFA (Unstructured)" },
-  { value: "other", label: "Other / Not Sure" },
+  { value: "richardson-112", label: "Richardson 112 (Trucker Snapback)", upcharge: "" },
+  { value: "richardson-112pfp", label: "Richardson 112PFP (Five Panel)", upcharge: "+$1.50" },
+  { value: "richardson-110", label: "Richardson 110 (R-Flex Fitted)", upcharge: "+$1.25" },
+  { value: "yp-classics-6606", label: "YP Classics 6606 (Retro Trucker)", upcharge: "+$1.05" },
+  { value: "legacy-ofa", label: "Legacy OFA (Unstructured)", upcharge: "+$2.00" },
+  { value: "other", label: "Other / Not Sure", upcharge: "" },
+];
+
+const HAT_COLORS = [
+  { value: "black-white", label: "Black / White" },
+  { value: "charcoal-white", label: "Charcoal / White" },
+  { value: "charcoal-black", label: "Charcoal / Black" },
+  { value: "navy-white", label: "Navy / White" },
+  { value: "heather-grey-black", label: "Heather Grey / Black" },
+  { value: "loden-black", label: "Loden / Black" },
+  { value: "brown-khaki", label: "Brown / Khaki" },
+  { value: "khaki-brown", label: "Khaki / Brown" },
+  { value: "camo-black", label: "Realtree Camo / Black" },
+  { value: "red-white", label: "Red / White" },
+  { value: "all-black", label: "Black / Black (Solid)" },
+  { value: "all-white", label: "White / White (Solid)" },
+  { value: "other", label: "Other — specify in notes" },
 ];
 
 const PATCH_SHAPES = [
@@ -64,7 +109,6 @@ const LeatherPatchHatForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const [hatBrand, setHatBrand] = useState("");
   const [hatModel, setHatModel] = useState("");
   const [hatColor, setHatColor] = useState("");
   const [patchShape, setPatchShape] = useState("");
@@ -78,8 +122,11 @@ const LeatherPatchHatForm = () => {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
 
+  const qty = Number(quantity) || 0;
+  const estimate = useMemo(() => calcEstimate(hatModel, qty), [hatModel, qty]);
+
   const isValid =
-    !!patchShape && !!quantity && Number(quantity) >= 1 && !!name && !!email && !!phone;
+    !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,8 +141,8 @@ const LeatherPatchHatForm = () => {
         company,
         notes,
         quantity,
+        estimate: estimate ? { low: estimate.subtotal, high: estimate.subtotal } : null,
         details: {
-          hatBrand,
           hatModel,
           hatColor,
           patchShape,
@@ -139,7 +186,6 @@ const LeatherPatchHatForm = () => {
           variant="outline"
           onClick={() => {
             setSubmitted(false);
-            setHatBrand("");
             setHatModel("");
             setHatColor("");
             setPatchShape("");
@@ -162,28 +208,13 @@ const LeatherPatchHatForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-8">
-      {/* Product Details */}
+      {/* Hat Details */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h3 className="font-heading text-lg font-bold text-foreground">
           HAT DETAILS
         </h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label className="text-foreground">Hat Brand</Label>
-            <Select value={hatBrand} onValueChange={setHatBrand}>
-              <SelectTrigger className="mt-1.5">
-                <SelectValue placeholder="Select brand..." />
-              </SelectTrigger>
-              <SelectContent>
-                {HAT_BRANDS.map((b) => (
-                  <SelectItem key={b.value} value={b.value}>
-                    {b.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
+          <div className="sm:col-span-2">
             <Label className="text-foreground">Hat Model</Label>
             <Select value={hatModel} onValueChange={setHatModel}>
               <SelectTrigger className="mt-1.5">
@@ -192,23 +223,26 @@ const LeatherPatchHatForm = () => {
               <SelectContent>
                 {HAT_MODELS.map((m) => (
                   <SelectItem key={m.value} value={m.value}>
-                    {m.label}
+                    {m.label}{m.upcharge ? ` (${m.upcharge}/hat)` : ""}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className="sm:col-span-2">
-            <Label htmlFor="hat-color" className="text-foreground">
-              Hat Color(s)
-            </Label>
-            <Input
-              id="hat-color"
-              placeholder="e.g. Black/White, Charcoal/Black, Camo/Tan..."
-              value={hatColor}
-              onChange={(e) => setHatColor(e.target.value)}
-              className="mt-1.5"
-            />
+            <Label className="text-foreground">Hat Color</Label>
+            <Select value={hatColor} onValueChange={setHatColor}>
+              <SelectTrigger className="mt-1.5">
+                <SelectValue placeholder="Select color..." />
+              </SelectTrigger>
+              <SelectContent>
+                {HAT_COLORS.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
@@ -267,25 +301,90 @@ const LeatherPatchHatForm = () => {
         </div>
       </div>
 
-      {/* Quantity */}
+      {/* Quantity + Live Pricing */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h3 className="font-heading text-lg font-bold text-foreground">
-          QUANTITY
+          QUANTITY & PRICING
         </h3>
-        <div className="mt-4 max-w-[200px]">
+        <div className="mt-4">
           <Label htmlFor="qty" className="text-foreground">
-            How many hats? *
+            How many hats? * (minimum {MIN_QTY})
           </Label>
           <Input
             id="qty"
             type="number"
-            min={1}
+            min={MIN_QTY}
             placeholder="e.g. 48"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="mt-1.5 text-lg"
+            className="mt-1.5 max-w-[200px] text-lg"
           />
+          {qty > 0 && qty < MIN_QTY && (
+            <p className="mt-2 text-sm text-destructive">
+              Minimum order is {MIN_QTY} hats.
+            </p>
+          )}
         </div>
+
+        {/* Clickable pricing tiers */}
+        <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Volume Pricing — click a tier or enter a custom quantity
+          </p>
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+            {HAT_PRICE_TIERS.slice().reverse().map((tier) => {
+              const isActive =
+                qty >= tier.min &&
+                HAT_PRICE_TIERS.find((t) => qty >= t.min)?.min === tier.min;
+              return (
+                <button
+                  key={tier.min}
+                  type="button"
+                  onClick={() => setQuantity(String(tier.min))}
+                  className={`rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
+                    isActive
+                      ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  <span className="block text-xs">{tier.min}+</span>
+                  <span className="block text-sm font-bold">${tier.price}</span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Prices shown per hat on Richardson 112. Includes patch + hat + free shipping.
+          </p>
+        </div>
+
+        {/* Live estimate */}
+        {estimate && (
+          <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+              <DollarSign className="h-4 w-4" />
+              ESTIMATED PRICING
+            </div>
+            <div className="mt-3 flex items-baseline gap-1 text-2xl font-bold text-foreground">
+              ${estimate.perHat.toFixed(2)}
+              <span className="text-sm font-normal text-muted-foreground">/hat</span>
+              {estimate.upcharge > 0 && (
+                <span className="ml-2 text-xs text-muted-foreground">
+                  (base ${estimate.base} + ${estimate.upcharge.toFixed(2)} hat upcharge)
+                </span>
+              )}
+            </div>
+            <div className="mt-2 text-sm text-muted-foreground">
+              {estimate.qty} hats × ${estimate.perHat.toFixed(2)} ={" "}
+              <span className="font-semibold text-foreground">
+                ${estimate.subtotal.toFixed(2)}
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Includes patch + hat + free shipping. Final price confirmed within 1 business day.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Artwork */}
@@ -342,7 +441,7 @@ const LeatherPatchHatForm = () => {
         </h3>
         <div className="mt-4">
           <Textarea
-            placeholder="Special requests, questions, multiple designs, size breakdowns..."
+            placeholder="Special requests, multiple hat colors, size breakdowns, questions..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
@@ -416,7 +515,9 @@ const LeatherPatchHatForm = () => {
         disabled={!isValid || submitting}
         className="w-full font-heading text-base tracking-wide"
       >
-        {submitting ? "Submitting..." : "Submit Quote Request"}
+        {submitting ? "Submitting..." : estimate
+          ? `Submit Quote Request — Est. $${estimate.subtotal.toFixed(2)}`
+          : "Submit Quote Request"}
       </Button>
     </form>
   );
