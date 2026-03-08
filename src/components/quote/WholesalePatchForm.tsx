@@ -159,8 +159,8 @@ const WholesalePatchForm = () => {
   const { toast } = useToast();
 
   const [patchType, setPatchType] = useState("");
-  const [patchShape, setPatchShape] = useState("");
-  const [patchSize, setPatchSize] = useState("");
+  const [patchLength, setPatchLength] = useState("");
+  const [patchWidth, setPatchWidth] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
   const [quantity, setQuantity] = useState("");
   const [backing, setBacking] = useState("");
