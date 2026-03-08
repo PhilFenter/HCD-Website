@@ -106,33 +106,42 @@ const SIZE_INDEX: Record<string, number> = {
   "3.51-4.0": 5,
 };
 
-function getLeatherPrice(size: string, qty: number): number | null {
+// Multipliers relative to leather base pricing
+const PATCH_TYPE_MULTIPLIERS: Record<string, number> = {
+  leather: 1.0,
+  leatherette: 0.88,  // 12% less
+  "uv-printed": 1.10, // 10% more
+};
+
+function getPatchPrice(patchType: string, size: string, qty: number): number | null {
   const sizeIdx = SIZE_INDEX[size];
-  if (sizeIdx === undefined || qty < MIN_QTY) return null;
+  const multiplier = PATCH_TYPE_MULTIPLIERS[patchType];
+  if (sizeIdx === undefined || multiplier === undefined || qty < MIN_QTY) return null;
   for (let i = 0; i < LEATHER_QTY_TIERS.length; i++) {
     if (qty >= LEATHER_QTY_TIERS[i].min) {
-      return LEATHER_PRICES[i][sizeIdx];
+      return Math.round(LEATHER_PRICES[i][sizeIdx] * multiplier * 100) / 100;
     }
   }
   return null;
 }
 
 function calcPatchEstimate(patchType: string, size: string, qty: number) {
-  if (patchType !== "leather") return null;
-  const perPatch = getLeatherPrice(size, qty);
+  if (!PATCH_TYPE_MULTIPLIERS[patchType]) return null;
+  const perPatch = getPatchPrice(patchType, size, qty);
   if (!perPatch) return null;
   const subtotal = perPatch * qty;
   return { perPatch, subtotal, setupFee: ART_SETUP_FEE, total: subtotal + ART_SETUP_FEE, qty };
 }
 
-// Get tier prices for a given size (for clickable tier buttons)
-function getTierPricesForSize(size: string): { min: number; label: string; price: number }[] {
+// Get tier prices for a given size + patch type (for clickable tier buttons)
+function getTierPricesForSize(patchType: string, size: string): { min: number; label: string; price: number }[] {
   const sizeIdx = SIZE_INDEX[size];
-  if (sizeIdx === undefined) return [];
+  const multiplier = PATCH_TYPE_MULTIPLIERS[patchType];
+  if (sizeIdx === undefined || multiplier === undefined) return [];
   return LEATHER_QTY_TIERS.map((tier, i) => ({
     min: tier.min,
     label: tier.label,
-    price: LEATHER_PRICES[i][sizeIdx],
+    price: Math.round(LEATHER_PRICES[i][sizeIdx] * multiplier * 100) / 100,
   }));
 }
 
@@ -158,11 +167,11 @@ const WholesalePatchForm = () => {
   const qty = Number(quantity) || 0;
   const estimate = useMemo(() => calcPatchEstimate(patchType, patchSize, qty), [patchType, patchSize, qty]);
   const tierPrices = useMemo(
-    () => (patchType === "leather" ? getTierPricesForSize(patchSize) : []),
+    () => (PATCH_TYPE_MULTIPLIERS[patchType] ? getTierPricesForSize(patchType, patchSize) : []),
     [patchType, patchSize]
   );
 
-  const hasLivePricing = patchType === "leather" && patchSize && patchSize !== "custom";
+  const hasLivePricing = !!PATCH_TYPE_MULTIPLIERS[patchType] && patchSize && patchSize !== "custom";
 
   const isValid =
     !!patchType && !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
