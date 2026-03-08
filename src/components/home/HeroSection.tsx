@@ -78,7 +78,7 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            Custom hats, wholesale patches & decorated apparel — designed and
+            Custom hats, wholesale patches & decorated apparel. Designed and
             crafted in Idaho, shipped nationwide.
           </motion.p>
 
