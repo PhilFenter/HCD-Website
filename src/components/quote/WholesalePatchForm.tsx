@@ -20,7 +20,6 @@ const PATCH_TYPES = [
   { value: "leather", label: "Genuine Leather", desc: "Laser engraved on real leather — classic, premium feel." },
   { value: "leatherette", label: "Leatherette", desc: "Synthetic leather with a similar look — more color options, budget-friendly." },
   { value: "uv-printed", label: "UV Printed", desc: "Full-color prints on leather or leatherette — photos, gradients, unlimited colors." },
-  
 ];
 
 // ── Patch Shapes ───────────────────────────────────────
@@ -34,16 +33,24 @@ const PATCH_SHAPES = [
   { value: "other", label: "Other / Not Sure" },
 ];
 
-// ── Patch Sizes (based on supplier Size = (L+W)/2 ) ───
-const PATCH_SIZES = [
-  { value: "up-to-1.5", label: 'Up to 1.5"' },
-  { value: "1.51-2.0", label: '1.51"–2.0"' },
-  { value: "2.01-2.5", label: '2.01"–2.5"' },
-  { value: "2.51-3.0", label: '2.51"–3.0"' },
-  { value: "3.01-3.5", label: '3.01"–3.5"' },
-  { value: "3.51-4.0", label: '3.51"–4.0"' },
-  { value: "custom", label: "Custom / Not Sure" },
+// ── Size tier boundaries for (L+W)/2 formula ──────────
+const SIZE_TIERS = [
+  { key: "up-to-1.5", max: 1.5 },
+  { key: "1.51-2.0", max: 2.0 },
+  { key: "2.01-2.5", max: 2.5 },
+  { key: "2.51-3.0", max: 3.0 },
+  { key: "3.01-3.5", max: 3.5 },
+  { key: "3.51-4.0", max: 4.0 },
 ];
+
+function calcSizeTier(length: number, width: number): string | null {
+  if (length <= 0 || width <= 0) return null;
+  const size = (length + width) / 2;
+  for (const tier of SIZE_TIERS) {
+    if (size <= tier.max) return tier.key;
+  }
+  return null;
+}
 
 const LEATHER_COLORS = [
   { value: "natural", label: "Natural (Tan)" },
@@ -54,8 +61,6 @@ const LEATHER_COLORS = [
 ];
 
 // ── Leather Patch Pricing Matrix (size × quantity) ─────
-// Size = (Length + Width) / 2
-// Columns: up-to-1.5, 1.51-2.0, 2.01-2.5, 2.51-3.0, 3.01-3.5, 3.51-4.0
 const LEATHER_QTY_TIERS = [
   { min: 10000, max: 24999, label: "10,000+" },
   { min: 5000, max: 9999, label: "5,000+" },
@@ -69,27 +74,16 @@ const LEATHER_QTY_TIERS = [
   { min: 12, max: 24, label: "12+" },
 ];
 
-// prices[qtyTierIndex][sizeIndex]
 const LEATHER_PRICES: number[][] = [
-  // 10000+
   [1.10, 1.61, 1.65, 1.75, 1.86, 2.11],
-  // 5000+
   [1.18, 1.68, 1.75, 1.82, 1.97, 2.24],
-  // 2500+
   [1.22, 1.79, 1.82, 1.92, 2.04, 2.35],
-  // 1000+
   [1.29, 1.82, 2.04, 2.21, 2.35, 2.65],
-  // 500+
   [1.36, 1.90, 2.27, 2.43, 2.54, 2.97],
-  // 250+
   [1.50, 2.04, 2.89, 3.08, 3.24, 3.64],
-  // 100+
   [1.97, 2.50, 3.34, 3.88, 4.02, 4.31],
-  // 50+
   [2.72, 3.27, 3.91, 4.81, 5.41, 5.69],
-  // 25+
   [4.31, 4.81, 5.41, 5.98, 6.47, 7.06],
-  // 12+
   [5.17, 5.77, 6.49, 7.18, 7.76, 8.47],
 ];
 
@@ -105,11 +99,10 @@ const SIZE_INDEX: Record<string, number> = {
   "3.51-4.0": 5,
 };
 
-// Multipliers relative to leather base pricing
 const PATCH_TYPE_MULTIPLIERS: Record<string, number> = {
   leather: 1.0,
-  leatherette: 0.88,  // 12% less
-  "uv-printed": 1.10, // 10% more
+  leatherette: 0.88,
+  "uv-printed": 1.10,
 };
 
 function getPatchPrice(patchType: string, size: string, qty: number): number | null {
@@ -132,7 +125,6 @@ function calcPatchEstimate(patchType: string, size: string, qty: number) {
   return { perPatch, subtotal, setupFee: ART_SETUP_FEE, total: subtotal + ART_SETUP_FEE, qty };
 }
 
-// Get tier prices for a given size + patch type (for clickable tier buttons)
 function getTierPricesForSize(patchType: string, size: string): { min: number; label: string; price: number }[] {
   const sizeIdx = SIZE_INDEX[size];
   const multiplier = PATCH_TYPE_MULTIPLIERS[patchType];
@@ -152,7 +144,8 @@ const WholesalePatchForm = () => {
 
   const [patchType, setPatchType] = useState("");
   const [patchShape, setPatchShape] = useState("");
-  const [patchSize, setPatchSize] = useState("");
+  const [patchLength, setPatchLength] = useState("");
+  const [patchWidth, setPatchWidth] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
   const [quantity, setQuantity] = useState("");
   const [backing, setBacking] = useState("");
@@ -163,14 +156,19 @@ const WholesalePatchForm = () => {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
 
+  const patchLenNum = parseFloat(patchLength) || 0;
+  const patchWidNum = parseFloat(patchWidth) || 0;
+  const calculatedSize = (patchLenNum + patchWidNum) / 2;
+  const patchSize = calcSizeTier(patchLenNum, patchWidNum);
+
   const qty = Number(quantity) || 0;
-  const estimate = useMemo(() => calcPatchEstimate(patchType, patchSize, qty), [patchType, patchSize, qty]);
+  const estimate = useMemo(() => patchSize ? calcPatchEstimate(patchType, patchSize, qty) : null, [patchType, patchSize, qty]);
   const tierPrices = useMemo(
-    () => (PATCH_TYPE_MULTIPLIERS[patchType] ? getTierPricesForSize(patchType, patchSize) : []),
+    () => (PATCH_TYPE_MULTIPLIERS[patchType] && patchSize ? getTierPricesForSize(patchType, patchSize) : []),
     [patchType, patchSize]
   );
 
-  const hasLivePricing = !!PATCH_TYPE_MULTIPLIERS[patchType] && patchSize && patchSize !== "custom";
+  const hasLivePricing = !!PATCH_TYPE_MULTIPLIERS[patchType] && !!patchSize;
 
   const isValid =
     !!patchType && !!patchShape && qty >= MIN_QTY && !!name && !!email && !!phone;
@@ -192,7 +190,9 @@ const WholesalePatchForm = () => {
         details: {
           patchType,
           patchShape,
-          patchSize,
+          patchLength,
+          patchWidth,
+          patchSize: patchSize || `custom (${patchLenNum}" × ${patchWidNum}")`,
           leatherColor,
           backing,
         },
@@ -235,7 +235,8 @@ const WholesalePatchForm = () => {
             setSubmitted(false);
             setPatchType("");
             setPatchShape("");
-            setPatchSize("");
+            setPatchLength("");
+            setPatchWidth("");
             setLeatherColor("");
             setQuantity("");
             setBacking("");
@@ -284,7 +285,7 @@ const WholesalePatchForm = () => {
         <h3 className="font-heading text-lg font-bold text-foreground">
           PATCH DETAILS
         </h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Label className="text-foreground">Patch Shape *</Label>
             <Select value={patchShape} onValueChange={setPatchShape}>
@@ -301,24 +302,30 @@ const WholesalePatchForm = () => {
             </Select>
           </div>
           <div>
-            <Label className="text-foreground">Patch Size *</Label>
-            <Select value={patchSize} onValueChange={setPatchSize}>
-              <SelectTrigger className="mt-1.5">
-                <SelectValue placeholder="Select size..." />
-              </SelectTrigger>
-              <SelectContent>
-                {PATCH_SIZES.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>
-                    {s.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {patchType === "leather" && (
-              <p className="mt-1.5 text-xs text-muted-foreground">
-                Size = (Length + Width) ÷ 2
-              </p>
-            )}
+            <Label className="text-foreground">Length (inches) *</Label>
+            <Input
+              type="number"
+              step="0.25"
+              min="0.5"
+              max="8"
+              placeholder='e.g. 3'
+              value={patchLength}
+              onChange={(e) => setPatchLength(e.target.value)}
+              className="mt-1.5"
+            />
+          </div>
+          <div>
+            <Label className="text-foreground">Width (inches) *</Label>
+            <Input
+              type="number"
+              step="0.25"
+              min="0.5"
+              max="8"
+              placeholder='e.g. 2'
+              value={patchWidth}
+              onChange={(e) => setPatchWidth(e.target.value)}
+              className="mt-1.5"
+            />
           </div>
           <div>
             <Label className="text-foreground">Color</Label>
@@ -336,6 +343,18 @@ const WholesalePatchForm = () => {
             </Select>
           </div>
         </div>
+        {patchLenNum > 0 && patchWidNum > 0 && (
+          <div className="mt-3 rounded-md bg-secondary/50 px-3 py-2">
+            <p className="text-sm text-muted-foreground">
+              Calculated size: <span className="font-semibold text-foreground">({patchLenNum}" + {patchWidNum}") ÷ 2 = {calculatedSize.toFixed(2)}"</span>
+              {patchSize ? (
+                <span className="ml-2 text-xs text-primary">✓ Pricing available</span>
+              ) : calculatedSize > 4.0 ? (
+                <span className="ml-2 text-xs text-destructive">Exceeds standard sizing — we'll quote custom</span>
+              ) : null}
+            </p>
+          </div>
+        )}
 
         <div className="mt-6">
           <Label className="text-foreground">Backing *</Label>
@@ -393,7 +412,6 @@ const WholesalePatchForm = () => {
           )}
         </div>
 
-        {/* Clickable pricing tiers (leather only, when size is selected) */}
         {hasLivePricing && tierPrices.length > 0 && (
           <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -427,17 +445,14 @@ const WholesalePatchForm = () => {
           </div>
         )}
 
-        {/* "Request quote" note for non-leather types */}
-        {patchType && patchType !== "leather" && patchType !== "other" && (
+        {patchType && !hasLivePricing && patchLenNum > 0 && patchWidNum > 0 && (
           <div className="mt-5 rounded-lg border border-border bg-secondary/30 p-4">
             <p className="text-sm text-muted-foreground">
-              Pricing for <span className="font-medium text-foreground">{PATCH_TYPES.find(p => p.value === patchType)?.label}</span> patches
-              varies by design complexity. We'll include a detailed quote within one business day.
+              Pricing for this size/type combination will be included in your quote. We'll get back to you within one business day.
             </p>
           </div>
         )}
 
-        {/* Live estimate (leather only) */}
         {estimate && (
           <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
