@@ -155,7 +155,7 @@ const WholesalePatchForm = () => {
   const [patchSize, setPatchSize] = useState("");
   const [leatherColor, setLeatherColor] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [sewingChannel, setSewingChannel] = useState(false);
+  const [backing, setBacking] = useState("");
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [notes, setNotes] = useState("");
   const [name, setName] = useState("");
@@ -194,7 +194,7 @@ const WholesalePatchForm = () => {
           patchShape,
           patchSize,
           leatherColor,
-          sewingChannel,
+          backing,
         },
       });
       setSubmitted(true);
@@ -238,7 +238,7 @@ const WholesalePatchForm = () => {
             setPatchSize("");
             setLeatherColor("");
             setQuantity("");
-            setSewingChannel(false);
+            setBacking("");
             setArtworkFile(null);
             setNotes("");
             setName("");
