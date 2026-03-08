@@ -21,7 +21,7 @@ const products = [
   {
     key: "apparel",
     title: "Custom Apparel",
-    subtitle: "Screen print, DTF, or embroidery on any garment.",
+    subtitle: "T-shirts, hoodies, work & team wear, and outerwear.",
     image: serviceGarments,
     imagePosition: "object-top",
   },
