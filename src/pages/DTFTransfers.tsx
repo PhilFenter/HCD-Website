@@ -37,7 +37,7 @@ const DTFTransfers = () => {
                 DTF TRANSFERS
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                Photo-quality, full-color transfers on virtually any fabric.
+                Full-color transfers on virtually any fabric.
                 Powered by our Super Gamut Hydra — a 9-color, 6-head expanded
                 gamut machine delivering brand-accurate colors that standard CMYK
                 printers simply can't match.
@@ -194,8 +194,8 @@ const DTFTransfers = () => {
               },
               {
                 icon: ExternalLink,
-                title: "Photo-Quality Detail",
-                desc: "Gradients, fine text, photo-realistic imagery — the Hydra reproduces detail that screen printing and vinyl can't touch.",
+                title: "Fine Detail & Gradients",
+                desc: "Smooth gradients, fine text, and complex multi-color artwork — the Hydra reproduces detail that screen printing and vinyl can't touch.",
               },
             ].map((item, i) => (
               <motion.div
