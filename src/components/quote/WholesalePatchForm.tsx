@@ -34,16 +34,24 @@ const PATCH_SHAPES = [
   { value: "other", label: "Other / Not Sure" },
 ];
 
-// ── Patch Sizes (based on supplier Size = (L+W)/2 ) ───
-const PATCH_SIZES = [
-  { value: "up-to-1.5", label: 'Up to 1.5"' },
-  { value: "1.51-2.0", label: '1.51"–2.0"' },
-  { value: "2.01-2.5", label: '2.01"–2.5"' },
-  { value: "2.51-3.0", label: '2.51"–3.0"' },
-  { value: "3.01-3.5", label: '3.01"–3.5"' },
-  { value: "3.51-4.0", label: '3.51"–4.0"' },
-  { value: "custom", label: "Custom / Not Sure" },
+// ── Size tier boundaries for (L+W)/2 formula ──────────
+const SIZE_TIERS = [
+  { key: "up-to-1.5", max: 1.5 },
+  { key: "1.51-2.0", max: 2.0 },
+  { key: "2.01-2.5", max: 2.5 },
+  { key: "2.51-3.0", max: 3.0 },
+  { key: "3.01-3.5", max: 3.5 },
+  { key: "3.51-4.0", max: 4.0 },
 ];
+
+function calcSizeTier(length: number, width: number): string | null {
+  if (length <= 0 || width <= 0) return null;
+  const size = (length + width) / 2;
+  for (const tier of SIZE_TIERS) {
+    if (size <= tier.max) return tier.key;
+  }
+  return null; // exceeds max
+}
 
 const LEATHER_COLORS = [
   { value: "natural", label: "Natural (Tan)" },
