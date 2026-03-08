@@ -49,8 +49,8 @@ const ServiceCards = () => {
             WHAT WE DO
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            From a single custom hat to thousands of branded garments — crafted
-            in Idaho, shipped to your door anywhere in the U.S.
+            Custom gear made to order — crafted in Idaho, shipped to your door
+            anywhere in the U.S.
           </p>
         </motion.div>
 
