@@ -206,7 +206,9 @@ const WholesalePatchForm = () => {
         details: {
           patchType,
           patchShape,
-          patchSize,
+          patchSize: patchSize || `custom (${patchLenNum}" × ${patchWidNum}")`,
+          patchLength: patchLength,
+          patchWidth: patchWidth,
           leatherColor,
           backing,
         },
