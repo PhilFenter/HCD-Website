@@ -367,13 +367,19 @@ const PATCH_SHAPES = [
   { value: "other", label: "Other / Not Sure" },
 ];
 
-const PATCH_SIZES = [
-  { value: "2x3", label: '2" × 3"' },
-  { value: "2.5x3.5", label: '2.5" × 3.5"' },
-  { value: "3x3", label: '3" × 3"' },
-  { value: "3x4", label: '3" × 4"' },
-  { value: "custom", label: "Custom Size" },
-];
+const PATCH_SIZES: Record<string, { value: string; label: string }[]> = {
+  circle: [
+    { value: "2.25-round", label: '2.25" Round' },
+  ],
+  default: [
+    { value: "1.5x3", label: '1.5" × 3"' },
+    { value: "2x3", label: '2" × 3"' },
+    { value: "2x2.25", label: '2" × 2.25"' },
+    { value: "2.25x3", label: '2.25" × 3"' },
+    { value: "2.25x3.5", label: '2.25" × 3.5"' },
+    { value: "custom", label: "Custom Size" },
+  ],
+};
 
 const LEATHER_COLORS = [
   { value: "natural", label: "Natural (Tan)" },
