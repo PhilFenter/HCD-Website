@@ -318,25 +318,44 @@ const WholesalePatchForm = () => {
             </Select>
           </div>
           <div>
-            <Label className="text-foreground">Patch Size *</Label>
-            <Select value={patchSize} onValueChange={setPatchSize}>
-              <SelectTrigger className="mt-1.5">
-                <SelectValue placeholder="Select size..." />
-              </SelectTrigger>
-              <SelectContent>
-                {PATCH_SIZES.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>
-                    {s.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {patchType === "leather" && (
-              <p className="mt-1.5 text-xs text-muted-foreground">
-                Size = (Length + Width) ÷ 2
-              </p>
-            )}
+            <Label className="text-foreground">Length (inches) *</Label>
+            <Input
+              type="number"
+              step="0.25"
+              min="0.5"
+              max="8"
+              placeholder='e.g. 3'
+              value={patchLength}
+              onChange={(e) => setPatchLength(e.target.value)}
+              className="mt-1.5"
+            />
           </div>
+          <div>
+            <Label className="text-foreground">Width (inches) *</Label>
+            <Input
+              type="number"
+              step="0.25"
+              min="0.5"
+              max="8"
+              placeholder='e.g. 2'
+              value={patchWidth}
+              onChange={(e) => setPatchWidth(e.target.value)}
+              className="mt-1.5"
+            />
+          </div>
+        </div>
+        {patchLenNum > 0 && patchWidNum > 0 && (
+          <div className="mt-3 rounded-md bg-secondary/50 px-3 py-2">
+            <p className="text-sm text-muted-foreground">
+              Calculated size: <span className="font-semibold text-foreground">({patchLenNum}" + {patchWidNum}") ÷ 2 = {calculatedSize.toFixed(2)}"</span>
+              {patchSize ? (
+                <span className="ml-2 text-xs text-primary">✓ Pricing available</span>
+              ) : calculatedSize > 4.0 ? (
+                <span className="ml-2 text-xs text-destructive">Exceeds standard sizing — we'll quote custom</span>
+              ) : null}
+            </p>
+          </div>
+        )}
           <div>
             <Label className="text-foreground">Color</Label>
             <Select value={leatherColor} onValueChange={setLeatherColor}>
