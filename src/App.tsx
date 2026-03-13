@@ -17,6 +17,7 @@ import ScreenPrintingClarkston from "./pages/ScreenPrintingClarkston";
 import EmbroideryLewiston from "./pages/EmbroideryLewiston";
 import EmbroideryClarkston from "./pages/EmbroideryClarkston";
 import CustomHatsLCValley from "./pages/CustomHatsLCValley";
+import Seekins from "./pages/stories/Seekins";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/embroidery-lewiston-id" element={<EmbroideryLewiston />} />
             <Route path="/embroidery-clarkston-wa" element={<EmbroideryClarkston />} />
             <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
+            <Route path="/stories/seekins" element={<Seekins />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
