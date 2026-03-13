@@ -4,6 +4,7 @@ import HeroSection from "@/components/home/HeroSection";
 import SituationFinder from "@/components/home/SituationFinder";
 import SocialProof from "@/components/home/SocialProof";
 import HowItWorks from "@/components/home/HowItWorks";
+import PartnershipSection from "@/components/home/PartnershipSection";
 import PortfolioGallery from "@/components/home/PortfolioGallery";
 import InstagramFeed from "@/components/home/InstagramFeed";
 import FAQ from "@/components/home/FAQ";
