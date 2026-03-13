@@ -109,10 +109,6 @@ const Seekins = () => {
             className="space-y-6 text-lg leading-relaxed text-muted-foreground"
           >
             <p>
-              Sure thing. Come pick a color.
-            </p>
-
-            <p>
               She was in the shop within 30 minutes. Pulled two hat colors. We cranked up Beky and got to work. It was pretty fun to load those hats in the truck and deliver them Thursday around noon.
             </p>
 
