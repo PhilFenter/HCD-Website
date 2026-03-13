@@ -23,7 +23,7 @@ const stories = [
       "A precision manufacturer needed 600 embroidered hats by Friday. It was Monday morning.",
     outcome:
       "Years later, they send a text. We send an invoice. No back and forth. Just trust.",
-    image: galleryHatsGrace,
+    image: seekinsHat,
     url: "/stories/seekins",
   },
   {

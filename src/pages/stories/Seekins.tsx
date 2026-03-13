@@ -57,7 +57,7 @@ const Seekins = () => {
             className="mt-10 overflow-hidden rounded-lg border border-border"
           >
             <img
-              src={galleryHatsGrace}
+              src={seekinsHat}
               alt="Custom embroidered hats for Seekins Precision"
               className="w-full h-auto object-cover aspect-video"
             />
