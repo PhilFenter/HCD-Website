@@ -8,6 +8,15 @@ import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
 
 const stories = [
   {
+    headline: "Just Make Them Look Cool.",
+    teaser:
+      "A local contractor handed us their brand and said those four words. No micromanaging. No endless revisions. Just trust.",
+    outcome:
+      "That is the kind of relationship we are built for.",
+    image: galleryHatsGrace,
+    url: "/stories/make-them-cool",
+  },
+  {
     headline: "Sure. Just Come Pick A Color.",
     teaser:
       "A precision manufacturer needed 600 embroidered hats by Friday. It was Monday morning.",
@@ -33,28 +42,20 @@ const stories = [
     url: "/stories/tristate",
   },
   {
-    headline: "Days, Not Months.",
+    headline: "She Almost Walked Right Past Us.",
     teaser:
-      "They came in flustered and upset — their old supplier had been sitting on their order for weeks. We had their merch ready in days, not months.",
-    outcome: "Now they are family.",
-    image: galleryHatsGrace,
-    url: "/stories/wrong-building",
-  },
-  {
-    headline: "Where's My Order?",
-    teaser:
-      "You know the one call every shop dreads? We never get it. Professional systems keep you in the loop from proof to delivery — so you never have to ask.",
-    outcome: "The best customer service call is the one that never happens.",
+      "She almost walked right past us — then stopped, came in, and everything changed.",
+    outcome: "Sometimes the best partnerships start by accident.",
     image: galleryEmbroideredPatch,
-    url: "/stories/order-tracking",
+    url: "/stories/walked-past",
   },
   {
-    headline: "Is This Impossible?",
-    teaser:
-      "No — just difficult. And that's fine. When a client brings us something other shops turned down, we don't flinch. We figure it out.",
-    outcome: "Difficult is what we signed up for.",
+    headline: "The Right Story Is Coming.",
+    teaser: "Check back soon.",
+    outcome: "",
     image: galleryScreenprintSquad,
-    url: "/stories/difficult-jobs",
+    url: "",
+    placeholder: true,
   },
 ];
 
@@ -64,38 +65,55 @@ const StoryCard = ({
 }: {
   story: (typeof stories)[0];
   index: number;
-}) => (
-  <Link
-    to={story.url}
-    className="group rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] hover:border-primary/30"
-  >
-    {/* Image */}
-    <div className="h-48 overflow-hidden">
-      <img
-        src={story.image}
-        alt={story.headline}
-        className="h-full w-full object-cover"
-        loading="lazy"
-      />
-    </div>
+}) => {
+  const content = (
+    <>
+      <div className="h-48 overflow-hidden">
+        <img
+          src={story.image}
+          alt={story.headline}
+          className="h-full w-full object-cover"
+          loading="lazy"
+        />
+      </div>
+      <div className="p-6">
+        <h3 className="font-heading text-xl font-bold text-foreground">
+          {story.headline}
+        </h3>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {story.teaser}
+        </p>
+        {story.outcome && (
+          <p className="mt-4 text-sm font-semibold italic text-accent">
+            {story.outcome}
+          </p>
+        )}
+        {!story.placeholder && (
+          <span className="mt-4 inline-block text-sm font-semibold text-primary">
+            Read the full story →
+          </span>
+        )}
+      </div>
+    </>
+  );
 
-    {/* Content */}
-    <div className="p-6">
-      <h3 className="font-heading text-xl font-bold text-foreground">
-        {story.headline}
-      </h3>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        {story.teaser}
-      </p>
-      <p className="mt-4 text-sm font-semibold italic text-accent">
-        {story.outcome}
-      </p>
-      <span className="mt-4 inline-block text-sm font-semibold text-primary">
-        Read the full story →
-      </span>
-    </div>
-  </Link>
-);
+  if (story.placeholder) {
+    return (
+      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden opacity-75">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={story.url}
+      className="group rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] hover:border-primary/30"
+    >
+      {content}
+    </Link>
+  );
+};
 
 const PartnershipSection = () => {
   return (
