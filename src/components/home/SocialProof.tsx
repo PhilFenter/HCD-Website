@@ -21,10 +21,10 @@ const SocialProof = () => {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+          <p className="text-sm md:text-base uppercase tracking-[0.2em] text-muted-foreground mb-5">
             Trusted by companies across the region
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm md:text-base font-medium text-primary/70">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-lg md:text-xl font-medium text-primary/70">
             {companies.map((name, i) => (
               <span key={name} className="flex items-center gap-2">
                 {name}
