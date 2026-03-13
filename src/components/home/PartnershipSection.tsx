@@ -11,13 +11,13 @@ const stories = [
       "Years later, they send a text. We send an invoice. No back and forth. Just trust.",
   },
   {
-    headline: "We Caught It Before You Knew It Was A Problem.",
+    headline: "We Caught It First.",
     story:
       "A large regional employer dropped off a jacket for embroidery. When we pulled it out we noticed it already had embroidery on it — the wrong order from another supplier. We texted a photo, sourced a replacement overnight, and had the right jacket ready the next day.",
     outcome: "That is what we mean when we say we got you.",
   },
   {
-    headline: "A Store Your Employees Actually Use.",
+    headline: "A Store They Actually Use.",
     story:
       "A regional health company needed a company store that worked. The old one took four months to fulfill an order — employees had stopped using it entirely. We rebuilt the experience. Now it runs itself.",
     outcome: "When the system works, everyone wins.",
