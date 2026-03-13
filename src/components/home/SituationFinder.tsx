@@ -156,8 +156,8 @@ const SituationFinder = () => {
                         <div
                           className={`flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 ${
                             isSelected
-                              ? "bg-primary/20 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)]"
-                              : "bg-secondary/80 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                              ? "bg-primary/20 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
+                              : "bg-secondary/80 text-primary group-hover:bg-primary/15 group-hover:shadow-[0_0_24px_hsl(var(--primary)/0.25)]"
                           }`}
                         >
                           <Icon className="h-7 w-7" strokeWidth={1.5} />
