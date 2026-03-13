@@ -32,6 +32,14 @@ const stories = [
     image: galleryScreenprintSquad,
     url: "/stories/tristate",
   },
+  {
+    headline: "Days, Not Months.",
+    teaser:
+      "They came in flustered and upset — their old supplier had been sitting on their order for weeks. We had their merch ready in days, not months.",
+    outcome: "Now they are family.",
+    image: galleryHatsGrace,
+    url: "/stories/wrong-building",
+  },
 ];
 
 const StoryCard = ({
