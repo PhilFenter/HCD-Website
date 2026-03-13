@@ -17,7 +17,7 @@ const stories = [
     outcome: "That is what we mean when we say we got you.",
   },
   {
-    headline: "A Store Your Employees Actually Use.",
+    headline: "A Store They Actually Use.",
     story:
       "A regional health company needed a company store that worked. The old one took four months to fulfill an order — employees had stopped using it entirely. We rebuilt the experience. Now it runs itself.",
     outcome: "When the system works, everyone wins.",
