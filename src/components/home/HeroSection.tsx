@@ -1,31 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-leather-patches.jpg";
-import serviceHats from "@/assets/hero-sewing-patch.jpg";
-import servicePatches from "@/assets/hero-leather-patches.jpg";
-import serviceGarments from "@/assets/quote-garments.jpg";
-
-const products = [
-  {
-    key: "hats",
-    title: "Custom Hats",
-    subtitle: "Leather patches, UV patches, embroidered patches, or traditional embroidery. Designed and decorated in-house.",
-    image: serviceHats,
-  },
-  {
-    key: "patches",
-    title: "Wholesale Patches",
-    subtitle: "Genuine leather and UV printed patches for hat makers, retailers, and apparel brands. Precision cut and ready for sewing or heat application.",
-    image: servicePatches,
-  },
-  {
-    key: "apparel",
-    title: "Custom Apparel",
-    subtitle: "T-shirts, hoodies, workwear, and team apparel decorated in-house. Clean, professional results with fast turnaround.",
-    image: serviceGarments,
-    imagePosition: "object-top",
-  },
-];
 
 const HeroSection = () => {
   return (
@@ -34,7 +11,7 @@ const HeroSection = () => {
       <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Collection of custom laser engraved leather patches"
+          alt="Custom decorated apparel crafted by Hells Canyon Designs"
           className="h-full w-full object-cover"
           loading="eager"
         />
@@ -67,75 +44,39 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-6xl"
           >
-            YOUR BRAND,
+            YOUR BRAND DESERVES
             <br />
-            <span className="text-gradient-gold">OUR CRAFT</span>
+            <span className="text-gradient-gold">A PARTNER, NOT A VENDOR</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground md:text-xl"
+            className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            Custom hats, wholesale patches & decorated apparel. Designed and
-            crafted in Idaho, shipped nationwide.
+            We don't just fill orders — we learn your brand, catch problems before
+            they happen, and make sure every piece is right. When you work with us,
+            you get a team that treats your reputation like our own.
           </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="mt-3 text-sm font-medium tracking-wide text-primary"
-          >
-            Serving the LC Valley, the Palouse & the Camas Prairie.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.37 }}
-            className="mt-2 text-sm text-muted-foreground"
-          >
-            Uniforms • Contractor workwear • School spirit wear • Branded hats
-          </motion.p>
-
-          {/* Product cards */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-10 grid w-full max-w-4xl gap-5 sm:grid-cols-3"
+            className="mt-10 flex flex-col gap-4 sm:flex-row"
           >
-            {products.map((product, i) => (
-              <motion.div
-                key={product.key}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45 + i * 0.08 }}
-              >
-                <Link
-                  to={`/quote?product=${product.key}`}
-                  className="group block overflow-hidden rounded-lg border border-border bg-card/80 backdrop-blur-sm text-center transition-all hover:border-primary hover:shadow-lg"
-                >
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${product.imagePosition || ""}`}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-base font-semibold text-foreground">
-                      {product.title}
-                    </h3>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {product.subtitle}
-                    </p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+            <Button asChild size="lg" className="gap-2 text-base font-heading tracking-wide">
+              <Link to="/quote">
+                Start Your Project
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="text-base font-heading tracking-wide">
+              <Link to="/portfolio">
+                See Our Work
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </div>
