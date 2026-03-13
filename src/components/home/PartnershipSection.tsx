@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 import galleryHatsGrace from "@/assets/gallery-hats-grace-hardrock.jpg";
-import seekinsHat from "@/assets/gallery-seekins-hat.jpg";
+import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
 

@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import seekinsHat from "@/assets/gallery-seekins-hat.jpg";
+import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 
 const Seekins = () => {
   const scrollToSituationFinder = (e: React.MouseEvent) => {
