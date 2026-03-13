@@ -42,7 +42,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 font-heading text-2xl font-bold leading-tight text-foreground sm:text-4xl md:text-6xl"
+            className="mt-8 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-6xl"
           >
             YOU KNOW WHERE YOU WANT TO GO.
             <br />
