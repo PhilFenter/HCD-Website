@@ -66,37 +66,54 @@ const StoryCard = ({
   story: (typeof stories)[0];
   index: number;
 }) => (
-  <Link
-    to={story.url}
-    className="group rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] hover:border-primary/30"
-  >
-    {/* Image */}
-    <div className="h-48 overflow-hidden">
-      <img
-        src={story.image}
-        alt={story.headline}
-        className="h-full w-full object-cover"
-        loading="lazy"
-      />
-    </div>
+  const content = (
+    <>
+      <div className="h-48 overflow-hidden">
+        <img
+          src={story.image}
+          alt={story.headline}
+          className="h-full w-full object-cover"
+          loading="lazy"
+        />
+      </div>
+      <div className="p-6">
+        <h3 className="font-heading text-xl font-bold text-foreground">
+          {story.headline}
+        </h3>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {story.teaser}
+        </p>
+        {story.outcome && (
+          <p className="mt-4 text-sm font-semibold italic text-accent">
+            {story.outcome}
+          </p>
+        )}
+        {!story.placeholder && (
+          <span className="mt-4 inline-block text-sm font-semibold text-primary">
+            Read the full story →
+          </span>
+        )}
+      </div>
+    </>
+  );
 
-    {/* Content */}
-    <div className="p-6">
-      <h3 className="font-heading text-xl font-bold text-foreground">
-        {story.headline}
-      </h3>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        {story.teaser}
-      </p>
-      <p className="mt-4 text-sm font-semibold italic text-accent">
-        {story.outcome}
-      </p>
-      <span className="mt-4 inline-block text-sm font-semibold text-primary">
-        Read the full story →
-      </span>
-    </div>
-  </Link>
-);
+  if (story.placeholder) {
+    return (
+      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden opacity-75">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={story.url}
+      className="group rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] hover:border-primary/30"
+    >
+      {content}
+    </Link>
+  );
+};
 
 const PartnershipSection = () => {
   return (
