@@ -72,7 +72,7 @@ const PartnershipSection = () => {
           <p className="text-muted-foreground italic">
             These are not exceptions. This is how we operate.
           </p>
-          <Button asChild variant="cta" size="lg" className="mt-8">
+          <Button asChild size="lg" className="mt-8">
             <Link to="/quote">See If We Are The Right Fit</Link>
           </Button>
         </motion.div>
