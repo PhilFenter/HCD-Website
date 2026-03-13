@@ -21,7 +21,7 @@ const SocialProof = () => {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <p className="text-sm md:text-base uppercase tracking-[0.2em] text-muted-foreground mb-5">
+          <p className="text-sm md:text-base uppercase tracking-[0.2em] font-bold text-foreground mb-5">
             Trusted by companies across the region
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-lg md:text-xl font-medium text-primary/70">
