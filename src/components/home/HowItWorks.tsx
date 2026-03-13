@@ -16,7 +16,7 @@ const steps = [
   },
   {
     icon: Package,
-    title: "We Get It Done And Stay On It",
+    title: "We Handle It. Start To Finish",
     description:
       "Once you approve, we handle production, quality check, and delivery. If anything comes up along the way, we catch it and we handle it — before you have to ask.",
   },
