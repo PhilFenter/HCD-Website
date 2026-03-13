@@ -18,6 +18,7 @@ import EmbroideryLewiston from "./pages/EmbroideryLewiston";
 import EmbroideryClarkston from "./pages/EmbroideryClarkston";
 import CustomHatsLCValley from "./pages/CustomHatsLCValley";
 import Seekins from "./pages/stories/Seekins";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
