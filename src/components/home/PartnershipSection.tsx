@@ -8,6 +8,15 @@ import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
 
 const stories = [
   {
+    headline: "Just Make Them Look Cool.",
+    teaser:
+      "A local contractor handed us their brand and said those four words. No micromanaging. No endless revisions. Just trust.",
+    outcome:
+      "That is the kind of relationship we are built for.",
+    image: galleryHatsGrace,
+    url: "/stories/make-them-cool",
+  },
+  {
     headline: "Sure. Just Come Pick A Color.",
     teaser:
       "A precision manufacturer needed 600 embroidered hats by Friday. It was Monday morning.",
@@ -33,28 +42,20 @@ const stories = [
     url: "/stories/tristate",
   },
   {
-    headline: "Days, Not Months.",
+    headline: "She Almost Walked Right Past Us.",
     teaser:
-      "They came in flustered and upset — their old supplier had been sitting on their order for weeks. We had their merch ready in days, not months.",
-    outcome: "Now they are family.",
-    image: galleryHatsGrace,
-    url: "/stories/wrong-building",
-  },
-  {
-    headline: "Where's My Order?",
-    teaser:
-      "You know the one call every shop dreads? We never get it. Professional systems keep you in the loop from proof to delivery — so you never have to ask.",
-    outcome: "The best customer service call is the one that never happens.",
+      "She almost walked right past us — then stopped, came in, and everything changed.",
+    outcome: "Sometimes the best partnerships start by accident.",
     image: galleryEmbroideredPatch,
-    url: "/stories/order-tracking",
+    url: "/stories/walked-past",
   },
   {
-    headline: "Is This Impossible?",
-    teaser:
-      "No — just difficult. And that's fine. When a client brings us something other shops turned down, we don't flinch. We figure it out.",
-    outcome: "Difficult is what we signed up for.",
+    headline: "The Right Story Is Coming.",
+    teaser: "Check back soon.",
+    outcome: "",
     image: galleryScreenprintSquad,
-    url: "/stories/difficult-jobs",
+    url: "",
+    placeholder: true,
   },
 ];
 
