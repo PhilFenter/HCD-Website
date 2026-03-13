@@ -40,6 +40,22 @@ const stories = [
     image: galleryHatsGrace,
     url: "/stories/wrong-building",
   },
+  {
+    headline: "Where's My Order?",
+    teaser:
+      "You know the one call every shop dreads? We never get it. Professional systems keep you in the loop from proof to delivery — so you never have to ask.",
+    outcome: "The best customer service call is the one that never happens.",
+    image: galleryEmbroideredPatch,
+    url: "/stories/order-tracking",
+  },
+  {
+    headline: "Is This Impossible?",
+    teaser:
+      "No — just difficult. And that's fine. When a client brings us something other shops turned down, we don't flinch. We figure it out.",
+    outcome: "Difficult is what we signed up for.",
+    image: galleryScreenprintSquad,
+    url: "/stories/difficult-jobs",
+  },
 ];
 
 const StoryCard = ({
