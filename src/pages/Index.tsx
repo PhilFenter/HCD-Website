@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import HeroSection from "@/components/home/HeroSection";
-import ServiceCards from "@/components/home/ServiceCards";
+import SituationFinder from "@/components/home/SituationFinder";
 import SocialProof from "@/components/home/SocialProof";
 import HowItWorks from "@/components/home/HowItWorks";
 import PortfolioGallery from "@/components/home/PortfolioGallery";
@@ -17,7 +17,7 @@ const Index = () => {
         canonicalPath="/"
       />
       <HeroSection />
-      <ServiceCards />
+      <SituationFinder />
       <SocialProof />
       <HowItWorks />
       <PortfolioGallery />
