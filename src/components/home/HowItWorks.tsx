@@ -36,8 +36,7 @@ const HowItWorks = () => {
             HOW IT WORKS
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            Getting custom gear shouldn't be complicated. Three simple steps and
-            you're on your way.
+            We built our process around one idea: no surprises. Here is what working with us looks like.
           </p>
         </motion.div>
 
