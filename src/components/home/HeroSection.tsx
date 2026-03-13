@@ -67,10 +67,10 @@ const HeroSection = () => {
             className="mt-10 flex flex-col gap-4 sm:flex-row"
           >
             <Button asChild size="lg" className="gap-2 text-base font-heading tracking-wide">
-              <Link to="/quote">
+              <a href="#situation-finder" onClick={(e) => { e.preventDefault(); document.getElementById('situation-finder')?.scrollIntoView({ behavior: 'smooth' }); }}>
                 Start Your Project
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base font-heading tracking-wide">
               <Link to="/portfolio">
