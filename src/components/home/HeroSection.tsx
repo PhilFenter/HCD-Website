@@ -44,9 +44,9 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-8 font-heading text-4xl font-bold leading-tight text-foreground md:text-6xl"
           >
-            YOUR BRAND DESERVES
+            YOU KNOW WHERE YOU WANT TO GO.
             <br />
-            <span className="text-gradient-gold">A PARTNER, NOT A VENDOR</span>
+            <span className="text-gradient-gold">WE KNOW HOW TO GET YOU THERE.</span>
           </motion.h1>
 
           <motion.p
