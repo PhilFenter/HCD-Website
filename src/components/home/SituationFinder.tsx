@@ -8,8 +8,8 @@ import {
   PartyPopper,
   Layers,
   HelpCircle,
-  RefreshCw,
   Repeat,
+  RotateCcw,
   CalendarClock,
   Clock,
   Check,
@@ -19,29 +19,29 @@ import { Button } from "@/components/ui/button";
 const questions = [
   {
     prompt: "What are you working on?",
-    columns: "grid-cols-2 sm:grid-cols-3",
+    columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
     options: [
-      { label: "Building a brand", icon: Sparkles },
-      { label: "Outfitting a crew or team", icon: Users },
-      { label: "Planning an event or promotion", icon: PartyPopper },
-      { label: "Wholesale patches", icon: Layers },
-      { label: "Something else", icon: HelpCircle },
+      { label: "Building a brand", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
+      { label: "Outfitting a crew or team", icon: Users, accent: "from-primary/20 to-primary/5" },
+      { label: "Event or promotion", icon: PartyPopper, accent: "from-primary/20 to-primary/5" },
+      { label: "Wholesale patches", icon: Layers, accent: "from-primary/20 to-primary/5" },
+      { label: "Something else", icon: HelpCircle, accent: "from-primary/20 to-primary/5" },
     ],
   },
   {
-    prompt: "Is this a one-time need or an ongoing program?",
-    columns: "grid-cols-2",
+    prompt: "One-time project or ongoing?",
+    columns: "grid-cols-2 max-w-lg mx-auto",
     options: [
-      { label: "One time", icon: RefreshCw },
-      { label: "Ongoing program", icon: Repeat },
+      { label: "One-time project", icon: RotateCcw, accent: "from-primary/20 to-primary/5" },
+      { label: "Ongoing program", icon: Repeat, accent: "from-primary/20 to-primary/5" },
     ],
   },
   {
     prompt: "Do you have a hard deadline?",
-    columns: "grid-cols-2",
+    columns: "grid-cols-2 max-w-lg mx-auto",
     options: [
-      { label: "Yes, fixed date", icon: CalendarClock },
-      { label: "Flexible timing", icon: Clock },
+      { label: "Yes, fixed date", icon: CalendarClock, accent: "from-primary/20 to-primary/5" },
+      { label: "Flexible timing", icon: Clock, accent: "from-primary/20 to-primary/5" },
     ],
   },
 ];
@@ -58,7 +58,7 @@ const SituationFinder = () => {
     next[step] = option;
     setAnswers(next);
     if (step < questions.length - 1) {
-      setTimeout(() => setStep(step + 1), 300);
+      setTimeout(() => setStep(step + 1), 350);
     }
   };
 
@@ -73,27 +73,31 @@ const SituationFinder = () => {
   const currentQuestion = questions[step];
 
   return (
-    <section className="py-20 md:py-28">
-      <div className="container">
-        <div className="mx-auto max-w-3xl text-center">
-          {/* Progress dots */}
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Subtle background texture */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />
+
+      <div className="container relative z-10">
+        <div className="mx-auto max-w-4xl text-center">
+          {/* Progress bar */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: -10 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-10 flex items-center justify-center gap-2.5"
+            className="mb-12 flex items-center justify-center gap-3"
           >
             {questions.map((_, i) => (
-              <div
-                key={i}
-                className={`h-2 rounded-full transition-all duration-500 ${
-                  i < answers.length
-                    ? "w-10 bg-primary"
-                    : i === step
-                      ? "w-10 bg-primary/40"
-                      : "w-2 bg-border"
-                }`}
-              />
+              <div key={i} className="relative">
+                <div
+                  className={`h-2 rounded-full transition-all duration-500 ease-out ${
+                    i < answers.length
+                      ? "w-12 bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
+                      : i === step
+                        ? "w-12 bg-primary/30"
+                        : "w-3 bg-border"
+                  }`}
+                />
+              </div>
             ))}
           </motion.div>
 
@@ -101,16 +105,19 @@ const SituationFinder = () => {
             {!isComplete ? (
               <motion.div
                 key={step}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
-                <h2 className="font-heading text-2xl font-bold text-foreground md:text-4xl">
+                <p className="font-heading text-xs font-medium tracking-[0.25em] text-primary mb-4">
+                  STEP {step + 1} OF {questions.length}
+                </p>
+                <h2 className="font-heading text-3xl font-bold text-foreground md:text-5xl">
                   {currentQuestion.prompt}
                 </h2>
 
-                <div className={`mt-10 grid gap-4 ${currentQuestion.columns}`}>
+                <div className={`mt-12 grid gap-4 ${currentQuestion.columns}`}>
                   {currentQuestion.options.map((option, i) => {
                     const Icon = option.icon;
                     const isSelected = answers[step] === option.label;
@@ -118,39 +125,46 @@ const SituationFinder = () => {
                     return (
                       <motion.button
                         key={option.label}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.05, duration: 0.25 }}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 + i * 0.06, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                         onClick={() => handleSelect(option.label)}
-                        className={`group relative flex flex-col items-center gap-3 rounded-xl border-2 px-4 py-6 text-center transition-all duration-200 sm:py-8 ${
+                        whileHover={{ y: -4 }}
+                        whileTap={{ scale: 0.97 }}
+                        className={`group relative flex flex-col items-center gap-4 rounded-2xl border-2 p-6 text-center transition-all duration-300 sm:p-8 ${
                           isSelected
-                            ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
-                            : "border-border bg-card hover:border-primary/40 hover:bg-card/80"
+                            ? "border-primary bg-gradient-to-b from-primary/15 to-primary/5 shadow-[0_0_30px_-5px_hsl(var(--primary)/0.25)]"
+                            : "border-border/60 bg-card/60 backdrop-blur-sm hover:border-primary/50 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.15)]"
                         }`}
                       >
-                        {/* Selected check */}
-                        {isSelected && (
-                          <motion.span
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary"
-                          >
-                            <Check className="h-3 w-3 text-primary-foreground" />
-                          </motion.span>
-                        )}
+                        {/* Selected badge */}
+                        <AnimatePresence>
+                          {isSelected && (
+                            <motion.span
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0, opacity: 0 }}
+                              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                              className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary shadow-lg shadow-primary/30"
+                            >
+                              <Check className="h-4 w-4 text-primary-foreground" strokeWidth={3} />
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
 
+                        {/* Icon container */}
                         <div
-                          className={`flex h-12 w-12 items-center justify-center rounded-lg transition-colors duration-200 ${
+                          className={`flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 ${
                             isSelected
-                              ? "bg-primary/20 text-primary"
-                              : "bg-secondary text-muted-foreground group-hover:text-foreground"
+                              ? "bg-primary/20 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)]"
+                              : "bg-secondary/80 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                           }`}
                         >
-                          <Icon className="h-6 w-6" />
+                          <Icon className="h-7 w-7" strokeWidth={1.5} />
                         </div>
 
                         <span
-                          className={`font-heading text-sm font-semibold tracking-wide transition-colors sm:text-base ${
+                          className={`font-heading text-sm font-semibold tracking-wide transition-colors duration-300 sm:text-base ${
                             isSelected
                               ? "text-foreground"
                               : "text-muted-foreground group-hover:text-foreground"
@@ -164,43 +178,62 @@ const SituationFinder = () => {
                 </div>
 
                 {step > 0 && (
-                  <button
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
                     onClick={() => setStep(step - 1)}
-                    className="mt-8 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="mt-10 font-heading text-sm tracking-wide text-muted-foreground transition-colors hover:text-primary"
                   >
                     ← Back
-                  </button>
+                  </motion.button>
                 )}
               </motion.div>
             ) : (
               <motion.div
                 key="complete"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 className="flex flex-col items-center"
               >
-                <h2 className="font-heading text-2xl font-bold text-foreground md:text-4xl">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.15 }}
+                  className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 shadow-[0_0_40px_hsl(var(--primary)/0.2)]"
+                >
+                  <Check className="h-8 w-8 text-primary" strokeWidth={2.5} />
+                </motion.div>
+
+                <h2 className="font-heading text-3xl font-bold text-foreground md:text-5xl">
                   WE'VE GOT YOU.
                 </h2>
-                <p className="mt-4 max-w-md text-muted-foreground">
+                <p className="mt-4 max-w-md text-lg text-muted-foreground">
                   Let's put together exactly what you need.
                 </p>
-                <Button
-                  size="lg"
-                  onClick={handleFindSolution}
-                  className="mt-8 gap-2 font-heading text-base tracking-wide"
+
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
                 >
-                  Find My Solution
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                  <Button
+                    size="lg"
+                    onClick={handleFindSolution}
+                    className="mt-10 gap-2 font-heading text-base tracking-wide shadow-lg shadow-primary/20 transition-shadow hover:shadow-xl hover:shadow-primary/30"
+                  >
+                    Find My Solution
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </motion.div>
 
                 <button
                   onClick={() => {
                     setStep(0);
                     setAnswers([]);
                   }}
-                  className="mt-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  className="mt-5 font-heading text-sm tracking-wide text-muted-foreground transition-colors hover:text-primary"
                 >
                   Start over
                 </button>
