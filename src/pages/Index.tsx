@@ -5,6 +5,7 @@ import SituationFinder from "@/components/home/SituationFinder";
 import SocialProof from "@/components/home/SocialProof";
 import HowItWorks from "@/components/home/HowItWorks";
 import PartnershipSection from "@/components/home/PartnershipSection";
+import HonestyStatement from "@/components/home/HonestyStatement";
 import PortfolioGallery from "@/components/home/PortfolioGallery";
 import InstagramFeed from "@/components/home/InstagramFeed";
 import FAQ from "@/components/home/FAQ";
@@ -22,6 +23,7 @@ const Index = () => {
       <SocialProof />
       <HowItWorks />
       <PartnershipSection />
+      <HonestyStatement />
       <PortfolioGallery />
       <InstagramFeed />
       <FAQ />
