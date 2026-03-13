@@ -65,7 +65,7 @@ const StoryCard = ({
 }: {
   story: (typeof stories)[0];
   index: number;
-}) => (
+}) => {
   const content = (
     <>
       <div className="h-48 overflow-hidden">
