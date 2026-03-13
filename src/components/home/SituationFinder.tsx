@@ -73,7 +73,7 @@ const SituationFinder = () => {
   const currentQuestion = questions[step];
 
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section className="relative py-12 md:py-16 overflow-hidden">
       {/* Subtle background texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />
 
