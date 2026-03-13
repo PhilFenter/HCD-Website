@@ -21,6 +21,7 @@ const Index = () => {
       <SituationFinder />
       <SocialProof />
       <HowItWorks />
+      <PartnershipSection />
       <PortfolioGallery />
       <InstagramFeed />
       <FAQ />
