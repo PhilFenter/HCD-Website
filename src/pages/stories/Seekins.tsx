@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import galleryHatsGrace from "@/assets/gallery-hats-grace-hardrock.jpg";
+import seekinsHat from "@/assets/gallery-seekins-hat.jpg";
 
 const Seekins = () => {
   const scrollToSituationFinder = (e: React.MouseEvent) => {
@@ -57,7 +57,7 @@ const Seekins = () => {
             className="mt-10 overflow-hidden rounded-lg border border-border"
           >
             <img
-              src={galleryHatsGrace}
+              src={seekinsHat}
               alt="Custom embroidered hats for Seekins Precision"
               className="w-full h-auto object-cover aspect-video"
             />

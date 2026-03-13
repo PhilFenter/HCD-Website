@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 import galleryHatsGrace from "@/assets/gallery-hats-grace-hardrock.jpg";
+import seekinsHat from "@/assets/gallery-seekins-hat.jpg";
 import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
 
@@ -22,7 +23,7 @@ const stories = [
       "A precision manufacturer needed 600 embroidered hats by Friday. It was Monday morning.",
     outcome:
       "Years later, they send a text. We send an invoice. No back and forth. Just trust.",
-    image: galleryHatsGrace,
+    image: seekinsHat,
     url: "/stories/seekins",
   },
   {
