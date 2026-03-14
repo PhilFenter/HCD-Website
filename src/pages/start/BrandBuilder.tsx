@@ -168,29 +168,6 @@ const BrandBuilder = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Section 5 — CTA */}
-      <section className="border-t border-primary/30 bg-secondary py-20">
-        <div className="container max-w-2xl text-center">
-          <motion.div {...fadeUp}>
-            <p className="font-heading text-xs font-medium tracking-[0.25em] text-primary mb-6">
-              READY TO START?
-            </p>
-            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
-              Tell us about your brand and what you are building.
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              We'll point you in the right direction.
-            </p>
-            <Button asChild variant="cta" size="lg" className="mt-10">
-              <Link to="/quote?situation=Building+a+brand">
-                Start Your Brand Project
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
     </Layout>
   );
 };
