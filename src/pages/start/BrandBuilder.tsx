@@ -3,11 +3,12 @@ import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Fingerprint, Sprout, TrendingUp, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import serviceHats from "@/assets/service-hats.jpg";
 import serviceEmbroidery from "@/assets/service-embroidery.jpg";
 import heroLeatherPatches from "@/assets/hero-leather-patches.jpg";
+import BrandIntakeForm from "@/components/brand/BrandIntakeForm";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -15,27 +16,6 @@ const fadeUp = {
   viewport: { once: true },
   transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
 } as const;
-
-const approaches = [
-  {
-    icon: Fingerprint,
-    title: "Identity first",
-    description:
-      "We start with who you are and what you want people to feel when they see your gear. Not with SKUs and quantities.",
-  },
-  {
-    icon: Sprout,
-    title: "Small runs welcome",
-    description:
-      "We know your first order is a test. We help you get it right before you scale.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Built to grow with you",
-    description:
-      "The brands we work with come back. Because when something works, you want more of it.",
-  },
-];
 
 const products = [
   {
@@ -98,41 +78,8 @@ const BrandBuilder = () => {
         </div>
       </section>
 
-      {/* Section 2 — How We Approach Brand Work */}
-      <section className="border-t border-border/50 bg-card/30 py-20 md:py-24">
-        <div className="container max-w-5xl">
-          <motion.h2
-            {...fadeUp}
-            className="text-center font-heading text-xs font-medium tracking-[0.25em] text-primary mb-16"
-          >
-            HOW WE APPROACH BRAND WORK
-          </motion.h2>
-
-          <div className="grid gap-10 md:grid-cols-3 md:gap-8">
-            {approaches.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.title}
-                  {...fadeUp}
-                  transition={{ ...fadeUp.transition, delay: 0.1 + i * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/15 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
-                    <Icon className="h-7 w-7" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="font-heading text-lg font-bold text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-muted-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Section 2 — Brand Intake Form */}
+      <BrandIntakeForm />
 
       {/* Section 3 — Where Most Brands Start */}
       <section className="py-20 md:py-24">
