@@ -32,7 +32,7 @@ const stories = [
     teaser:
       "A large employer dropped off a jacket for embroidery — it already had the wrong order from another supplier.",
     outcome: "That is what we mean when we say we got you.",
-    image: galleryEmbroideredPatch,
+    image: galleryClearwaterJackets,
     url: "/stories/clearwater",
   },
   {
