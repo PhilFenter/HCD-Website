@@ -47,6 +47,7 @@ const App = () => (
             <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
             <Route path="/stories/seekins" element={<Seekins />} />
             <Route path="/stories/clearwater" element={<Clearwater />} />
+            <Route path="/stories/tristate" element={<Tristate />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
