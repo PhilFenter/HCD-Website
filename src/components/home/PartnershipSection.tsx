@@ -6,6 +6,7 @@ import galleryHatsGrace from "@/assets/gallery-grace-builders-hat.jpg";
 import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
 import galleryClearwaterJackets from "@/assets/gallery-clearwater-jackets.jpg";
+import galleryWrongDoorShop from "@/assets/gallery-wrong-door-shop.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-tristate-store.png";
 
 const stories = [
@@ -48,7 +49,7 @@ const stories = [
     teaser:
       "She almost walked right past us — then stopped, came in, and everything changed.",
     outcome: "Sometimes the best partnerships start by accident.",
-    image: galleryEmbroideredPatch,
+    image: galleryWrongDoorShop,
     url: "/stories/walked-past",
   },
   {
