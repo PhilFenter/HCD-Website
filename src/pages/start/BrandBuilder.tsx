@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import serviceHats from "@/assets/service-hats.jpg";
-import serviceEmbroidery from "@/assets/service-embroidery.jpg";
+import embroideryHops from "@/assets/gallery-embroidery-hops.jpg";
 import heroLeatherPatches from "@/assets/hero-leather-patches.jpg";
 import uvPatchLcstate from "@/assets/gallery-uv-patch-lcstate.jpg";
 import BrandIntakeForm from "@/components/brand/BrandIntakeForm";
