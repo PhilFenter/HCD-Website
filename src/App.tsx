@@ -19,6 +19,7 @@ import EmbroideryClarkston from "./pages/EmbroideryClarkston";
 import CustomHatsLCValley from "./pages/CustomHatsLCValley";
 import Seekins from "./pages/stories/Seekins";
 import Clearwater from "./pages/stories/Clearwater";
+import Tristate from "./pages/stories/Tristate";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
             <Route path="/stories/seekins" element={<Seekins />} />
             <Route path="/stories/clearwater" element={<Clearwater />} />
+            <Route path="/stories/tristate" element={<Tristate />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
