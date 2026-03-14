@@ -3,11 +3,12 @@ import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Fingerprint, Sprout, TrendingUp, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import serviceHats from "@/assets/service-hats.jpg";
 import serviceEmbroidery from "@/assets/service-embroidery.jpg";
 import heroLeatherPatches from "@/assets/hero-leather-patches.jpg";
+import BrandIntakeForm from "@/components/brand/BrandIntakeForm";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
