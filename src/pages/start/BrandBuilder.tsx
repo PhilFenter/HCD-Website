@@ -17,27 +17,6 @@ const fadeUp = {
   transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
 } as const;
 
-const approaches = [
-  {
-    icon: Fingerprint,
-    title: "Identity first",
-    description:
-      "We start with who you are and what you want people to feel when they see your gear. Not with SKUs and quantities.",
-  },
-  {
-    icon: Sprout,
-    title: "Small runs welcome",
-    description:
-      "We know your first order is a test. We help you get it right before you scale.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Built to grow with you",
-    description:
-      "The brands we work with come back. Because when something works, you want more of it.",
-  },
-];
-
 const products = [
   {
     title: "Leather Patch Hats",
