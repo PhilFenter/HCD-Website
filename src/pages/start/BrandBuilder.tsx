@@ -37,7 +37,7 @@ const products = [
     title: "Custom Apparel",
     description:
       "Shirts, hoodies, and workwear decorated to match your brand.",
-    image: serviceEmbroidery,
+    image: embroideryHops,
     link: "/embroidery",
   },
 ];
