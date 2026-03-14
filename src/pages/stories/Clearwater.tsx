@@ -75,7 +75,7 @@ const Clearwater = () => {
               He wanted to do something special for all their employees — high end KUHL jackets embroidered with the Clearwater Paper logo. But not just the standard logo. He wanted it redesigned in the shape of Idaho. We said sure. How many jackets?
             </p>
 
-            <p>He said they had about 685 employees. He'd like to get each of them one.</p>
+            <p>He said they had about 750 employees. He'd like to get each of them one.</p>
 
             <p>We said that would be just fine.</p>
 
