@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import galleryHatsGrace from "@/assets/gallery-grace-builders-hat.jpg";
 import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
+import galleryClearwaterJackets from "@/assets/gallery-clearwater-jackets.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-tristate-store.png";
 
 const stories = [
@@ -31,7 +32,7 @@ const stories = [
     teaser:
       "A large employer dropped off a jacket for embroidery — it already had the wrong order from another supplier.",
     outcome: "That is what we mean when we say we got you.",
-    image: galleryEmbroideredPatch,
+    image: galleryClearwaterJackets,
     url: "/stories/clearwater",
   },
   {
