@@ -44,7 +44,7 @@ const stories = [
     url: "/stories/make-them-cool",
   },
   {
-    headline: "She Almost Walked Right Past Us.",
+    headline: "The Wrong Door Turned Into The Right Shop.",
     teaser:
       "She almost walked right past us — then stopped, came in, and everything changed.",
     outcome: "Sometimes the best partnerships start by accident.",
