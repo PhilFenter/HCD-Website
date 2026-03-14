@@ -130,7 +130,7 @@ const WalkedPast = () => {
               Just two small business owners in a small town, taking care of each other.
             </p>
 
-            <p className="font-semibold text-foreground">We had heard the name before.</p>
+            <p className="font-semibold text-foreground">She knew she could trust us.</p>
           </motion.div>
         </div>
 
