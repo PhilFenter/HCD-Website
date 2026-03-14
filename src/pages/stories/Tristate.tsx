@@ -60,7 +60,7 @@ const Tristate = () => {
             transition={{ delay: 0.4 }}
             className="mt-12 space-y-6 text-lg leading-relaxed text-muted-foreground"
           >
-            <p>It started with a hat customer who sat on some local boards.</p>
+            <p>It started with a local realtor who needed some hats and knew everyone in town.</p>
 
             <p>
               She knew a graphic designer looking for a change and thought HCD might be a good fit. That designer came to work with us for a while — and through her we were introduced to someone in the marketing department at Tristate Health, one of the region's largest employers.
