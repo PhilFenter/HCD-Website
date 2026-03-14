@@ -63,6 +63,10 @@ const SituationFinder = () => {
   };
 
   const handleFindSolution = () => {
+    if (answers[0] === "Building a brand") {
+      navigate("/start/brand-builder");
+      return;
+    }
     const params = new URLSearchParams();
     if (answers[0]) params.set("situation", answers[0]);
     if (answers[1]) params.set("frequency", answers[1]);

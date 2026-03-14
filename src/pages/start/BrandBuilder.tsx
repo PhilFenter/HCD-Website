@@ -13,8 +13,8 @@ const fadeUp = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-};
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+} as const;
 
 const approaches = [
   {
