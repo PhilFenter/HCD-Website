@@ -13,7 +13,7 @@ import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import servicePatches from "@/assets/gallery-leather-patch-flag.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
-type ProductKey = "hats" | "patches" | "apparel";
+type ProductKey = "hats" | "apparel";
 
 const products: {
   key: ProductKey;
@@ -24,15 +24,9 @@ const products: {
 }[] = [
   {
     key: "hats",
-    title: "Leather Patch Hats",
-    subtitle: "Custom leather patches on premium hat brands — laser engraved, UV printed, or embroidered.",
+    title: "Custom Headwear",
+    subtitle: "Leather patch hats, embroidered caps, and UV printed designs on premium hat brands.",
     image: serviceHats,
-  },
-  {
-    key: "patches",
-    title: "Wholesale Leather Patches",
-    subtitle: "Loose leather patches for hat makers, retailers, and brands. No hat included.",
-    image: servicePatches,
   },
   {
     key: "apparel",
@@ -45,11 +39,10 @@ const products: {
 
 const formMap: Record<ProductKey, React.ReactNode> = {
   hats: <LeatherPatchHatForm />,
-  patches: <WholesalePatchForm />,
   apparel: <CustomApparelForm />,
 };
 
-const validKeys: ProductKey[] = ["hats", "patches", "apparel"];
+const validKeys: ProductKey[] = ["hats", "apparel"];
 
 const Quote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
