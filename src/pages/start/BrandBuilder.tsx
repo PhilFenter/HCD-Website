@@ -8,6 +8,7 @@ import seekinsHat from "@/assets/gallery-seekins-two-hats.jpg";
 import serviceHats from "@/assets/service-hats.jpg";
 import serviceEmbroidery from "@/assets/service-embroidery.jpg";
 import heroLeatherPatches from "@/assets/hero-leather-patches.jpg";
+import uvPatchLcstate from "@/assets/gallery-uv-patch-lcstate.jpg";
 import BrandIntakeForm from "@/components/brand/BrandIntakeForm";
 
 const fadeUp = {
