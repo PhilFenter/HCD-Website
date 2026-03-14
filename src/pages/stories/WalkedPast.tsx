@@ -23,7 +23,7 @@ const WalkedPast = () => {
             transition={{ delay: 0.1 }}
           >
             <Link
-              to="/#partnerships"
+              to="/#story-walked-past"
               className="inline-block text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               ← Back to Our Work

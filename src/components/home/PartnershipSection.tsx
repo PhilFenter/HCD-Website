@@ -51,6 +51,7 @@ const stories = [
     outcome: "Sometimes the best partnerships start by accident.",
     image: galleryWrongDoorShop,
     url: "/stories/walked-past",
+    anchorId: "story-walked-past",
   },
   {
     headline: "The Right Story Is Coming.",
@@ -102,7 +103,10 @@ const StoryCard = ({
 
   if (story.placeholder) {
     return (
-      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden opacity-75">
+      <div
+        id={story.anchorId}
+        className="rounded-lg border border-border bg-card shadow-sm overflow-hidden opacity-75"
+      >
         {content}
       </div>
     );
@@ -110,6 +114,7 @@ const StoryCard = ({
 
   return (
     <Link
+      id={story.anchorId}
       to={story.url}
       className="group rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] hover:border-primary/30"
     >
@@ -120,7 +125,7 @@ const StoryCard = ({
 
 const PartnershipSection = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section id="partnerships" className="py-20 md:py-28">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
