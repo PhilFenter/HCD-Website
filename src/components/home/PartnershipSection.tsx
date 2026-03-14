@@ -69,7 +69,7 @@ const StoryCard = ({
 }) => {
   const content = (
     <>
-      <div className="aspect-square overflow-hidden">
+      <div className="aspect-[4/3] overflow-hidden">
         <img
           src={story.image}
           alt={story.headline}
