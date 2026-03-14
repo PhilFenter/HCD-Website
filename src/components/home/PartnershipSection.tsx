@@ -49,7 +49,7 @@ const stories = [
     teaser:
       "She almost walked right past us — then stopped, came in, and everything changed.",
     outcome: "Sometimes the best partnerships start by accident.",
-    image: galleryEmbroideredPatch,
+    image: galleryWrongDoorShop,
     url: "/stories/walked-past",
   },
   {
