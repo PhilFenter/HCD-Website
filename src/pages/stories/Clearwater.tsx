@@ -10,7 +10,7 @@ const Clearwater = () => {
     <Layout>
       <SEOHead
         title="Clearwater Paper — 685 Jackets by Thanksgiving | Hells Canyon Designs"
-        description="How two pallets of KUHL jackets became 685 custom-embroidered gifts — delivered early — and what happened when the last one showed up wrong."
+        description="How two pallets of KUHL jackets became 750 custom-embroidered gifts — delivered early — and what happened when the last one showed up wrong."
         canonicalPath="/stories/clearwater"
       />
 
