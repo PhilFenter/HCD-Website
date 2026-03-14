@@ -20,10 +20,10 @@ const Index = () => {
       />
       <HeroSection />
       <SituationFinder />
-      <HonestyStatement />
       <SocialProof />
       <HowItWorks />
       <PartnershipSection />
+      <HonestyStatement />
       <PortfolioGallery />
       <InstagramFeed />
       <FAQ />
