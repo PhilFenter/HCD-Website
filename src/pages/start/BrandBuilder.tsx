@@ -22,7 +22,7 @@ const products = [
   {
     title: "Leather Patch Hats",
     description:
-      "Laser engraved or UV printed patches on premium hat brands. The most requested item for brands building identity.",
+      "Laser engraved leather patches on premium hat brands. The most requested item for brands building identity.",
     image: heroLeatherPatches,
     link: "/custom-hats",
   },
