@@ -22,6 +22,7 @@ import Clearwater from "./pages/stories/Clearwater";
 import Tristate from "./pages/stories/Tristate";
 import GraceBuilders from "./pages/stories/GraceBuilders";
 import WalkedPast from "./pages/stories/WalkedPast";
+import BrandBuilder from "./pages/start/BrandBuilder";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/stories/tristate" element={<Tristate />} />
             <Route path="/stories/make-them-cool" element={<GraceBuilders />} />
             <Route path="/stories/walked-past" element={<WalkedPast />} />
+            <Route path="/start/brand-builder" element={<BrandBuilder />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
