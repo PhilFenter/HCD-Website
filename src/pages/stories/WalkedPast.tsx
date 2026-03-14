@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/gallery-clearwater-jackets.jpg";
+import heroImage from "@/assets/gallery-walked-past-hero.jpg";
 
 const WalkedPast = () => {
   return (
