@@ -36,7 +36,7 @@ const products = [
   {
     title: "Custom Apparel",
     description:
-      "T-shirts, polo shirts, hoodies and crew necks — all the latest colors and styles. Embroidery, screen printing, and digital printing, all done in house.",
+      "T-shirts, polo shirts, hoodies and crew necks — all the latest colors and styles. We do all embellishments in-house.",
     image: embroideryHops,
     link: "/embroidery",
   },
