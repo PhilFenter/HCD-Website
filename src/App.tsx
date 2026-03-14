@@ -21,6 +21,7 @@ import Seekins from "./pages/stories/Seekins";
 import Clearwater from "./pages/stories/Clearwater";
 import Tristate from "./pages/stories/Tristate";
 import GraceBuilders from "./pages/stories/GraceBuilders";
+import WalkedPast from "./pages/stories/WalkedPast";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
