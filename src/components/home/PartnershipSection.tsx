@@ -28,10 +28,10 @@ const stories = [
     url: "/stories/seekins",
   },
   {
-    headline: "We Caught It First.",
+    headline: "The Last Jacket.",
     teaser:
-      "A large employer dropped off a jacket for embroidery — it already had the wrong order from another supplier.",
-    outcome: "That is what we mean when we say we got you.",
+      "750 high-end KUHL jackets for every employee. Months of work. One jacket still outstanding. When it finally arrived we opened it and knew immediately something was wrong.",
+    outcome: "We already had a replacement on the way before she finished the sentence.",
     image: galleryClearwaterJackets,
     url: "/stories/clearwater",
   },
