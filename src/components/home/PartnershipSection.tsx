@@ -30,7 +30,7 @@ const stories = [
   {
     headline: "The Last Jacket.",
     teaser:
-      "750 high-end KUHL jackets for every employee. Months of work. One jacket still outstanding. When it finally arrived we opened it and knew immediately something was wrong.",
+      "750 high-end KUHL jackets for every employee. One jacket still outstanding. When it finally arrived we opened it and knew immediately something was wrong.",
     outcome: "We already had a replacement on the way before she finished the sentence.",
     image: galleryClearwaterJackets,
     url: "/stories/clearwater",
