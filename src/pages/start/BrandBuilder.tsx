@@ -30,7 +30,7 @@ const products = [
     title: "UV Printed Patch Hats",
     description:
       "Full color, photo-quality patches. Perfect for complex logos and artwork.",
-    image: serviceHats,
+    image: uvPatchLcstate,
     link: "/custom-hats",
   },
   {
