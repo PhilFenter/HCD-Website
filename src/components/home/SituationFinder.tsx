@@ -57,6 +57,13 @@ const SituationFinder = () => {
     const next = [...answers];
     next[step] = option;
     setAnswers(next);
+
+    // Route immediately for "Building a brand"
+    if (step === 0 && option === "Building a brand") {
+      setTimeout(() => navigate("/start/brand-builder"), 350);
+      return;
+    }
+
     if (step < questions.length - 1) {
       setTimeout(() => setStep(step + 1), 350);
     }
