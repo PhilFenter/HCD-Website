@@ -78,41 +78,8 @@ const BrandBuilder = () => {
         </div>
       </section>
 
-      {/* Section 2 — How We Approach Brand Work */}
-      <section className="border-t border-border/50 bg-card/30 py-20 md:py-24">
-        <div className="container max-w-5xl">
-          <motion.h2
-            {...fadeUp}
-            className="text-center font-heading text-xs font-medium tracking-[0.25em] text-primary mb-16"
-          >
-            HOW WE APPROACH BRAND WORK
-          </motion.h2>
-
-          <div className="grid gap-10 md:grid-cols-3 md:gap-8">
-            {approaches.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.title}
-                  {...fadeUp}
-                  transition={{ ...fadeUp.transition, delay: 0.1 + i * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/15 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
-                    <Icon className="h-7 w-7" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="font-heading text-lg font-bold text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-muted-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Section 2 — Brand Intake Form */}
+      <BrandIntakeForm />
 
       {/* Section 3 — Where Most Brands Start */}
       <section className="py-20 md:py-24">
