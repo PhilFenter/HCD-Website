@@ -10,15 +10,6 @@ import galleryScreenprintSquad from "@/assets/gallery-tristate-store.png";
 
 const stories = [
   {
-    headline: "Just Make Them Look Cool.",
-    teaser:
-      "A local contractor handed us their brand and said those four words. No micromanaging. No endless revisions. Just trust.",
-    outcome:
-      "That is the kind of relationship we are built for.",
-    image: galleryHatsGrace,
-    url: "/stories/make-them-cool",
-  },
-  {
     headline: "Sure. Just Come Pick A Color.",
     teaser:
       "A precision manufacturer needed 600 embroidered hats by Friday. It was Monday morning.",
@@ -26,6 +17,14 @@ const stories = [
       "Years later, they send a text. We send an invoice. No back and forth. Just trust.",
     image: seekinsHat,
     url: "/stories/seekins",
+  },
+  {
+    headline: "A Store They Actually Use.",
+    teaser:
+      "A regional health company's old store took four months to fulfill. Employees stopped using it entirely.",
+    outcome: "When the system works, everyone wins.",
+    image: galleryScreenprintSquad,
+    url: "/stories/tristate",
   },
   {
     headline: "The Last Jacket.",
@@ -36,12 +35,13 @@ const stories = [
     url: "/stories/clearwater",
   },
   {
-    headline: "A Store They Actually Use.",
+    headline: "Just Make Them Look Cool.",
     teaser:
-      "A regional health company's old store took four months to fulfill. Employees stopped using it entirely.",
-    outcome: "When the system works, everyone wins.",
-    image: galleryScreenprintSquad,
-    url: "/stories/tristate",
+      "A local contractor handed us their brand and said those four words. No micromanaging. No endless revisions. Just trust.",
+    outcome:
+      "That is the kind of relationship we are built for.",
+    image: galleryHatsGrace,
+    url: "/stories/make-them-cool",
   },
   {
     headline: "She Almost Walked Right Past Us.",
