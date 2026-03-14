@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/gallery-embroidered-patch.jpg";
+import heroImage from "@/assets/gallery-clearwater-jackets.jpg";
 
 const Clearwater = () => {
   return (
