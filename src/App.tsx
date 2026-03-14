@@ -20,6 +20,7 @@ import CustomHatsLCValley from "./pages/CustomHatsLCValley";
 import Seekins from "./pages/stories/Seekins";
 import Clearwater from "./pages/stories/Clearwater";
 import Tristate from "./pages/stories/Tristate";
+import GraceBuilders from "./pages/stories/GraceBuilders";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/stories/seekins" element={<Seekins />} />
             <Route path="/stories/clearwater" element={<Clearwater />} />
             <Route path="/stories/tristate" element={<Tristate />} />
+            <Route path="/stories/make-them-cool" element={<GraceBuilders />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
