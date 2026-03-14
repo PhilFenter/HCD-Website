@@ -22,12 +22,12 @@ const WalkedPast = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <button
-              onClick={() => window.history.back()}
+            <Link
+              to="/#partnerships"
               className="inline-block text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               ← Back to Our Work
-            </button>
+            </Link>
           </motion.div>
 
           {/* Headline */}
