@@ -6,11 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
-import WholesalePatchForm from "@/components/quote/WholesalePatchForm";
 import CustomApparelForm from "@/components/quote/CustomApparelForm";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
-import servicePatches from "@/assets/gallery-leather-patch-flag.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
 type ProductKey = "hats" | "apparel";
