@@ -22,16 +22,12 @@ const Clearwater = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <Link
-              to="/"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = "/#situation-finder";
-              }}
+            <button
+              onClick={() => window.history.back()}
               className="inline-block text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               ← Back to Our Work
-            </Link>
+            </button>
           </motion.div>
 
           {/* Headline */}
