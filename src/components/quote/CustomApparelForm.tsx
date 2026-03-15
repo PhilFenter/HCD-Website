@@ -242,6 +242,7 @@ const CustomApparelForm = () => {
           printLocations,
           numColors,
         },
+        artworkFile,
       });
       setSubmitted(true);
       toast({
