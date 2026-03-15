@@ -59,7 +59,7 @@ const SituationFinder = () => {
     setAnswers(next);
 
     // Route immediately for "Building a brand"
-    if (step === 0 && option === "Building a brand") {
+    if (step === 0 && option === "Hats and branded gear") {
       setTimeout(() => navigate("/start/brand-builder"), 350);
       return;
     }
