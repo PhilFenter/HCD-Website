@@ -21,7 +21,7 @@ const questions = [
     prompt: "What are you working on?",
     columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
     options: [
-      { label: "Building a brand", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
+      { label: "Hats and branded gear", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
       { label: "Outfitting a crew or team", icon: Users, accent: "from-primary/20 to-primary/5" },
       { label: "Event or promotion", icon: PartyPopper, accent: "from-primary/20 to-primary/5" },
       { label: "Wholesale patches", icon: Layers, accent: "from-primary/20 to-primary/5" },
