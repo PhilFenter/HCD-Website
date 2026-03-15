@@ -163,7 +163,8 @@ const Quote = () => {
                   </h2>
                 </div>
 
-                {formMap[selected]}
+                {selected === "hats" && <LeatherPatchHatForm brandContext={brandContext} />}
+                {selected === "apparel" && <CustomApparelForm brandContext={brandContext} />}
               </motion.div>
             )}
           </AnimatePresence>
