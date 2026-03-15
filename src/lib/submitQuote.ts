@@ -47,6 +47,71 @@ async function uploadArtworkFile(file: File, serviceType: string): Promise<strin
 
   return urlData.publicUrl;
 }
+/**
+ * Format a label for display (snake_case / camelCase → Title Case).
+ */
+function formatLabel(key: string): string {
+  return key
+    .replace(/([A-Z])/g, " $1")
+    .replace(/[_-]/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}
+
+/**
+ * Build a human-readable notes string from all quote data so
+ * the ShopManagerPro action item contains every detail.
+ */
+function buildFullNotes(submission: QuoteSubmission, artworkUrl?: string): string {
+  const sections: string[] = [];
+
+  // Service type header
+  sections.push(`— ${formatLabel(submission.serviceType)} Quote —`);
+
+  // Quantity
+  if (submission.quantity) sections.push(`Quantity: ${submission.quantity}`);
+
+  // Timeline
+  if (submission.timeline) sections.push(`Timeline: ${submission.timeline}`);
+
+  // Estimate
+  if (submission.estimate) {
+    const { low, high } = submission.estimate;
+    sections.push(
+      low === high
+        ? `Estimate: $${low}`
+        : `Estimate: $${low} – $${high}`
+    );
+  }
+
+  // Service-specific details
+  if (submission.details && Object.keys(submission.details).length > 0) {
+    sections.push(""); // blank line
+    sections.push("Order Details:");
+    for (const [key, value] of Object.entries(submission.details)) {
+      if (value === undefined || value === null || value === "") continue;
+      const display = Array.isArray(value) ? value.join(", ") : String(value);
+      sections.push(`  ${formatLabel(key)}: ${display}`);
+    }
+  }
+
+  // Artwork
+  if (submission.artworkNotes) {
+    sections.push("");
+    sections.push(`Artwork Notes: ${submission.artworkNotes}`);
+  }
+  if (artworkUrl) {
+    sections.push(`Artwork File: ${artworkUrl}`);
+  }
+
+  // Customer notes
+  if (submission.notes) {
+    sections.push("");
+    sections.push(`Customer Notes: ${submission.notes}`);
+  }
+
+  return sections.join("\n");
+}
 
 /**
  * Submit a quote request to ShopManagerPro's backend.
@@ -60,10 +125,14 @@ export async function submitQuoteRequest(submission: QuoteSubmission) {
     artworkUrl = await uploadArtworkFile(submission.artworkFile, submission.serviceType);
   }
 
+  // Build comprehensive notes with all order details
+  const fullNotes = buildFullNotes(submission, artworkUrl);
+
   // Map frontend field names to what the edge function expects
   const { artworkFile, ...rest } = submission;
   const payload = {
     ...rest,
+    notes: fullNotes,
     customer_name: submission.name,
     customer_email: submission.email,
     customer_phone: submission.phone,
