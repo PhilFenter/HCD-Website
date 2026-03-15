@@ -78,6 +78,21 @@ function formatLabel(key: string): string {
 function buildFullNotes(submission: QuoteSubmission, artworkUrl?: string): string {
   const sections: string[] = [];
 
+  // Brand context from Brand Builder funnel
+  if (submission.brandContext) {
+    const bc = submission.brandContext;
+    sections.push("— Brand Info —");
+    if (bc.situation) sections.push(`  Source: ${bc.situation}`);
+    if (bc.brandDoes) sections.push(`  What They Do: ${bc.brandDoes}`);
+    if (bc.success) sections.push(`  Success Looks Like: ${bc.success}`);
+    if (bc.years) sections.push(`  Years In Business: ${bc.years}`);
+    if (bc.teamSize) sections.push(`  Team Size: ${bc.teamSize}`);
+    if (bc.orderedBefore) sections.push(`  Ordered Before: ${bc.orderedBefore}`);
+    if (bc.artwork) sections.push(`  Artwork Status: ${bc.artwork}`);
+    if (bc.deadline) sections.push(`  Timeline: ${bc.deadline}`);
+    sections.push("");
+  }
+
   // Service type header
   sections.push(`— ${formatLabel(submission.serviceType)} Quote —`);
 

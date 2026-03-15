@@ -42,6 +42,22 @@ const Quote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selected, setSelected] = useState<ProductKey | null>(null);
 
+  // Extract brand context from URL params (set by Brand Builder intake form)
+  const brandContext = useMemo<BrandContext | undefined>(() => {
+    const situation = searchParams.get("situation");
+    if (!situation) return undefined;
+    return {
+      situation: situation || undefined,
+      brandDoes: searchParams.get("brand_does") || undefined,
+      success: searchParams.get("success") || undefined,
+      years: searchParams.get("years") || undefined,
+      teamSize: searchParams.get("team_size") || undefined,
+      orderedBefore: searchParams.get("ordered_before") || undefined,
+      artwork: searchParams.get("artwork") || undefined,
+      deadline: searchParams.get("deadline") || undefined,
+    };
+  }, [searchParams]);
+
   // Read ?product= on mount
   useEffect(() => {
     const param = searchParams.get("product") as ProductKey | null;
@@ -52,12 +68,17 @@ const Quote = () => {
 
   const handleSelect = (key: ProductKey) => {
     setSelected(key);
-    setSearchParams({ product: key });
+    // Preserve existing params (brand context) when selecting product
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("product", key);
+    setSearchParams(newParams);
   };
 
   const handleBack = () => {
     setSelected(null);
-    setSearchParams({});
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("product");
+    setSearchParams(newParams);
   };
 
   return (
