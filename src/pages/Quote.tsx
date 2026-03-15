@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
 import CustomApparelForm from "@/components/quote/CustomApparelForm";
+import type { BrandContext } from "@/lib/submitQuote";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
@@ -34,11 +35,6 @@ const products: {
     imagePosition: "object-top",
   },
 ];
-
-const formMap: Record<ProductKey, React.ReactNode> = {
-  hats: <LeatherPatchHatForm />,
-  apparel: <CustomApparelForm />,
-};
 
 const validKeys: ProductKey[] = ["hats", "apparel"];
 
