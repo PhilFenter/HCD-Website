@@ -1,5 +1,16 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export interface BrandContext {
+  situation?: string;
+  brandDoes?: string;
+  success?: string;
+  years?: string;
+  teamSize?: string;
+  orderedBefore?: string;
+  artwork?: string;
+  deadline?: string;
+}
+
 export interface QuoteSubmission {
   /** Which service: "custom_hats" | "embroidery" | "screen_print" | "dtf" | "garments" */
   serviceType: string;
@@ -22,6 +33,8 @@ export interface QuoteSubmission {
   estimate?: { low: number; high: number } | null;
   /** Optional artwork file to upload */
   artworkFile?: File | null;
+  /** Brand intake context from the Brand Builder funnel */
+  brandContext?: BrandContext;
 }
 
 /**
