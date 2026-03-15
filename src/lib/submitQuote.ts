@@ -1,5 +1,16 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export interface BrandContext {
+  situation?: string;
+  brandDoes?: string;
+  success?: string;
+  years?: string;
+  teamSize?: string;
+  orderedBefore?: string;
+  artwork?: string;
+  deadline?: string;
+}
+
 export interface QuoteSubmission {
   /** Which service: "custom_hats" | "embroidery" | "screen_print" | "dtf" | "garments" */
   serviceType: string;
@@ -22,6 +33,8 @@ export interface QuoteSubmission {
   estimate?: { low: number; high: number } | null;
   /** Optional artwork file to upload */
   artworkFile?: File | null;
+  /** Brand intake context from the Brand Builder funnel */
+  brandContext?: BrandContext;
 }
 
 /**
@@ -64,6 +77,21 @@ function formatLabel(key: string): string {
  */
 function buildFullNotes(submission: QuoteSubmission, artworkUrl?: string): string {
   const sections: string[] = [];
+
+  // Brand context from Brand Builder funnel
+  if (submission.brandContext) {
+    const bc = submission.brandContext;
+    sections.push("— Brand Info —");
+    if (bc.situation) sections.push(`  Source: ${bc.situation}`);
+    if (bc.brandDoes) sections.push(`  What They Do: ${bc.brandDoes}`);
+    if (bc.success) sections.push(`  Success Looks Like: ${bc.success}`);
+    if (bc.years) sections.push(`  Years In Business: ${bc.years}`);
+    if (bc.teamSize) sections.push(`  Team Size: ${bc.teamSize}`);
+    if (bc.orderedBefore) sections.push(`  Ordered Before: ${bc.orderedBefore}`);
+    if (bc.artwork) sections.push(`  Artwork Status: ${bc.artwork}`);
+    if (bc.deadline) sections.push(`  Timeline: ${bc.deadline}`);
+    sections.push("");
+  }
 
   // Service type header
   sections.push(`— ${formatLabel(submission.serviceType)} Quote —`);

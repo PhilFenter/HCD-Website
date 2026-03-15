@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
 import CustomApparelForm from "@/components/quote/CustomApparelForm";
+import type { BrandContext } from "@/lib/submitQuote";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
@@ -35,16 +36,27 @@ const products: {
   },
 ];
 
-const formMap: Record<ProductKey, React.ReactNode> = {
-  hats: <LeatherPatchHatForm />,
-  apparel: <CustomApparelForm />,
-};
-
 const validKeys: ProductKey[] = ["hats", "apparel"];
 
 const Quote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selected, setSelected] = useState<ProductKey | null>(null);
+
+  // Extract brand context from URL params (set by Brand Builder intake form)
+  const brandContext = useMemo<BrandContext | undefined>(() => {
+    const situation = searchParams.get("situation");
+    if (!situation) return undefined;
+    return {
+      situation: situation || undefined,
+      brandDoes: searchParams.get("brand_does") || undefined,
+      success: searchParams.get("success") || undefined,
+      years: searchParams.get("years") || undefined,
+      teamSize: searchParams.get("team_size") || undefined,
+      orderedBefore: searchParams.get("ordered_before") || undefined,
+      artwork: searchParams.get("artwork") || undefined,
+      deadline: searchParams.get("deadline") || undefined,
+    };
+  }, [searchParams]);
 
   // Read ?product= on mount
   useEffect(() => {
@@ -56,12 +68,17 @@ const Quote = () => {
 
   const handleSelect = (key: ProductKey) => {
     setSelected(key);
-    setSearchParams({ product: key });
+    // Preserve existing params (brand context) when selecting product
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("product", key);
+    setSearchParams(newParams);
   };
 
   const handleBack = () => {
     setSelected(null);
-    setSearchParams({});
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("product");
+    setSearchParams(newParams);
   };
 
   return (
@@ -146,7 +163,8 @@ const Quote = () => {
                   </h2>
                 </div>
 
-                {formMap[selected]}
+                {selected === "hats" && <LeatherPatchHatForm brandContext={brandContext} />}
+                {selected === "apparel" && <CustomApparelForm brandContext={brandContext} />}
               </motion.div>
             )}
           </AnimatePresence>

@@ -389,7 +389,13 @@ const LEATHER_COLORS = [
   { value: "other", label: "Other" },
 ];
 
-const LeatherPatchHatForm = () => {
+import type { BrandContext } from "@/lib/submitQuote";
+
+interface LeatherPatchHatFormProps {
+  brandContext?: BrandContext;
+}
+
+const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
@@ -437,6 +443,7 @@ const LeatherPatchHatForm = () => {
           leatherColor,
         },
         artworkFile,
+        brandContext,
       });
       setSubmitted(true);
       toast({
