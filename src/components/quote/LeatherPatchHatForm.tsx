@@ -443,6 +443,7 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
           leatherColor,
         },
         artworkFile,
+        brandContext,
       });
       setSubmitted(true);
       toast({

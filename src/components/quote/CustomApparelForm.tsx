@@ -249,6 +249,7 @@ const CustomApparelForm = ({ brandContext }: CustomApparelFormProps) => {
           numColors,
         },
         artworkFile,
+        brandContext,
       });
       setSubmitted(true);
       toast({
