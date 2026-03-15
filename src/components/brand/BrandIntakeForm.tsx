@@ -55,10 +55,7 @@ const BrandIntakeForm = () => {
     if (yearsInBusiness) params.set("years", yearsInBusiness);
     if (teamSize) params.set("team_size", teamSize);
     if (orderedBefore) {
-      params.set("ordered_before", "yes");
-      if (priorExperience.trim()) params.set("prior_experience", priorExperience.trim().slice(0, 300));
-    } else {
-      params.set("ordered_before", "no");
+      params.set("ordered_before", orderedBefore);
     }
     if (artworkStatus) params.set("artwork", artworkStatus);
     if (timeline) params.set("deadline", timeline);
