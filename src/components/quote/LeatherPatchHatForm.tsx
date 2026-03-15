@@ -436,6 +436,7 @@ const LeatherPatchHatForm = () => {
           patchSize,
           leatherColor,
         },
+        artworkFile,
       });
       setSubmitted(true);
       toast({

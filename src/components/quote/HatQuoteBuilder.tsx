@@ -161,6 +161,7 @@ const HatQuoteBuilder = () => {
           hatColors: data.hatColors,
         },
         estimate: est ? { low: Math.round(est.total), high: Math.round(est.total) } : null,
+        artworkFile: data.artworkFile,
       });
       setSubmitted(true);
       toast({

@@ -85,6 +85,7 @@ const DTFQuoteBuilder = () => {
           orderType: data.orderType,
           garmentType: data.garmentType,
         },
+        artworkFile: data.artworkFile,
       });
       setSubmitted(true);
       toast({
