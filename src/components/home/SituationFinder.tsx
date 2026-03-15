@@ -70,7 +70,7 @@ const SituationFinder = () => {
   };
 
   const handleFindSolution = () => {
-    if (answers[0] === "Building a brand") {
+    if (answers[0] === "Hats and branded gear") {
       navigate("/start/brand-builder");
       return;
     }
