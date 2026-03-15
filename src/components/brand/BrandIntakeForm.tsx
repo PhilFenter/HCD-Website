@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -41,8 +41,7 @@ const BrandIntakeForm = () => {
   const [success, setSuccess] = useState("");
   const [yearsInBusiness, setYearsInBusiness] = useState("");
   const [teamSize, setTeamSize] = useState("");
-  const [orderedBefore, setOrderedBefore] = useState(false);
-  const [priorExperience, setPriorExperience] = useState("");
+  const [orderedBefore, setOrderedBefore] = useState("");
   const [artworkStatus, setArtworkStatus] = useState("");
   const [timeline, setTimeline] = useState("");
 
@@ -56,10 +55,7 @@ const BrandIntakeForm = () => {
     if (yearsInBusiness) params.set("years", yearsInBusiness);
     if (teamSize) params.set("team_size", teamSize);
     if (orderedBefore) {
-      params.set("ordered_before", "yes");
-      if (priorExperience.trim()) params.set("prior_experience", priorExperience.trim().slice(0, 300));
-    } else {
-      params.set("ordered_before", "no");
+      params.set("ordered_before", orderedBefore);
     }
     if (artworkStatus) params.set("artwork", artworkStatus);
     if (timeline) params.set("deadline", timeline);
@@ -149,32 +145,17 @@ const BrandIntakeForm = () => {
                 <Label className="font-heading text-sm font-semibold text-foreground">
                   Have you ordered branded gear before?
                 </Label>
-                <div className="flex items-center gap-3">
-                  <Switch
-                    checked={orderedBefore}
-                    onCheckedChange={setOrderedBefore}
-                  />
-                  <span className="text-sm text-muted-foreground">
-                    {orderedBefore ? "Yes" : "No"}
-                  </span>
-                </div>
-                {orderedBefore && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="pt-2"
-                  >
-                    <Input
-                      value={priorExperience}
-                      onChange={(e) => setPriorExperience(e.target.value)}
-                      placeholder="How was that experience?"
-                      maxLength={300}
-                      className="border-border/60 bg-background/50"
-                    />
-                  </motion.div>
-                )}
+                <Select value={orderedBefore} onValueChange={setOrderedBefore}>
+                  <SelectTrigger className="border-border/60 bg-background/50">
+                    <SelectValue placeholder="Select one..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="no">No, this is our first time</SelectItem>
+                    <SelectItem value="yes-ok">Yes — it went okay</SelectItem>
+                    <SelectItem value="yes-great">Yes — we had a great experience</SelectItem>
+                    <SelectItem value="yes-bad">Yes — it was terrible, that's why we're here</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Q6 */}
