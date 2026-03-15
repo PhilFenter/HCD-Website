@@ -21,7 +21,7 @@ const questions = [
     prompt: "What are you working on?",
     columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
     options: [
-      { label: "Building a brand", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
+      { label: "Hats and branded gear", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
       { label: "Outfitting a crew or team", icon: Users, accent: "from-primary/20 to-primary/5" },
       { label: "Event or promotion", icon: PartyPopper, accent: "from-primary/20 to-primary/5" },
       { label: "Wholesale patches", icon: Layers, accent: "from-primary/20 to-primary/5" },
@@ -59,7 +59,7 @@ const SituationFinder = () => {
     setAnswers(next);
 
     // Route immediately for "Building a brand"
-    if (step === 0 && option === "Building a brand") {
+    if (step === 0 && option === "Hats and branded gear") {
       setTimeout(() => navigate("/start/brand-builder"), 350);
       return;
     }
@@ -70,7 +70,7 @@ const SituationFinder = () => {
   };
 
   const handleFindSolution = () => {
-    if (answers[0] === "Building a brand") {
+    if (answers[0] === "Hats and branded gear") {
       navigate("/start/brand-builder");
       return;
     }
