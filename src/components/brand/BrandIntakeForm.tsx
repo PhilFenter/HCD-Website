@@ -47,63 +47,84 @@ const BrandIntakeForm = () => {
   const [timeline, setTimeline] = useState("");
 
   // Contact fields
-  const [customerName, setCustomerName] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [customerCompany, setCustomerCompany] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   // Submission state
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+    setError("");
+    setSubmitting(true);
 
     const noteLines = [
-      "Brand Builder Intake — Hats and Branded Gear",
-      "",
-      `What does your brand do: ${brandDoes}`,
-      `What does success look like: ${success}`,
-      `Years in business: ${yearsInBusiness}`,
-      `Team size: ${teamSize}`,
+      "— Brand Builder Intake —",
+      `What the brand does: ${brandDoes || "Not provided"}`,
+      `Success looks like: ${success || "Not provided"}`,
+      `Years in business: ${yearsInBusiness || "Not provided"}`,
+      `Team size: ${teamSize || "Not provided"}`,
       `Ordered before: ${orderedBefore ? "Yes" : "No"}`,
-      orderedBefore && priorExperience ? `Prior experience: ${priorExperience}` : null,
-      `Artwork status: ${artworkStatus}`,
-      `Timeline: ${timeline}`,
-    ].filter(Boolean).join("\n");
-
-    const details = {
-      situation: "Hats and branded gear",
-      brand_does: brandDoes,
-      success_looks_like: success,
-      years_in_business: yearsInBusiness,
-      team_size: teamSize,
-      ordered_before: orderedBefore ? "yes" : "no",
-      ...(orderedBefore && priorExperience ? { prior_experience: priorExperience } : {}),
-      artwork_status: artworkStatus,
-      timeline: timeline,
-    };
+      ...(orderedBefore && priorExperience ? [`Prior experience: ${priorExperience}`] : []),
+      `Artwork status: ${artworkStatus || "Not provided"}`,
+      `Timeline: ${timeline || "Not provided"}`,
+    ];
 
     try {
       await submitQuoteRequest({
         serviceType: "other",
-        name: customerName,
-        email: customerEmail,
-        phone: customerPhone,
-        company: customerCompany,
-        notes: noteLines,
-        details,
+        name,
+        email,
+        phone,
+        notes: noteLines.join("\n"),
+        timeline: timeline || undefined,
+        details: {
+          source: "brand-builder",
+          brandDoes,
+          success,
+          yearsInBusiness,
+          teamSize,
+          orderedBefore,
+          priorExperience: orderedBefore ? priorExperience : undefined,
+          artworkStatus,
+          timeline,
+        },
       });
       setSubmitted(true);
     } catch (err) {
-      setError("Something went wrong. Please try again or call us at 208-748-6242.");
+      console.error("Brand intake submission failed:", err);
+      setError("Something went wrong submitting your project details. Please try again or give us a call.");
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
+
+  if (submitted) {
+    return (
+      <section className="py-20 md:py-24">
+        <div className="container max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="rounded-xl border border-primary/20 bg-card/80 p-8 md:p-12 text-center">
+              <CheckCircle className="mx-auto h-12 w-12 text-primary mb-6" />
+              <h3 className="font-heading text-2xl font-bold text-foreground mb-4">
+                We got your project details.
+              </h3>
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                Expect to hear from us within one business day.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 md:py-24">
@@ -119,59 +140,6 @@ const BrandIntakeForm = () => {
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-10">
-              {/* Contact Fields */}
-              <div className="space-y-3">
-                <Label className="font-heading text-sm font-semibold text-foreground">
-                  Your name *
-                </Label>
-                <Input
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Full name"
-                  required
-                  className="border-border/60 bg-background/50"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <Label className="font-heading text-sm font-semibold text-foreground">
-                  Email address *
-                </Label>
-                <Input
-                  type="email"
-                  value={customerEmail}
-                  onChange={(e) => setCustomerEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  required
-                  className="border-border/60 bg-background/50"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <Label className="font-heading text-sm font-semibold text-foreground">
-                  Phone number
-                </Label>
-                <Input
-                  type="tel"
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="(208) 555-1234"
-                  className="border-border/60 bg-background/50"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <Label className="font-heading text-sm font-semibold text-foreground">
-                  Company name
-                </Label>
-                <Input
-                  value={customerCompany}
-                  onChange={(e) => setCustomerCompany(e.target.value)}
-                  placeholder="Optional"
-                  className="border-border/60 bg-background/50"
-                />
-              </div>
-
               {/* Q1 */}
               <div className="space-y-3">
                 <Label className="font-heading text-sm font-semibold text-foreground">
@@ -302,49 +270,78 @@ const BrandIntakeForm = () => {
                 </div>
               </div>
 
-              {/* Submit / Thank You */}
-              {submitted ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="rounded-lg border border-primary/20 bg-card p-8 text-center"
-                >
-                  <CheckCircle className="mx-auto h-10 w-10 text-primary mb-4" />
-                  <h3 className="font-heading text-xl font-bold text-foreground mb-2">
-                    We got your project details.
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Expect to hear from us within one business day.
-                  </p>
-                </motion.div>
-              ) : (
-                <Button
-                  type="submit"
-                  variant="cta"
-                  size="lg"
-                  className="w-full mt-4"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Sending…
-                    </>
-                  ) : (
-                    <>
-                      Start My Brand Project
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              )}
+              {/* Contact Fields */}
+              <div className="space-y-6 border-t border-border/40 pt-10">
+                <p className="font-heading text-xs font-medium tracking-[0.25em] text-primary">
+                  HOW DO WE REACH YOU?
+                </p>
+                <div className="space-y-3">
+                  <Label className="font-heading text-sm font-semibold text-foreground">
+                    Full name *
+                  </Label>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    required
+                    className="border-border/60 bg-background/50"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label className="font-heading text-sm font-semibold text-foreground">
+                    Email *
+                  </Label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@company.com"
+                    required
+                    className="border-border/60 bg-background/50"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label className="font-heading text-sm font-semibold text-foreground">
+                    Phone *
+                  </Label>
+                  <Input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="(208) 555-1234"
+                    required
+                    className="border-border/60 bg-background/50"
+                  />
+                </div>
+              </div>
 
+              {/* Error */}
               {error && (
                 <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
                   {error}
                 </div>
               )}
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                variant="cta"
+                size="lg"
+                className="w-full mt-4"
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Submitting…
+                  </>
+                ) : (
+                  <>
+                    Start My Brand Project
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
             </form>
           </div>
         </motion.div>
