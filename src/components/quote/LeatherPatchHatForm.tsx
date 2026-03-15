@@ -815,6 +815,18 @@ const LeatherPatchHatForm = () => {
       </div>
 
       {/* Submit */}
+      {!isValid && (qty > 0 || name || email || phone) && (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+          <p className="font-medium">Please complete the required fields:</p>
+          <ul className="mt-1 list-disc pl-5 space-y-0.5">
+            {!patchShape && <li>Select a patch shape</li>}
+            {qty < MIN_QTY && <li>Quantity must be at least {MIN_QTY}</li>}
+            {!name && <li>Full name</li>}
+            {!email && <li>Email</li>}
+            {!phone && <li>Phone</li>}
+          </ul>
+        </div>
+      )}
       <Button
         type="submit"
         size="lg"
