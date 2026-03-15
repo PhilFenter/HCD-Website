@@ -41,8 +41,7 @@ const BrandIntakeForm = () => {
   const [success, setSuccess] = useState("");
   const [yearsInBusiness, setYearsInBusiness] = useState("");
   const [teamSize, setTeamSize] = useState("");
-  const [orderedBefore, setOrderedBefore] = useState(false);
-  const [priorExperience, setPriorExperience] = useState("");
+  const [orderedBefore, setOrderedBefore] = useState("");
   const [artworkStatus, setArtworkStatus] = useState("");
   const [timeline, setTimeline] = useState("");
 
