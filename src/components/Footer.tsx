@@ -5,22 +5,6 @@ import { Button } from "@/components/ui/button";
 const Footer = () => {
   return (
     <footer className="border-t border-border bg-card">
-      {/* CTA banner */}
-      <div className="bg-primary/10 border-b border-border">
-        <div className="container flex flex-col items-center gap-4 py-10 text-center md:flex-row md:justify-between md:text-left">
-          <div>
-            <h3 className="font-heading text-2xl font-bold text-foreground">
-              Ready to Bring Your Brand to Life?
-            </h3>
-            <p className="mt-1 text-muted-foreground">
-              Get a custom quote in minutes — no obligation, no hassle.
-            </p>
-          </div>
-          <Button size="lg" asChild>
-            <Link to="/custom-hats#quote">Get a Free Quote</Link>
-          </Button>
-        </div>
-      </div>
 
       <div className="container py-12">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
