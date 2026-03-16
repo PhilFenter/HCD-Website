@@ -654,7 +654,7 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
                   key={tier.min}
                   type="button"
                   onClick={() => setQuantity(String(tier.min))}
-                  className={`relative rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
+                  className={`relative rounded-md border px-4 py-3 text-center transition-colors cursor-pointer hover:border-primary/60 ${
                     isActive
                       ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
                       : "border-border text-muted-foreground"
@@ -666,8 +666,8 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
                       POPULAR
                     </span>
                   )}
-                  <span className="block text-xs">{tier.min}+</span>
-                  <span className="block text-sm font-bold">${tier.price}</span>
+                  <span className="block text-sm">{tier.min}+</span>
+                  <span className="block text-base font-bold">${tier.price}</span>
                 </button>
               );
             })}
