@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, ArrowLeft, Check, Upload, X, DollarSign } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Upload, X, DollarSign, Star } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import OptionCard from "./OptionCard";
 import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
