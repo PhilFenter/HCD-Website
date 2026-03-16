@@ -18,8 +18,7 @@ import {
 const HAT_PRICE_TIERS = [
   { min: 100, price: 19 },
   { min: 72, price: 21 },
-  { min: 60, price: 22 },
-  { min: 48, price: 23 },
+  { min: 48, price: 23, popular: true },
   { min: 24, price: 26 },
   { min: 12, price: 27 },
 ];
