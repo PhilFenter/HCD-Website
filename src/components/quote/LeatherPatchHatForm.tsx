@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Upload, X, DollarSign } from "lucide-react";
+import { Check, Upload, X, DollarSign, Star } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import {
   Select,
@@ -18,8 +18,7 @@ import {
 const HAT_PRICE_TIERS = [
   { min: 100, price: 19 },
   { min: 72, price: 21 },
-  { min: 60, price: 22 },
-  { min: 48, price: 23 },
+  { min: 48, price: 23, popular: true },
   { min: 24, price: 26 },
   { min: 12, price: 27 },
 ];
@@ -645,7 +644,7 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
           <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Volume Pricing — click a tier or enter a custom quantity
           </p>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
             {HAT_PRICE_TIERS.slice().reverse().map((tier) => {
               const isActive =
                 qty >= tier.min &&
@@ -655,12 +654,18 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
                   key={tier.min}
                   type="button"
                   onClick={() => setQuantity(String(tier.min))}
-                  className={`rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
+                  className={`relative rounded-md border px-3 py-2 text-center transition-colors cursor-pointer hover:border-primary/60 ${
                     isActive
                       ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
                       : "border-border text-muted-foreground"
-                  }`}
+                  } ${'popular' in tier ? "ring-1 ring-primary/40" : ""}`}
                 >
+                  {'popular' in tier && (
+                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 flex items-center gap-0.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground whitespace-nowrap">
+                      <Star className="h-2.5 w-2.5 fill-current" />
+                      POPULAR
+                    </span>
+                  )}
                   <span className="block text-xs">{tier.min}+</span>
                   <span className="block text-sm font-bold">${tier.price}</span>
                 </button>
