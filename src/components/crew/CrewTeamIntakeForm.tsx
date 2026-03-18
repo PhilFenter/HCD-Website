@@ -48,6 +48,7 @@ const CrewTeamIntakeForm = () => {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [organizationType, setOrganizationType] = useState("");
+  const [whatYouDoAndWhoYouServe, setWhatYouDoAndWhoYouServe] = useState("");
   const [itemsLookingFor, setItemsLookingFor] = useState<string[]>([]);
   const [teamSize, setTeamSize] = useState("");
   const [orderType, setOrderType] = useState("");
@@ -95,6 +96,7 @@ const CrewTeamIntakeForm = () => {
       `Phone: ${phone.trim() || "Not provided"}`,
       `Company: ${company.trim() || "Not provided"}`,
       `Organization Type: ${organizationType || "Not provided"}`,
+      `What You Do and Who You Serve: ${whatYouDoAndWhoYouServe.trim() || "Not provided"}`,
       `Items Needed: ${formatSummaryList(itemsLookingFor)}`,
       `People Outfitting: ${teamSize || "Not provided"}`,
       `Order Type: ${orderType || "Not provided"}`,
@@ -117,6 +119,7 @@ const CrewTeamIntakeForm = () => {
         details: {
           source: "website-crew-team",
           organizationType,
+          whatYouDoAndWhoYouServe: whatYouDoAndWhoYouServe.trim() || undefined,
           itemsLookingFor,
           teamSize,
           orderType,
@@ -218,6 +221,18 @@ const CrewTeamIntakeForm = () => {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="font-heading text-sm font-semibold text-foreground">
+                What you do and who you serve
+              </Label>
+              <Input
+                value={whatYouDoAndWhoYouServe}
+                onChange={(e) => setWhatYouDoAndWhoYouServe(e.target.value)}
+                placeholder="Ex. Commercial construction for local builders and developers"
+                className="border-border/60 bg-background/50"
+              />
             </div>
 
             <div className="space-y-3">
