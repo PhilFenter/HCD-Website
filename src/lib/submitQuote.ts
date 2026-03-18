@@ -9,6 +9,7 @@ export interface BrandContext {
   orderedBefore?: string;
   artwork?: string;
   deadline?: string;
+  hardDate?: string;
 }
 
 export interface QuoteSubmission {
@@ -90,6 +91,7 @@ function buildFullNotes(submission: QuoteSubmission, artworkUrl?: string): strin
     if (bc.orderedBefore) sections.push(`  Ordered Before: ${bc.orderedBefore}`);
     if (bc.artwork) sections.push(`  Artwork Status: ${bc.artwork}`);
     if (bc.deadline) sections.push(`  Timeline: ${bc.deadline}`);
+    if (bc.hardDate) sections.push(`  Hard Date: ${bc.hardDate}`);
     sections.push("");
   }
 
