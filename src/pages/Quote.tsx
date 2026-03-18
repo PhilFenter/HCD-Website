@@ -55,6 +55,7 @@ const Quote = () => {
       orderedBefore: searchParams.get("ordered_before") || undefined,
       artwork: searchParams.get("artwork") || undefined,
       deadline: searchParams.get("deadline") || undefined,
+      hardDate: searchParams.get("hard_date") || undefined,
     };
   }, [searchParams]);
 
