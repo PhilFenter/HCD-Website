@@ -20,6 +20,8 @@ export interface QuoteSubmission {
   email: string;
   phone: string;
   company?: string;
+  /** Lead source */
+  source?: string;
   /** Free-form notes */
   notes?: string;
   /** Timeline preference */
