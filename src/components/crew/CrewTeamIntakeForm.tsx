@@ -225,6 +225,18 @@ const CrewTeamIntakeForm = () => {
 
             <div className="space-y-3">
               <Label className="font-heading text-sm font-semibold text-foreground">
+                What you do and who you serve
+              </Label>
+              <Input
+                value={whatYouDoAndWhoYouServe}
+                onChange={(e) => setWhatYouDoAndWhoYouServe(e.target.value)}
+                placeholder="Ex. Commercial construction for local builders and developers"
+                className="border-border/60 bg-background/50"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label className="font-heading text-sm font-semibold text-foreground">
                 What items are you looking for?
               </Label>
               <div className="grid gap-3 sm:grid-cols-2">
