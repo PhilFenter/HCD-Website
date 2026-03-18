@@ -58,9 +58,13 @@ const SituationFinder = () => {
     next[step] = option;
     setAnswers(next);
 
-    // Route immediately for "Building a brand"
     if (step === 0 && option === "Hats and branded gear") {
       setTimeout(() => navigate("/start/brand-builder"), 350);
+      return;
+    }
+
+    if (step === 0 && option === "Outfitting a crew or team") {
+      setTimeout(() => navigate("/start/crew-team"), 350);
       return;
     }
 
@@ -74,6 +78,12 @@ const SituationFinder = () => {
       navigate("/start/brand-builder");
       return;
     }
+
+    if (answers[0] === "Outfitting a crew or team") {
+      navigate("/start/crew-team");
+      return;
+    }
+
     const params = new URLSearchParams();
     if (answers[0]) params.set("situation", answers[0]);
     if (answers[1]) params.set("frequency", answers[1]);
