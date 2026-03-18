@@ -9,6 +9,7 @@ export interface BrandContext {
   orderedBefore?: string;
   artwork?: string;
   deadline?: string;
+  hardDate?: string;
 }
 
 export interface QuoteSubmission {
