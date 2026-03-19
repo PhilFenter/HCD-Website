@@ -68,6 +68,11 @@ const SituationFinder = () => {
       return;
     }
 
+    if (step === 0 && option === "Event or promotion") {
+      setTimeout(() => navigate("/start/event"), 350);
+      return;
+    }
+
     if (step < questions.length - 1) {
       setTimeout(() => setStep(step + 1), 350);
     }
