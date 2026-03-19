@@ -173,6 +173,7 @@ const Quote = () => {
 
                 {selected === "hats" && <LeatherPatchHatForm brandContext={brandContext} />}
                 {selected === "apparel" && <CustomApparelForm brandContext={brandContext} />}
+                {selected === "patches" && <WholesalePatchForm />}
               </motion.div>
             )}
           </AnimatePresence>
