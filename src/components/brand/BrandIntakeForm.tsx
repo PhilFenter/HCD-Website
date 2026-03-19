@@ -45,6 +45,7 @@ const BrandIntakeForm = () => {
   const [yearsInBusiness, setYearsInBusiness] = useState("");
   const [teamSize, setTeamSize] = useState("");
   const [orderedBefore, setOrderedBefore] = useState("");
+  const [matchExisting, setMatchExisting] = useState("");
   const [artworkStatus, setArtworkStatus] = useState("");
   const [timeline, setTimeline] = useState("");
   const [hardDate, setHardDate] = useState<Date | undefined>();
