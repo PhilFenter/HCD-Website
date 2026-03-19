@@ -68,6 +68,11 @@ const SituationFinder = () => {
       return;
     }
 
+    if (step === 0 && option === "Event or promotion") {
+      setTimeout(() => navigate("/start/event"), 350);
+      return;
+    }
+
     if (step < questions.length - 1) {
       setTimeout(() => setStep(step + 1), 350);
     }
@@ -81,6 +86,11 @@ const SituationFinder = () => {
 
     if (answers[0] === "Outfitting a crew or team") {
       navigate("/start/crew-team");
+      return;
+    }
+
+    if (answers[0] === "Event or promotion") {
+      navigate("/start/event");
       return;
     }
 
