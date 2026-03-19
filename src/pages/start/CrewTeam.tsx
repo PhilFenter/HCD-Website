@@ -166,6 +166,8 @@ const CrewTeam = () => {
           </motion.div>
         </div>
       </section>
+      </>
+      )}
     </Layout>
   );
 };
