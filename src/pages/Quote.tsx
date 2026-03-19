@@ -6,13 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
+import WholesalePatchForm from "@/components/quote/WholesalePatchForm";
 import CustomApparelForm from "@/components/quote/CustomApparelForm";
 import type { BrandContext } from "@/lib/submitQuote";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
-type ProductKey = "hats" | "apparel";
+type ProductKey = "hats" | "apparel" | "patches";
 
 const products: {
   key: ProductKey;
@@ -34,9 +35,15 @@ const products: {
     image: serviceGarments,
     imagePosition: "object-top",
   },
+  {
+    key: "patches" as ProductKey,
+    title: "Wholesale Patches",
+    subtitle: "Leather, woven, PVC, and UV-printed patches for hats, bags, and gear.",
+    image: serviceHats,
+  },
 ];
 
-const validKeys: ProductKey[] = ["hats", "apparel"];
+const validKeys: ProductKey[] = ["hats", "apparel", "patches"];
 
 const Quote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -166,6 +173,7 @@ const Quote = () => {
 
                 {selected === "hats" && <LeatherPatchHatForm brandContext={brandContext} />}
                 {selected === "apparel" && <CustomApparelForm brandContext={brandContext} />}
+                {selected === "patches" && <WholesalePatchForm />}
               </motion.div>
             )}
           </AnimatePresence>
