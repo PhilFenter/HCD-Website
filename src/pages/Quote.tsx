@@ -35,9 +35,15 @@ const products: {
     image: serviceGarments,
     imagePosition: "object-top",
   },
+  {
+    key: "patches" as ProductKey,
+    title: "Wholesale Patches",
+    subtitle: "Leather, woven, PVC, and UV-printed patches for hats, bags, and gear.",
+    image: serviceHats,
+  },
 ];
 
-const validKeys: ProductKey[] = ["hats", "apparel"];
+const validKeys: ProductKey[] = ["hats", "apparel", "patches"];
 
 const Quote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
