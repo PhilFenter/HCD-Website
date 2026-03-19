@@ -44,6 +44,8 @@ const products = [
 ];
 
 const Event = () => {
+  const [submitted, setSubmitted] = useState(false);
+
   return (
     <Layout>
       <SEOHead
