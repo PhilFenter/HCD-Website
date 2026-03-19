@@ -20,6 +20,7 @@ const Index = () => {
         canonicalPath="/"
       />
       <HeroSection />
+      <PilotAnalogy />
       <SituationFinder />
       <SocialProof />
       <HowItWorks />
