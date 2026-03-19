@@ -42,6 +42,8 @@ const products = [
 ];
 
 const CrewTeam = () => {
+  const [submitted, setSubmitted] = useState(false);
+
   return (
     <Layout>
       <SEOHead
