@@ -57,6 +57,7 @@ const App = () => (
             <Route path="/stories/walked-past" element={<WalkedPast />} />
             <Route path="/start/brand-builder" element={<BrandBuilder />} />
             <Route path="/start/crew-team" element={<CrewTeam />} />
+            <Route path="/start/event" element={<Event />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
