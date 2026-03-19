@@ -168,6 +168,7 @@ const Event = () => {
             </div>
           </motion.div>
         </div>
+      </section>
       </>
       )}
     </Layout>
