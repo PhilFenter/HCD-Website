@@ -45,6 +45,7 @@ const BrandIntakeForm = () => {
   const [yearsInBusiness, setYearsInBusiness] = useState("");
   const [teamSize, setTeamSize] = useState("");
   const [orderedBefore, setOrderedBefore] = useState("");
+  const [matchExisting, setMatchExisting] = useState("");
   const [artworkStatus, setArtworkStatus] = useState("");
   const [timeline, setTimeline] = useState("");
   const [hardDate, setHardDate] = useState<Date | undefined>();
@@ -68,6 +69,7 @@ const BrandIntakeForm = () => {
     if (orderedBefore) {
       params.set("ordered_before", orderedBefore);
     }
+    if (matchExisting) params.set("match_existing", matchExisting);
     if (artworkStatus) params.set("artwork", artworkStatus);
     if (timeline) params.set("deadline", timeline);
     if (timeline === "hard-date" && hardDate) {
@@ -165,6 +167,26 @@ const BrandIntakeForm = () => {
                     <SelectItem value="yes-bad">Yes — it was terrible, that's why we're here</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="font-heading text-sm font-semibold text-foreground">
+                  Are we trying to match previously decorated apparel?
+                </Label>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    { value: "yes", label: "Yes, need to match" },
+                    { value: "no", label: "No, starting fresh" },
+                    { value: "not-sure", label: "Not sure yet" },
+                  ].map((opt) => (
+                    <OptionCard
+                      key={opt.value}
+                      label={opt.label}
+                      selected={matchExisting === opt.value}
+                      onClick={() => setMatchExisting(opt.value)}
+                    />
+                  ))}
+                </div>
               </div>
 
               <div className="space-y-3">
