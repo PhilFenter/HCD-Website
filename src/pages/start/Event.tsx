@@ -80,7 +80,10 @@ const Event = () => {
         </div>
       </section>
 
-      <EventIntakeForm />
+      <EventIntakeForm onSubmitted={() => setSubmitted(true)} />
+
+      {!submitted && (
+        <>
 
       <section className="py-20 md:py-24">
         <div className="container max-w-5xl">
