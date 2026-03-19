@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
@@ -6,6 +7,8 @@ import { ArrowRight } from "lucide-react";
 import EventIntakeForm from "@/components/event/EventIntakeForm";
 import serviceHats from "@/assets/service-hats.jpg";
 import galleryScreenprintShirt from "@/assets/gallery-screenprint-shirt.jpg";
+import embroideryHops from "@/assets/gallery-embroidery-hops.jpg";
+import graceBuildersHat from "@/assets/gallery-grace-builders-hat.jpg";
 import embroideryHops from "@/assets/gallery-embroidery-hops.jpg";
 import graceBuildersHat from "@/assets/gallery-grace-builders-hat.jpg";
 
