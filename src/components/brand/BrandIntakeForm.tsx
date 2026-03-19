@@ -69,6 +69,7 @@ const BrandIntakeForm = () => {
     if (orderedBefore) {
       params.set("ordered_before", orderedBefore);
     }
+    if (matchExisting) params.set("match_existing", matchExisting);
     if (artworkStatus) params.set("artwork", artworkStatus);
     if (timeline) params.set("deadline", timeline);
     if (timeline === "hard-date" && hardDate) {
