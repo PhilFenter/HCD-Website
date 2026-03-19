@@ -9,8 +9,6 @@ import serviceHats from "@/assets/service-hats.jpg";
 import galleryScreenprintShirt from "@/assets/gallery-screenprint-shirt.jpg";
 import embroideryHops from "@/assets/gallery-embroidery-hops.jpg";
 import graceBuildersHat from "@/assets/gallery-grace-builders-hat.jpg";
-import embroideryHops from "@/assets/gallery-embroidery-hops.jpg";
-import graceBuildersHat from "@/assets/gallery-grace-builders-hat.jpg";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
