@@ -130,6 +130,7 @@ const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
       });
 
       setSubmitted(true);
+      onSubmitted?.();
       toast({
         title: "Success",
         description: "We got your team details. Expect to hear from us within one business day.",

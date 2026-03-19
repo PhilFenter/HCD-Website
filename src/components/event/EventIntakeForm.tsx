@@ -118,6 +118,7 @@ const EventIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
       });
 
       setSubmitted(true);
+      onSubmitted?.();
       toast({
         title: "Success",
         description:
