@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const PilotAnalogy = () => {
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-8 md:py-12 bg-background">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
