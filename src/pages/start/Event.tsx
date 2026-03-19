@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
@@ -41,6 +42,8 @@ const products = [
 ];
 
 const Event = () => {
+  const [submitted, setSubmitted] = useState(false);
+
   return (
     <Layout>
       <SEOHead
@@ -75,7 +78,10 @@ const Event = () => {
         </div>
       </section>
 
-      <EventIntakeForm />
+      <EventIntakeForm onSubmitted={() => setSubmitted(true)} />
+
+      {!submitted && (
+        <>
 
       <section className="py-20 md:py-24">
         <div className="container max-w-5xl">
@@ -161,6 +167,8 @@ const Event = () => {
           </motion.div>
         </div>
       </section>
+      </>
+      )}
     </Layout>
   );
 };

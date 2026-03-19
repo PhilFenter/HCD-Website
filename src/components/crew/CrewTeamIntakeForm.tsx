@@ -39,7 +39,7 @@ const deadlineOptions = ["Yes, specific date", "Within 30 days", "No rush"] as c
 
 const formatSummaryList = (items: string[]) => (items.length ? items.join(", ") : "Not provided");
 
-const CrewTeamIntakeForm = () => {
+const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -130,6 +130,7 @@ const CrewTeamIntakeForm = () => {
       });
 
       setSubmitted(true);
+      onSubmitted?.();
       toast({
         title: "Success",
         description: "We got your team details. Expect to hear from us within one business day.",

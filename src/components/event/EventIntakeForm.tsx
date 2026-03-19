@@ -38,7 +38,7 @@ const artworkOptions = [
   "Starting from scratch",
 ] as const;
 
-const EventIntakeForm = () => {
+const EventIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -118,6 +118,7 @@ const EventIntakeForm = () => {
       });
 
       setSubmitted(true);
+      onSubmitted?.();
       toast({
         title: "Success",
         description:
