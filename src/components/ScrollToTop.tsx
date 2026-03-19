@@ -5,6 +5,12 @@ const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  useEffect(() => {
     if (hash) {
       const targetId = hash.replace("#", "");
       const scrollToHashTarget = () => {
