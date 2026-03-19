@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 
 const questions = [
   {
-    prompt: "What are you working on?",
+    prompt: "Where are we headed?",
     columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
     options: [
       { label: "Hats and branded gear", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
@@ -114,7 +114,7 @@ const SituationFinder = () => {
   const currentQuestion = questions[step];
 
   return (
-    <section id="situation-finder" className="relative py-12 md:py-16 overflow-hidden scroll-mt-20">
+    <section id="situation-finder" className="relative py-8 md:py-12 overflow-hidden scroll-mt-20">
       {/* Subtle background texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />
 
