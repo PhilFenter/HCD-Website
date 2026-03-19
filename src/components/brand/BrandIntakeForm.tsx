@@ -170,6 +170,26 @@ const BrandIntakeForm = () => {
 
               <div className="space-y-3">
                 <Label className="font-heading text-sm font-semibold text-foreground">
+                  Are we trying to match previously decorated apparel?
+                </Label>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    { value: "yes", label: "Yes, need to match" },
+                    { value: "no", label: "No, starting fresh" },
+                    { value: "not-sure", label: "Not sure yet" },
+                  ].map((opt) => (
+                    <OptionCard
+                      key={opt.value}
+                      label={opt.label}
+                      selected={matchExisting === opt.value}
+                      onClick={() => setMatchExisting(opt.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="font-heading text-sm font-semibold text-foreground">
                   Do you have artwork ready?
                 </Label>
                 <div className="grid gap-3 sm:grid-cols-3">
