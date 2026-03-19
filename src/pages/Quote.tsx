@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
+import WholesalePatchForm from "@/components/quote/WholesalePatchForm";
 import CustomApparelForm from "@/components/quote/CustomApparelForm";
 import type { BrandContext } from "@/lib/submitQuote";
 
