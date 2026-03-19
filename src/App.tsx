@@ -24,6 +24,7 @@ import GraceBuilders from "./pages/stories/GraceBuilders";
 import WalkedPast from "./pages/stories/WalkedPast";
 import BrandBuilder from "./pages/start/BrandBuilder";
 import CrewTeam from "./pages/start/CrewTeam";
+import Event from "./pages/start/Event";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
