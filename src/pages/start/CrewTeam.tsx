@@ -78,7 +78,10 @@ const CrewTeam = () => {
         </div>
       </section>
 
-      <CrewTeamIntakeForm />
+      <CrewTeamIntakeForm onSubmitted={() => setSubmitted(true)} />
+
+      {!submitted && (
+        <>
 
       <section className="py-20 md:py-24">
         <div className="container max-w-5xl">
