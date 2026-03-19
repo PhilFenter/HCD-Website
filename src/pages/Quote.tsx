@@ -13,7 +13,7 @@ import type { BrandContext } from "@/lib/submitQuote";
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
-type ProductKey = "hats" | "apparel";
+type ProductKey = "hats" | "apparel" | "patches";
 
 const products: {
   key: ProductKey;
