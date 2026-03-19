@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import HeroSection from "@/components/home/HeroSection";
+import PilotAnalogy from "@/components/home/PilotAnalogy";
 import SituationFinder from "@/components/home/SituationFinder";
 import SocialProof from "@/components/home/SocialProof";
 import HowItWorks from "@/components/home/HowItWorks";
@@ -19,6 +20,7 @@ const Index = () => {
         canonicalPath="/"
       />
       <HeroSection />
+      <PilotAnalogy />
       <SituationFinder />
       <SocialProof />
       <HowItWorks />
