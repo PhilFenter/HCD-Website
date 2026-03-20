@@ -42,6 +42,7 @@ const SomethingElse = () => {
         details: { message },
       });
       setStatus("success");
+      window.scrollTo({ top: 0, behavior: "instant" });
     } catch {
       setStatus("error");
     }
