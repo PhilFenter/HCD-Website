@@ -6,6 +6,7 @@ import {
   Sparkles,
   Users,
   PartyPopper,
+  Store,
   Layers,
   HelpCircle,
   Repeat,
