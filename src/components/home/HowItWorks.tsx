@@ -52,7 +52,7 @@ const HowItWorks = () => {
             >
               {/* Connector line on desktop */}
               {index < steps.length - 1 && (
-                <div className="absolute right-0 top-10 hidden h-px w-full translate-x-1/2 bg-border md:block" />
+                <div className="absolute right-0 top-10 hidden h-px w-full translate-x-1/2 md:block" style={{ backgroundColor: '#d4cdc4' }} />
               )}
 
               <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-secondary">
