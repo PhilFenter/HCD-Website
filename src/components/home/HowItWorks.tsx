@@ -24,7 +24,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-20 md:py-28" style={{ backgroundColor: '#F9F5EF' }}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
