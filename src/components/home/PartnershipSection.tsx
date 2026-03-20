@@ -8,6 +8,7 @@ import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
 import galleryClearwaterJackets from "@/assets/gallery-clearwater-jackets.jpg";
 import galleryWrongDoorShop from "@/assets/gallery-wrong-door-shop.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-tristate-store.png";
+import hcdLogoMark from "@/assets/hcd-logo-mark.png";
 
 const stories = [
   {
@@ -74,8 +75,8 @@ const StoryCard = ({
     <>
       <div className="aspect-[4/3] overflow-hidden">
         {story.placeholder ? (
-          <div className="flex h-full w-full items-center justify-center bg-muted">
-            <span className="font-heading text-4xl font-bold text-muted-foreground/30">HCD</span>
+          <div className="flex h-full w-full items-center justify-center bg-muted/50">
+            <img src={hcdLogoMark} alt="Hells Canyon Designs" className="h-24 w-auto opacity-40" />
           </div>
         ) : (
           <img
