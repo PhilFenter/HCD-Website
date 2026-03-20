@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Screen Printing", path: "/screen-printing" },
   { label: "DTF Transfers", path: "/dtf-transfers" },
   { label: "Our Story", path: "/about" },
+  { label: "Partner With Us", path: "/partner" },
 ];
 
 const servicePages = ["/custom-hats", "/embroidery", "/screen-printing", "/dtf-transfers"];
