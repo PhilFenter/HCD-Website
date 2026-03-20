@@ -55,17 +55,17 @@ const HowItWorks = () => {
                 <div className="absolute right-0 top-10 hidden h-px w-full translate-x-1/2 md:block" style={{ backgroundColor: '#d4cdc4' }} />
               )}
 
-              <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-secondary">
+              <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary" style={{ backgroundColor: '#f0ebe3' }}>
                 <step.icon className="h-8 w-8 text-primary" />
                 <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary font-heading text-sm font-bold text-primary-foreground">
                   {index + 1}
                 </span>
               </div>
 
-              <h3 className="mt-6 font-heading text-xl font-semibold text-foreground">
+              <h3 className="mt-6 font-heading text-xl font-semibold" style={{ color: '#1a1a1a' }}>
                 {step.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-sm leading-relaxed" style={{ color: '#555555' }}>
                 {step.description}
               </p>
             </motion.div>
