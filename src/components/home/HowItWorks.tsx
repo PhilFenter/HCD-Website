@@ -24,7 +24,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-20 md:py-28" style={{ backgroundColor: '#F9F5EF' }}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,10 +32,10 @@ const HowItWorks = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
+           <h2 className="font-heading text-3xl font-bold md:text-4xl" style={{ color: '#1a1a1a' }}>
             HOW IT WORKS
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-2xl" style={{ color: '#4a4a4a' }}>
             We built our process around one idea: no surprises. Here is what working with us looks like.
           </p>
         </motion.div>
@@ -52,20 +52,20 @@ const HowItWorks = () => {
             >
               {/* Connector line on desktop */}
               {index < steps.length - 1 && (
-                <div className="absolute right-0 top-10 hidden h-px w-full translate-x-1/2 bg-border md:block" />
+                <div className="absolute right-0 top-10 hidden h-px w-full translate-x-1/2 md:block" style={{ backgroundColor: '#d4cdc4' }} />
               )}
 
-              <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-secondary">
+              <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary" style={{ backgroundColor: '#f0ebe3' }}>
                 <step.icon className="h-8 w-8 text-primary" />
                 <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary font-heading text-sm font-bold text-primary-foreground">
                   {index + 1}
                 </span>
               </div>
 
-              <h3 className="mt-6 font-heading text-xl font-semibold text-foreground">
+              <h3 className="mt-6 font-heading text-xl font-semibold" style={{ color: '#1a1a1a' }}>
                 {step.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-sm leading-relaxed" style={{ color: '#555555' }}>
                 {step.description}
               </p>
             </motion.div>
