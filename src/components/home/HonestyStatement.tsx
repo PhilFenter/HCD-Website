@@ -20,8 +20,7 @@ const HonestyStatement = () => {
             — and we take both seriously.
           </p>
           <p className="mt-6 text-lg font-semibold leading-relaxed md:text-xl" style={{ color: '#1a1a1a' }}>
-            If your project is a fit, we are ready to get started. If it is not,
-            we will point you in the right direction.
+            If your project is a fit, we are ready to get started.
           </p>
         </motion.div>
       </div>
