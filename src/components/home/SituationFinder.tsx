@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 
 const questions = [
   {
-    prompt: "Where are we headed?",
+    prompt: "So, where are we headed?",
     columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
     options: [
       { label: "Hats and branded gear", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
