@@ -6,7 +6,7 @@ const localBusinessData = {
   name: "Hells Canyon Designs",
   description:
     "Custom screen printing, embroidery, leather patch hats, and DTF transfers serving the LC Valley — Lewiston, ID and Clarkston, WA.",
-  url: "https://hcd-web-new.lovable.app",
+  url: "https://hellscanyondesigns.com",
   telephone: "+1-208-748-6242",
   email: "info@hellscanyondesigns.com",
   address: {

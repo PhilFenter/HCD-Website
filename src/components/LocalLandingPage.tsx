@@ -38,7 +38,7 @@ const LocalLandingPage = ({
       <ServiceJsonLd
         name={`${service} in ${city}, ${state}`}
         description={description}
-        url={`https://hcd-web-new.lovable.app${canonicalPath}`}
+        url={`https://hellscanyondesigns.com${canonicalPath}`}
       />
       <FAQJsonLd faqs={faqs} />
 

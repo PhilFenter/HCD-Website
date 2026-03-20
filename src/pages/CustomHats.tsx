@@ -16,7 +16,7 @@ const CustomHats = () => {
       <ServiceJsonLd
         name="Custom Leather Patch Hats"
         description="Custom hats with laser-engraved leather patches, UV printed patches, and embroidered patches in Lewiston, ID and Clarkston, WA."
-        url="https://hcd-web-new.lovable.app/custom-hats"
+        url="https://hellscanyondesigns.com/custom-hats"
       />
       {/* Hero */}
       <section className="relative py-20 md:py-28">

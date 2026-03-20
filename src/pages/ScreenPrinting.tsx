@@ -17,7 +17,7 @@ const ScreenPrinting = () => {
       <ServiceJsonLd
         name="Screen Printing"
         description="Custom screen printing services for businesses, teams, and events in Lewiston, ID and Clarkston, WA."
-        url="https://hcd-web-new.lovable.app/screen-printing"
+        url="https://hellscanyondesigns.com/screen-printing"
       />
       <section className="relative py-20 md:py-28">
         <div className="container">
