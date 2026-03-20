@@ -80,6 +80,7 @@ const SituationFinder = () => {
       return;
     }
 
+    if (step === 0 && option === "Wholesale patches") {
       setTimeout(() => navigate("/quote?product=patches"), 350);
       return;
     }
