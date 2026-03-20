@@ -110,6 +110,11 @@ const SituationFinder = () => {
       return;
     }
 
+    if (answers[0] === "Company/Team stores") {
+      navigate("/partner");
+      return;
+    }
+
     if (answers[0] === "Wholesale patches") {
       navigate("/quote?product=patches");
       return;
