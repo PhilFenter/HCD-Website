@@ -78,6 +78,11 @@ const SituationFinder = () => {
       return;
     }
 
+    if (step === 0 && option === "Something else") {
+      setTimeout(() => navigate("/start/something-else"), 350);
+      return;
+    }
+
     if (step < questions.length - 1) {
       setTimeout(() => setStep(step + 1), 350);
     }
