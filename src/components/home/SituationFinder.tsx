@@ -6,6 +6,7 @@ import {
   Sparkles,
   Users,
   PartyPopper,
+  Store,
   Layers,
   HelpCircle,
   Repeat,
@@ -19,11 +20,12 @@ import { Button } from "@/components/ui/button";
 const questions = [
   {
     prompt: "So, where are we headed?",
-    columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
+    columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6",
     options: [
       { label: "Hats and branded gear", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
       { label: "Outfitting a crew or team", icon: Users, accent: "from-primary/20 to-primary/5" },
       { label: "Event or promotion", icon: PartyPopper, accent: "from-primary/20 to-primary/5" },
+      { label: "Company/Team stores", icon: Store, accent: "from-primary/20 to-primary/5" },
       { label: "Wholesale patches", icon: Layers, accent: "from-primary/20 to-primary/5" },
       { label: "Something else", icon: HelpCircle, accent: "from-primary/20 to-primary/5" },
     ],
@@ -73,7 +75,11 @@ const SituationFinder = () => {
       return;
     }
 
-    if (step === 0 && option === "Wholesale patches") {
+    if (step === 0 && option === "Company/Team stores") {
+      setTimeout(() => navigate("/partner"), 350);
+      return;
+    }
+
       setTimeout(() => navigate("/quote?product=patches"), 350);
       return;
     }
@@ -101,6 +107,11 @@ const SituationFinder = () => {
 
     if (answers[0] === "Event or promotion") {
       navigate("/start/event");
+      return;
+    }
+
+    if (answers[0] === "Company/Team stores") {
+      navigate("/partner");
       return;
     }
 
