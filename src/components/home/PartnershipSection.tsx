@@ -8,6 +8,7 @@ import galleryEmbroideredPatch from "@/assets/gallery-embroidered-patch.jpg";
 import galleryClearwaterJackets from "@/assets/gallery-clearwater-jackets.jpg";
 import galleryWrongDoorShop from "@/assets/gallery-wrong-door-shop.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-tristate-store.png";
+import hcdLogoMark from "@/assets/hcd-logo-mark.png";
 
 const stories = [
   {
