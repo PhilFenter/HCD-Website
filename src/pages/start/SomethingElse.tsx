@@ -51,7 +51,7 @@ const SomethingElse = () => {
   return (
     <Layout>
       <SEOHead
-        title="Not Sure Where to Start? | High Country Drygoodz"
+        title="Not Sure Where to Start? | Hells Canyon Designs"
         description="Tell us what you need and we'll figure out the right path together."
         canonicalPath="/start/something-else"
       />
