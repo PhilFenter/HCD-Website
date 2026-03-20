@@ -78,6 +78,11 @@ const SituationFinder = () => {
       return;
     }
 
+    if (step === 0 && option === "Something else") {
+      setTimeout(() => navigate("/start/something-else"), 350);
+      return;
+    }
+
     if (step < questions.length - 1) {
       setTimeout(() => setStep(step + 1), 350);
     }
@@ -101,6 +106,11 @@ const SituationFinder = () => {
 
     if (answers[0] === "Wholesale patches") {
       navigate("/quote?product=patches");
+      return;
+    }
+
+    if (answers[0] === "Something else") {
+      navigate("/start/something-else");
       return;
     }
 
