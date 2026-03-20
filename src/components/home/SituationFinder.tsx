@@ -75,7 +75,11 @@ const SituationFinder = () => {
       return;
     }
 
-    if (step === 0 && option === "Wholesale patches") {
+    if (step === 0 && option === "Company/Team stores") {
+      setTimeout(() => navigate("/partner"), 350);
+      return;
+    }
+
       setTimeout(() => navigate("/quote?product=patches"), 350);
       return;
     }
