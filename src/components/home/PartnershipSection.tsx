@@ -73,12 +73,18 @@ const StoryCard = ({
   const content = (
     <>
       <div className="aspect-[4/3] overflow-hidden">
-        <img
-          src={story.image}
-          alt={story.headline}
-          className="h-full w-full object-cover"
-          loading="lazy"
-        />
+        {story.placeholder ? (
+          <div className="flex h-full w-full items-center justify-center bg-muted">
+            <span className="font-heading text-4xl font-bold text-muted-foreground/30">HCD</span>
+          </div>
+        ) : (
+          <img
+            src={story.image}
+            alt={story.headline}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        )}
       </div>
       <div className="p-6">
         <h3 className="font-heading text-xl font-bold text-foreground">
