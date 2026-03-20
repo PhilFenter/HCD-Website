@@ -21,17 +21,14 @@ const Header = () => {
   const handleQuoteClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setMobileOpen(false);
-    const isOnServicePage = servicePages.includes(location.pathname);
 
-    if (isOnServicePage) {
-      // Same page — just scroll to #quote
-      const el = document.getElementById("quote");
+    if (location.pathname === "/") {
+      const el = document.getElementById("situation-finder");
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      // Navigate to the dedicated quote page
-      navigate("/quote");
+      navigate("/#situation-finder");
     }
   }, [location.pathname, navigate]);
 

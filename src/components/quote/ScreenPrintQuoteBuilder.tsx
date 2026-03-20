@@ -97,6 +97,7 @@ const ScreenPrintQuoteBuilder = () => {
           printColors: data.printColors,
           locations: data.locations,
         },
+        artworkFile: data.artworkFile,
       });
       setSubmitted(true);
       toast({

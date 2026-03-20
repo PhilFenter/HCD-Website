@@ -17,6 +17,16 @@ import ScreenPrintingClarkston from "./pages/ScreenPrintingClarkston";
 import EmbroideryLewiston from "./pages/EmbroideryLewiston";
 import EmbroideryClarkston from "./pages/EmbroideryClarkston";
 import CustomHatsLCValley from "./pages/CustomHatsLCValley";
+import Seekins from "./pages/stories/Seekins";
+import Clearwater from "./pages/stories/Clearwater";
+import Tristate from "./pages/stories/Tristate";
+import GraceBuilders from "./pages/stories/GraceBuilders";
+import WalkedPast from "./pages/stories/WalkedPast";
+import BrandBuilder from "./pages/start/BrandBuilder";
+import CrewTeam from "./pages/start/CrewTeam";
+import Event from "./pages/start/Event";
+import SomethingElse from "./pages/start/SomethingElse";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +37,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/custom-hats" element={<CustomHats />} />
@@ -40,7 +51,15 @@ const App = () => (
             <Route path="/embroidery-lewiston-id" element={<EmbroideryLewiston />} />
             <Route path="/embroidery-clarkston-wa" element={<EmbroideryClarkston />} />
             <Route path="/custom-hats-lc-valley" element={<CustomHatsLCValley />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/stories/seekins" element={<Seekins />} />
+            <Route path="/stories/clearwater" element={<Clearwater />} />
+            <Route path="/stories/tristate" element={<Tristate />} />
+            <Route path="/stories/make-them-cool" element={<GraceBuilders />} />
+            <Route path="/stories/walked-past" element={<WalkedPast />} />
+            <Route path="/start/brand-builder" element={<BrandBuilder />} />
+            <Route path="/start/crew-team" element={<CrewTeam />} />
+            <Route path="/start/event" element={<Event />} />
+            <Route path="/start/something-else" element={<SomethingElse />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

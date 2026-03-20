@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button";
 import LeatherPatchHatForm from "@/components/quote/LeatherPatchHatForm";
 import WholesalePatchForm from "@/components/quote/WholesalePatchForm";
 import CustomApparelForm from "@/components/quote/CustomApparelForm";
+import type { BrandContext } from "@/lib/submitQuote";
 
 import serviceHats from "@/assets/hero-sewing-patch.jpg";
-import servicePatches from "@/assets/gallery-leather-patch-flag.jpg";
 import serviceGarments from "@/assets/quote-garments.jpg";
 
-type ProductKey = "hats" | "patches" | "apparel";
+type ProductKey = "hats" | "apparel" | "patches";
 
 const products: {
   key: ProductKey;
@@ -24,15 +24,9 @@ const products: {
 }[] = [
   {
     key: "hats",
-    title: "Leather Patch Hats",
-    subtitle: "Custom leather patches on premium hat brands — laser engraved, UV printed, or embroidered.",
+    title: "Custom Headwear",
+    subtitle: "Leather patch hats, embroidered caps, and UV printed designs on premium hat brands.",
     image: serviceHats,
-  },
-  {
-    key: "patches",
-    title: "Wholesale Leather Patches",
-    subtitle: "Loose leather patches for hat makers, retailers, and brands. No hat included.",
-    image: servicePatches,
   },
   {
     key: "apparel",
@@ -41,19 +35,36 @@ const products: {
     image: serviceGarments,
     imagePosition: "object-top",
   },
+  {
+    key: "patches" as ProductKey,
+    title: "Wholesale Patches",
+    subtitle: "Leather, woven, PVC, and UV-printed patches for hats, bags, and gear.",
+    image: serviceHats,
+  },
 ];
 
-const formMap: Record<ProductKey, React.ReactNode> = {
-  hats: <LeatherPatchHatForm />,
-  patches: <WholesalePatchForm />,
-  apparel: <CustomApparelForm />,
-};
-
-const validKeys: ProductKey[] = ["hats", "patches", "apparel"];
+const validKeys: ProductKey[] = ["hats", "apparel", "patches"];
 
 const Quote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selected, setSelected] = useState<ProductKey | null>(null);
+
+  // Extract brand context from URL params (set by Brand Builder intake form)
+  const brandContext = useMemo<BrandContext | undefined>(() => {
+    const situation = searchParams.get("situation");
+    if (!situation) return undefined;
+    return {
+      situation: situation || undefined,
+      brandDoes: searchParams.get("brand_does") || undefined,
+      success: searchParams.get("success") || undefined,
+      years: searchParams.get("years") || undefined,
+      teamSize: searchParams.get("team_size") || undefined,
+      orderedBefore: searchParams.get("ordered_before") || undefined,
+      artwork: searchParams.get("artwork") || undefined,
+      deadline: searchParams.get("deadline") || undefined,
+      hardDate: searchParams.get("hard_date") || undefined,
+    };
+  }, [searchParams]);
 
   // Read ?product= on mount
   useEffect(() => {
@@ -65,12 +76,17 @@ const Quote = () => {
 
   const handleSelect = (key: ProductKey) => {
     setSelected(key);
-    setSearchParams({ product: key });
+    // Preserve existing params (brand context) when selecting product
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("product", key);
+    setSearchParams(newParams);
   };
 
   const handleBack = () => {
     setSelected(null);
-    setSearchParams({});
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("product");
+    setSearchParams(newParams);
   };
 
   return (
@@ -103,7 +119,7 @@ const Quote = () => {
                   </p>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mx-auto grid max-w-3xl gap-6 sm:grid-cols-2">
                   {products.map((product, i) => (
                     <motion.button
                       key={product.key}
@@ -155,7 +171,9 @@ const Quote = () => {
                   </h2>
                 </div>
 
-                {formMap[selected]}
+                {selected === "hats" && <LeatherPatchHatForm brandContext={brandContext} />}
+                {selected === "apparel" && <CustomApparelForm brandContext={brandContext} />}
+                {selected === "patches" && <WholesalePatchForm />}
               </motion.div>
             )}
           </AnimatePresence>

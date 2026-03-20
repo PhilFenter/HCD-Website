@@ -106,6 +106,7 @@ const EmbroideryQuoteBuilder = () => {
           itemType: data.itemType,
           locations: data.locations,
         },
+        artworkFile: data.artworkFile,
       });
       setSubmitted(true);
       toast({

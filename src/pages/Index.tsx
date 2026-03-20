@@ -1,9 +1,12 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import HeroSection from "@/components/home/HeroSection";
-import ServiceCards from "@/components/home/ServiceCards";
+import PilotAnalogy from "@/components/home/PilotAnalogy";
+import SituationFinder from "@/components/home/SituationFinder";
 import SocialProof from "@/components/home/SocialProof";
 import HowItWorks from "@/components/home/HowItWorks";
+import PartnershipSection from "@/components/home/PartnershipSection";
+import HonestyStatement from "@/components/home/HonestyStatement";
 import PortfolioGallery from "@/components/home/PortfolioGallery";
 import InstagramFeed from "@/components/home/InstagramFeed";
 import FAQ from "@/components/home/FAQ";
@@ -17,9 +20,12 @@ const Index = () => {
         canonicalPath="/"
       />
       <HeroSection />
-      <ServiceCards />
+      <PilotAnalogy />
+      <SituationFinder />
       <SocialProof />
       <HowItWorks />
+      <PartnershipSection />
+      <HonestyStatement />
       <PortfolioGallery />
       <InstagramFeed />
       <FAQ />

@@ -168,7 +168,13 @@ const COLOR_COUNTS = [
 ];
 
 // ── Component ──────────────────────────────────────────
-const CustomApparelForm = () => {
+import type { BrandContext } from "@/lib/submitQuote";
+
+interface CustomApparelFormProps {
+  brandContext?: BrandContext;
+}
+
+const CustomApparelForm = ({ brandContext }: CustomApparelFormProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
@@ -242,6 +248,8 @@ const CustomApparelForm = () => {
           printLocations,
           numColors,
         },
+        artworkFile,
+        brandContext,
       });
       setSubmitted(true);
       toast({

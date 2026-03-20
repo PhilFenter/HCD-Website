@@ -196,6 +196,7 @@ const WholesalePatchForm = () => {
           leatherColor,
           backing,
         },
+        artworkFile,
       });
       setSubmitted(true);
       toast({

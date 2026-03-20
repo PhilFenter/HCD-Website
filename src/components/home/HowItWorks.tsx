@@ -4,21 +4,21 @@ import { MessageSquare, FileText, Package } from "lucide-react";
 const steps = [
   {
     icon: MessageSquare,
-    title: "Tell Us What You Need",
+    title: "Tell Us Where You Are Going",
     description:
-      "Fill out a quick guided quote form — choose your service, quantities, artwork, and timeline.",
+      "We start with your situation, not a product menu. A few smart questions help us point you in the right direction and make sure nothing gets missed before we start.",
   },
   {
     icon: FileText,
-    title: "Get Your Custom Quote",
+    title: "We Build The Right Solution",
     description:
-      "We'll review your request and send you a detailed quote within one business day.",
+      "Our team puts together a quote based on what you actually need, with options where it makes sense. You will hear back within one business day.",
   },
   {
     icon: Package,
-    title: "We Make It Happen",
+    title: "We Handle It. Start To Finish",
     description:
-      "Approve your quote and we get to work — premium craftsmanship, fast turnaround, delivered to your door.",
+      "Once you approve, we handle production, quality check, and delivery. If anything comes up along the way, we catch it and we handle it — before you have to ask.",
   },
 ];
 
@@ -36,8 +36,7 @@ const HowItWorks = () => {
             HOW IT WORKS
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            Getting custom gear shouldn't be complicated. Three simple steps and
-            you're on your way.
+            We built our process around one idea: no surprises. Here is what working with us looks like.
           </p>
         </motion.div>
 
