@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/gallery-grace-builders-hat.jpg";
@@ -11,6 +12,11 @@ const GraceBuilders = () => {
         title="Grace Builders — Just Make Them Look Cool | Hells Canyon Designs"
         description="How trust replaced revision rounds — and why Pete lets us pick the gear, the colors, and the style for his entire crew."
         canonicalPath="/stories/make-them-cool"
+      />
+      <ArticleJsonLd
+        title="Grace Builders — Just Make Them Look Cool"
+        description="How trust replaced revision rounds — and why Pete lets us pick the gear, the colors, and the style for his entire crew."
+        path="/stories/make-them-cool"
       />
 
       <article className="py-16 md:py-24">
