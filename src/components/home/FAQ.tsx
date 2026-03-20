@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     q: "What hat brands do you carry?",
-    a: "We stock Richardson, YP Classics (Yupoong), Pacific Headwear, and more — over 4,000 hats in our inventory. If you have a specific brand or style in mind, just ask!",
+    a: "We stock Richardson, YP Classics (Yupoong), and more — over 4,000 hats in our inventory. If you have a specific brand or style in mind, just ask!",
   },
   {
     q: "Can you ship orders nationwide?",
