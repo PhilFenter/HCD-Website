@@ -45,7 +45,7 @@ const ScreenPrintingGallery = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
-              className={`group relative aspect-square overflow-hidden rounded-lg ${item.span}`}
+              className={`group relative overflow-hidden rounded-lg ${item.span} ${item.aspect}`}
             >
               <img
                 src={item.src}
