@@ -15,8 +15,7 @@ const galleryItems = [
   { src: galleryScreenprintLcstate, alt: "LC State Hall of Fame screen printed t-shirt", span: "", aspect: "aspect-[4/3]" },
   { src: galleryScreenprintHelitack, alt: "Grangeville Helitack screen printed t-shirt design", span: "", aspect: "aspect-[4/3]" },
   { src: galleryScreenprintBaseball, alt: "NAIA World Series volunteer screen printed t-shirt", span: "md:col-span-2", aspect: "aspect-[2/1]" },
-  { src: galleryScreenprintSquad, alt: "Volunteer Squad screen printed t-shirt", span: "", aspect: "aspect-[4/3]" },
-  { src: serviceScreenprint, alt: "Screen printing production line", span: "md:col-span-2", aspect: "aspect-[2/1]" },
+  { src: galleryScreenprintSquad, alt: "Volunteer Squad screen printed t-shirt", span: "md:col-span-2", aspect: "aspect-[2/1]" },
 ];
 
 const ScreenPrintingGallery = () => {
