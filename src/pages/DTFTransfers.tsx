@@ -19,7 +19,7 @@ const DTFTransfers = () => {
       <ServiceJsonLd
         name="DTF Transfers"
         description="Full-color DTF transfers for any fabric, serving businesses in Lewiston, ID and Clarkston, WA."
-        url="https://hcd-web-new.lovable.app/dtf-transfers"
+        url="https://hellscanyondesigns.com/dtf-transfers"
       />
       {/* Hero */}
       <section className="relative py-20 md:py-28">

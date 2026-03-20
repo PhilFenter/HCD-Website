@@ -6,7 +6,7 @@ interface SEOHeadProps {
   canonicalPath: string;
 }
 
-const BASE_URL = "https://hcd-web-new.lovable.app";
+const BASE_URL = "https://hellscanyondesigns.com";
 
 const SEOHead = ({ title, description, canonicalPath }: SEOHeadProps) => {
   const canonicalUrl = `${BASE_URL}${canonicalPath}`;
