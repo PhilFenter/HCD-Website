@@ -52,6 +52,7 @@ const SomethingElse = () => {
       <SEOHead
         title="Not Sure Where to Start? | High Country Drygoodz"
         description="Tell us what you need and we'll figure out the right path together."
+        canonicalPath="/start/something-else"
       />
 
       <section className="bg-background py-20 md:py-28">
