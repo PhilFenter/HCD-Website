@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
@@ -22,13 +22,6 @@ const SomethingElse = () => {
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const topRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (status === "success") {
-      topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [status]);
 
   const canSubmit = name.trim() && email.trim() && message.trim() && status !== "submitting";
 
@@ -49,6 +42,7 @@ const SomethingElse = () => {
         details: { message },
       });
       setStatus("success");
+      window.scrollTo({ top: 0, behavior: "instant" });
     } catch {
       setStatus("error");
     }
@@ -63,7 +57,7 @@ const SomethingElse = () => {
       />
 
       <section className="bg-background py-20 md:py-28">
-        <div className="container" ref={topRef}>
+        <div className="container">
           <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
             <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground md:text-5xl">
               NOT SURE WHERE TO START?
