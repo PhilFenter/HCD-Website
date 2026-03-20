@@ -12,7 +12,7 @@ const PilotAnalogy = () => {
           className="mx-auto max-w-2xl text-center"
         >
           <p className="text-lg leading-relaxed text-muted-foreground md:text-xl">
-            After twenty years flying helicopters, I can plan a flight to almost anywhere in minutes — best route, weather considerations, terrain, fuel stops, which side of the mountains to avoid turbulence. But to do any of that, I need one thing first: a destination. Give me a spot on the map and everything else falls into place.
+            After more than 30 years flying helicopters, I can plan a flight to almost anywhere in minutes — best route, weather considerations, terrain, fuel stops, which side of the mountains to avoid turbulence. But to do any of that, I need one thing first: a destination. Give me a spot on the map and everything else falls into place.
           </p>
           <p className="mt-6 text-xl font-bold text-primary md:text-2xl">
             That's how we work here too. Tell us where you're trying to go and we'll handle the rest.
