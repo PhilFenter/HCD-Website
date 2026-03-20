@@ -32,10 +32,10 @@ const HowItWorks = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
+           <h2 className="font-heading text-3xl font-bold md:text-4xl" style={{ color: '#1a1a1a' }}>
             HOW IT WORKS
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-2xl" style={{ color: '#4a4a4a' }}>
             We built our process around one idea: no surprises. Here is what working with us looks like.
           </p>
         </motion.div>
