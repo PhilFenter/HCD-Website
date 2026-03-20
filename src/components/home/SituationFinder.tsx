@@ -109,6 +109,11 @@ const SituationFinder = () => {
       return;
     }
 
+    if (answers[0] === "Something else") {
+      navigate("/start/something-else");
+      return;
+    }
+
     const params = new URLSearchParams();
     if (answers[0]) params.set("situation", answers[0]);
     if (answers[1]) params.set("frequency", answers[1]);
