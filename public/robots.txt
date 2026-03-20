@@ -16,4 +16,4 @@ Allow: /
 # Disallow preview/staging domains
 # (Applied via host matching — crawlers on preview URLs should not index)
 
-Sitemap: https://hcd-web-new.lovable.app/sitemap.xml
+Sitemap: https://hellscanyondesigns.com/sitemap.xml

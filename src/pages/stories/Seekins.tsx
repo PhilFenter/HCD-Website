@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,11 @@ const Seekins = () => {
         title="Seekins Precision — 600 Hats by Friday | Hells Canyon Designs"
         description="How a single text turned into 600 embroidered hats delivered in four days — and a lasting partnership with Seekins Precision."
         canonicalPath="/stories/seekins"
+      />
+      <ArticleJsonLd
+        title="Seekins Precision — 600 Hats by Friday"
+        description="How a single text turned into 600 embroidered hats delivered in four days — and a lasting partnership with Seekins Precision."
+        path="/stories/seekins"
       />
 
       <article className="py-16 md:py-24">

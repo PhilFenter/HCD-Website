@@ -17,7 +17,7 @@ const Embroidery = () => {
       <ServiceJsonLd
         name="Custom Embroidery"
         description="Professional embroidery services for uniforms, hats, and apparel in Lewiston, ID and Clarkston, WA."
-        url="https://hcd-web-new.lovable.app/embroidery"
+        url="https://hellscanyondesigns.com/embroidery"
       />
       <section className="relative py-20 md:py-28">
         <div className="container">

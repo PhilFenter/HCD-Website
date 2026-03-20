@@ -26,6 +26,8 @@ import BrandBuilder from "./pages/start/BrandBuilder";
 import CrewTeam from "./pages/start/CrewTeam";
 import Event from "./pages/start/Event";
 import SomethingElse from "./pages/start/SomethingElse";
+import Partner from "./pages/Partner";
+import Portfolio from "./pages/Portfolio";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -60,6 +62,8 @@ const App = () => (
             <Route path="/start/crew-team" element={<CrewTeam />} />
             <Route path="/start/event" element={<Event />} />
             <Route path="/start/something-else" element={<SomethingElse />} />
+            <Route path="/partner" element={<Partner />} />
+            <Route path="/portfolio" element={<Portfolio />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
