@@ -6,7 +6,9 @@ import galleryScreenprintDetail from "@/assets/gallery-screenprint-detail.jpg";
 import galleryScreenprintBaseball from "@/assets/gallery-screenprint-baseball.jpg";
 import galleryScreenprintHelitack from "@/assets/gallery-screenprint-helitack.jpg";
 import galleryScreenprintSquad from "@/assets/gallery-screenprint-squad.jpg";
-import serviceScreenprint from "@/assets/service-screenprint.jpg";
+import galleryScreenprintHotshots from "@/assets/gallery-screenprint-hotshots.jpg";
+import galleryScreenprintBlastedbaked from "@/assets/gallery-screenprint-blastedbaked.jpg";
+import galleryScreenprintTristate from "@/assets/gallery-screenprint-tristate.jpg";
 
 const galleryItems = [
   { src: galleryScreenprintThunder, alt: "Thunder on the Snake 2025 screen printed event shirt", span: "md:col-span-2", aspect: "aspect-[2/1]" },
@@ -15,7 +17,10 @@ const galleryItems = [
   { src: galleryScreenprintLcstate, alt: "LC State Hall of Fame screen printed t-shirt", span: "", aspect: "aspect-[4/3]" },
   { src: galleryScreenprintHelitack, alt: "Grangeville Helitack screen printed t-shirt design", span: "", aspect: "aspect-[4/3]" },
   { src: galleryScreenprintBaseball, alt: "NAIA World Series volunteer screen printed t-shirt", span: "md:col-span-2", aspect: "aspect-[2/1]" },
-  { src: galleryScreenprintSquad, alt: "Volunteer Squad screen printed t-shirt", span: "md:col-span-2", aspect: "aspect-[2/1]" },
+  { src: galleryScreenprintHotshots, alt: "Hot Shots screen printed hoodie", span: "", aspect: "aspect-[4/3]" },
+  { src: galleryScreenprintBlastedbaked, alt: "Blasted and Baked Inc screen printed hoodie", span: "", aspect: "aspect-[4/3]" },
+  { src: galleryScreenprintTristate, alt: "TriState Health Tough Enough to Wear Pink screen printed shirt", span: "", aspect: "aspect-[4/3]" },
+  { src: galleryScreenprintSquad, alt: "Volunteer Squad screen printed t-shirt", span: "", aspect: "aspect-[4/3]" },
 ];
 
 const ScreenPrintingGallery = () => {
