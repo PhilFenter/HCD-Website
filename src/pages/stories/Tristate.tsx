@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/gallery-tristate-store.png";
@@ -11,6 +12,11 @@ const Tristate = () => {
         title="Tristate Health — 650 Gift Cards in 45 Days | Hells Canyon Designs"
         description="How 650 employee gift cards nearly broke our fulfillment — and how we turned it into a system that works for everyone."
         canonicalPath="/stories/tristate"
+      />
+      <ArticleJsonLd
+        title="Tristate Health — 650 Gift Cards in 45 Days"
+        description="How 650 employee gift cards nearly broke our fulfillment — and how we turned it into a system that works for everyone."
+        path="/stories/tristate"
       />
 
       <article className="py-16 md:py-24">

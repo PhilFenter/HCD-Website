@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -12,6 +13,11 @@ const WalkedPast = () => {
         title="She Came In Looking For Someone Else | Hells Canyon Designs"
         description="She walked in with jackets meant for another shop. She walked out with a partner who actually picks up the phone."
         canonicalPath="/stories/walked-past"
+      />
+      <ArticleJsonLd
+        title="She Came In Looking For Someone Else"
+        description="She walked in with jackets meant for another shop. She walked out with a partner who actually picks up the phone."
+        path="/stories/walked-past"
       />
 
       <article className="py-16 md:py-24">

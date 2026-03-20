@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,11 @@ const Clearwater = () => {
         title="Clearwater Paper — 750 Jackets by Thanksgiving | Hells Canyon Designs"
         description="How two pallets of KUHL jackets became 750 custom-embroidered gifts — delivered early — and what happened when the last one showed up wrong."
         canonicalPath="/stories/clearwater"
+      />
+      <ArticleJsonLd
+        title="Clearwater Paper — 750 Jackets by Thanksgiving"
+        description="How two pallets of KUHL jackets became 750 custom-embroidered gifts — delivered early — and what happened when the last one showed up wrong."
+        path="/stories/clearwater"
       />
 
       <article className="py-16 md:py-24">
