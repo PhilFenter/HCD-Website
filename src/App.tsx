@@ -27,6 +27,7 @@ import CrewTeam from "./pages/start/CrewTeam";
 import Event from "./pages/start/Event";
 import SomethingElse from "./pages/start/SomethingElse";
 import Partner from "./pages/Partner";
+import Portfolio from "./pages/Portfolio";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
