@@ -16,7 +16,7 @@ const Index = () => {
     <Layout>
       <SEOHead
         title="Custom Screen Printing, Embroidery & Hats in the LC Valley | Hells Canyon Designs"
-        description="Hells Canyon Designs serves Lewiston, ID and Clarkston, WA (the LC Valley) with screen printing, embroidery, custom hats, and DTF transfers for businesses, schools, and contractors."
+        description="Hells Canyon Designs — screen printing, embroidery, DTF transfers and custom hats for LC Valley businesses. Get your free quote today"
         canonicalPath="/"
       />
       <HeroSection />
