@@ -12,6 +12,7 @@ import DTFTransfers from "./pages/DTFTransfers";
 import About from "./pages/About";
 import Quote from "./pages/Quote";
 import NotFound from "./pages/NotFound";
+import ScreenPrintingQuote from "./pages/ScreenPrintingQuote";
 import ScreenPrintingLewiston from "./pages/ScreenPrintingLewiston";
 import ScreenPrintingClarkston from "./pages/ScreenPrintingClarkston";
 import EmbroideryLewiston from "./pages/EmbroideryLewiston";
@@ -64,6 +65,7 @@ const App = () => (
             <Route path="/start/something-else" element={<SomethingElse />} />
             <Route path="/partner" element={<Partner />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/screen-printing-quote" element={<ScreenPrintingQuote />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
