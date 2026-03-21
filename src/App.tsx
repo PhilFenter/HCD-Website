@@ -12,6 +12,7 @@ import DTFTransfers from "./pages/DTFTransfers";
 import About from "./pages/About";
 import Quote from "./pages/Quote";
 import NotFound from "./pages/NotFound";
+import ScreenPrintingQuote from "./pages/ScreenPrintingQuote";
 import ScreenPrintingLewiston from "./pages/ScreenPrintingLewiston";
 import ScreenPrintingClarkston from "./pages/ScreenPrintingClarkston";
 import EmbroideryLewiston from "./pages/EmbroideryLewiston";
