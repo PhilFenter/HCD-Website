@@ -43,7 +43,11 @@ const STEPS = ["Garment", "Colors", "Locations", "Quantity", "Artwork", "Timelin
 
 const LOCATION_OPTIONS = ["Front", "Full Back", "Upper Back", "Left Chest", "Right Chest", "Left Sleeve", "Right Sleeve", "Other"];
 
-const ScreenPrintQuoteBuilder = () => {
+interface ScreenPrintQuoteBuilderProps {
+  source?: string;
+}
+
+const ScreenPrintQuoteBuilder = ({ source }: ScreenPrintQuoteBuilderProps = {}) => {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<ScreenPrintQuoteData>(initialData);
   const [submitted, setSubmitted] = useState(false);
