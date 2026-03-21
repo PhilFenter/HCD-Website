@@ -5,13 +5,8 @@ import { Separator } from "@/components/ui/separator";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import pressImage from "@/assets/gallery-screenprint-press.jpg";
 
-const navLinks = [
-  { label: "Custom Hats", path: "/custom-hats" },
-  { label: "Embroidery", path: "/embroidery" },
-  { label: "Screen Printing", path: "/screen-printing" },
-  { label: "DTF Transfers", path: "/dtf-transfers" },
-  { label: "Our Story", path: "/about" },
-];
+import { Badge } from "@/components/ui/badge";
+
 
 const trustBadges = [
   { icon: "⭐", label: "5-Star Rated" },
