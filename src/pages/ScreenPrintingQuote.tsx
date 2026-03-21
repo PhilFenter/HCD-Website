@@ -1,18 +1,12 @@
 import { Helmet } from "react-helmet-async";
 import { Phone, Users, Clock } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import pressImage from "@/assets/gallery-screenprint-press.jpg";
 
-const navLinks = [
-  { label: "Custom Hats", path: "/custom-hats" },
-  { label: "Embroidery", path: "/embroidery" },
-  { label: "Screen Printing", path: "/screen-printing" },
-  { label: "DTF Transfers", path: "/dtf-transfers" },
-  { label: "Our Story", path: "/about" },
-];
+import { Badge } from "@/components/ui/badge";
+
 
 const trustBadges = [
   { icon: "⭐", label: "5-Star Rated" },
@@ -22,7 +16,7 @@ const trustBadges = [
 ];
 
 const ScreenPrintingQuote = () => {
-  const location = useLocation();
+  
 
   return (
     <>
@@ -75,21 +69,8 @@ const ScreenPrintingQuote = () => {
               </span>
             </Link>
 
-            <nav className="hidden items-center gap-1 lg:flex">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`px-3 py-2 font-heading text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                    location.pathname === link.path
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+
+
 
             <a
               href="tel:+12087486242"
