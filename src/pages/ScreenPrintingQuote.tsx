@@ -1,9 +1,18 @@
 import { Helmet } from "react-helmet-async";
-import { Phone } from "lucide-react";
+import { Phone, Users, Clock } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import pressImage from "@/assets/gallery-screenprint-press.jpg";
+
+const navLinks = [
+  { label: "Custom Hats", path: "/custom-hats" },
+  { label: "Embroidery", path: "/embroidery" },
+  { label: "Screen Printing", path: "/screen-printing" },
+  { label: "DTF Transfers", path: "/dtf-transfers" },
+  { label: "Our Story", path: "/about" },
+];
 
 const trustBadges = [
   { icon: "⭐", label: "5-Star Rated" },
@@ -13,6 +22,8 @@ const trustBadges = [
 ];
 
 const ScreenPrintingQuote = () => {
+  const location = useLocation();
+
   return (
     <>
       <Helmet>
@@ -25,16 +36,59 @@ const ScreenPrintingQuote = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background text-foreground">
-        {/* Top bar with phone */}
-        <div className="flex items-center justify-end px-4 py-3 sm:px-8">
-          <a
-            href="tel:2087486242"
-            className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-          >
-            <Phone className="h-4 w-4" />
-            (208) 748-6242
-          </a>
+        {/* Announcement bar */}
+        <div className="bg-primary/10 border-b border-primary/20">
+          <div className="container flex items-center justify-center gap-4 py-2 text-xs sm:gap-6 sm:text-sm">
+            <span className="flex items-center gap-1.5 font-medium text-primary">
+              <Users className="h-3.5 w-3.5" />
+              Built for Teams & Businesses
+            </span>
+            <span className="h-3 w-px bg-primary/30" />
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              Quotes in 1 Business Day
+            </span>
+            <span className="hidden h-3 w-px bg-primary/30 sm:block" />
+            <span className="hidden text-muted-foreground sm:block">
+              Crafted in Idaho · Shipped Nationwide
+            </span>
+          </div>
         </div>
+
+        {/* Header — no CTA button */}
+        <header className="border-b border-border bg-background/95">
+          <div className="container flex h-16 items-center justify-between md:h-20">
+            <Link to="/" className="flex items-center gap-2">
+              <span className="font-brand text-xl tracking-wider text-primary md:text-2xl">
+                HELLS CANYON DESIGNS
+              </span>
+            </Link>
+
+            <nav className="hidden items-center gap-1 lg:flex">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`px-3 py-2 font-heading text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+                    location.pathname === link.path
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            <a
+              href="tel:+12087486242"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Phone className="h-4 w-4" />
+              (208) 748-6242
+            </a>
+          </div>
+        </header>
 
         {/* Hero with background image */}
         <section
