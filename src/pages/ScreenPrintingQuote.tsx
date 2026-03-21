@@ -1,7 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Phone, Users, Clock } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import ScreenPrintQuoteBuilder from "@/components/quote/ScreenPrintQuoteBuilder";
 import pressImage from "@/assets/gallery-screenprint-press.jpg";
