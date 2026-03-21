@@ -16,7 +16,7 @@ const trustBadges = [
 ];
 
 const ScreenPrintingQuote = () => {
-  const location = useLocation();
+  
 
   return (
     <>
