@@ -140,6 +140,7 @@ const ScreenPrintingQuote = () => {
         <section className="px-4 pb-16 pt-8 sm:px-8">
           <ScreenPrintQuoteBuilder source="google-ads" />
         </section>
+        </div>
       </div>
     </>
   );
