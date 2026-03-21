@@ -35,7 +35,18 @@ const ScreenPrintingQuote = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="min-h-screen bg-background text-foreground">
+      <div
+        className="relative min-h-screen text-foreground"
+        style={{
+          backgroundImage: `url(${pressImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        {/* Full-page dark overlay */}
+        <div className="absolute inset-0 bg-background/90" />
+        <div className="relative z-10">
         {/* Announcement bar */}
         <div className="bg-primary/10 border-b border-primary/20">
           <div className="container flex items-center justify-center gap-4 py-2 text-xs sm:gap-6 sm:text-sm">
