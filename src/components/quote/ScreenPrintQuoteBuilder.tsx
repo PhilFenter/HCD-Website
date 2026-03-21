@@ -97,11 +97,6 @@ const ScreenPrintQuoteBuilder = ({ source }: ScreenPrintQuoteBuilderProps = {}) 
         quantity: data.quantity,
         artworkNotes: data.artworkNotes,
         ...(source && { source }),
-        company: data.company,
-        notes: data.notes,
-        timeline: data.timeline,
-        quantity: data.quantity,
-        artworkNotes: data.artworkNotes,
         details: {
           garmentType: data.garmentType,
           printColors: data.printColors,

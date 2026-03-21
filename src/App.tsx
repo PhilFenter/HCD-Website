@@ -65,6 +65,7 @@ const App = () => (
             <Route path="/start/something-else" element={<SomethingElse />} />
             <Route path="/partner" element={<Partner />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/screen-printing-quote" element={<ScreenPrintingQuote />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
