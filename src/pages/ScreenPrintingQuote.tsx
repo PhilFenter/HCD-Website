@@ -35,7 +35,18 @@ const ScreenPrintingQuote = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="min-h-screen bg-background text-foreground">
+      <div
+        className="relative min-h-screen text-foreground"
+        style={{
+          backgroundImage: `url(${pressImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        {/* Full-page dark overlay */}
+        <div className="absolute inset-0 bg-background/90" />
+        <div className="relative z-10">
         {/* Announcement bar */}
         <div className="bg-primary/10 border-b border-primary/20">
           <div className="container flex items-center justify-center gap-4 py-2 text-xs sm:gap-6 sm:text-sm">
@@ -90,17 +101,8 @@ const ScreenPrintingQuote = () => {
           </div>
         </header>
 
-        {/* Hero with background image */}
-        <section
-          className="relative px-4 pb-8 pt-6 text-center sm:px-8 sm:pt-10"
-          style={{
-            backgroundImage: `url(${pressImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-background/85" />
+        {/* Hero */}
+        <section className="px-4 pb-8 pt-6 text-center sm:px-8 sm:pt-10">
 
           <div className="relative z-10">
             <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
@@ -138,6 +140,7 @@ const ScreenPrintingQuote = () => {
         <section className="px-4 pb-16 pt-8 sm:px-8">
           <ScreenPrintQuoteBuilder source="google-ads" />
         </section>
+        </div>
       </div>
     </>
   );
