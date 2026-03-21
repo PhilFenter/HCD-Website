@@ -101,17 +101,8 @@ const ScreenPrintingQuote = () => {
           </div>
         </header>
 
-        {/* Hero with background image */}
-        <section
-          className="relative px-4 pb-8 pt-6 text-center sm:px-8 sm:pt-10"
-          style={{
-            backgroundImage: `url(${pressImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-background/85" />
+        {/* Hero */}
+        <section className="px-4 pb-8 pt-6 text-center sm:px-8 sm:pt-10">
 
           <div className="relative z-10">
             <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
