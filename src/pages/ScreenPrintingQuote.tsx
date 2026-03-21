@@ -69,21 +69,8 @@ const ScreenPrintingQuote = () => {
               </span>
             </Link>
 
-            <nav className="hidden items-center gap-1 lg:flex">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`px-3 py-2 font-heading text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                    location.pathname === link.path
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+
+
 
             <a
               href="tel:+12087486242"
