@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 const questions = [
   {
     prompt: "So, where are we headed?",
-    columns: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6",
+    columns: "grid-cols-2 sm:grid-cols-3",
     options: [
       { label: "Hats and branded gear", icon: Sparkles, accent: "from-primary/20 to-primary/5" },
       { label: "Outfitting a crew or team", icon: Users, accent: "from-primary/20 to-primary/5" },
