@@ -148,35 +148,49 @@ function buildFullNotes(submission: QuoteSubmission, artworkUrl?: string): strin
 /**
  * Submit a quote request to ShopManagerPro's backend.
  * Creates a customer, quote, and action item automatically.
+ * Includes a deduplication guard to prevent double submissions.
  */
+let _inflight: Promise<unknown> | null = null;
+
 export async function submitQuoteRequest(submission: QuoteSubmission) {
-  let artworkUrl: string | undefined;
+  // Prevent duplicate submissions from double-clicks
+  if (_inflight) return _inflight;
 
-  // Upload artwork file if provided
-  if (submission.artworkFile) {
-    artworkUrl = await uploadArtworkFile(submission.artworkFile, submission.serviceType);
-  }
+  _inflight = (async () => {
+    try {
+      let artworkUrl: string | undefined;
 
-  // Build comprehensive notes with all order details
-  const fullNotes = buildFullNotes(submission, artworkUrl);
+      // Upload artwork file if provided
+      if (submission.artworkFile) {
+        artworkUrl = await uploadArtworkFile(submission.artworkFile, submission.serviceType);
+      }
 
-  // Map frontend field names to what the edge function expects
-  const { artworkFile, ...rest } = submission;
-  const payload = {
-    ...rest,
-    notes: fullNotes,
-    customer_name: submission.name,
-    customer_email: submission.email,
-    customer_phone: submission.phone,
-    customer_company: submission.company,
-    ...(artworkUrl && { artworkUrl }),
-  };
+      // Build comprehensive notes with all order details
+      const fullNotes = buildFullNotes(submission, artworkUrl);
 
-  const { data, error } = await supabase.functions.invoke(
-    "create-quote-action-item",
-    { body: payload }
-  );
+      // Map frontend field names to what the edge function expects
+      const { artworkFile, ...rest } = submission;
+      const payload = {
+        ...rest,
+        notes: fullNotes,
+        customer_name: submission.name,
+        customer_email: submission.email,
+        customer_phone: submission.phone,
+        customer_company: submission.company,
+        ...(artworkUrl && { artworkUrl }),
+      };
 
-  if (error) throw error;
-  return data;
+      const { data, error } = await supabase.functions.invoke(
+        "create-quote-action-item",
+        { body: payload }
+      );
+
+      if (error) throw error;
+      return data;
+    } finally {
+      _inflight = null;
+    }
+  })();
+
+  return _inflight;
 }
