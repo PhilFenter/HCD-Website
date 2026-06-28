@@ -11,7 +11,7 @@ const AnnouncementBar = () => {
         <span className="h-3 w-px bg-primary/30" />
         <span className="flex items-center gap-1.5 text-muted-foreground">
           <Clock className="h-3.5 w-3.5" />
-          Quotes in 1 Business Day
+          Quotes in 24-48 Hours
         </span>
         <span className="hidden h-3 w-px bg-primary/30 sm:block" />
         <span className="hidden text-muted-foreground sm:block">
