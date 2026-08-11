@@ -159,14 +159,21 @@ export async function submitQuoteRequest(submission: QuoteSubmission) {
   _inflight = (async () => {
     try {
       let artworkUrl: string | undefined;
+      let artworkError: string | undefined;
 
-      // Upload artwork file if provided
+      // Upload artwork file if provided — never let this block the quote itself
       if (submission.artworkFile) {
-        artworkUrl = await uploadArtworkFile(submission.artworkFile, submission.serviceType);
+        try {
+          artworkUrl = await uploadArtworkFile(submission.artworkFile, submission.serviceType);
+        } catch (err) {
+          artworkError = `Customer attached "${submission.artworkFile.name}" but the upload failed — request the file by email.`;
+          console.error("Artwork upload failed (continuing with quote):", err);
+        }
       }
 
       // Build comprehensive notes with all order details
-      const fullNotes = buildFullNotes(submission, artworkUrl);
+      let fullNotes = buildFullNotes(submission, artworkUrl);
+      if (artworkError) fullNotes += `\n⚠️ ${artworkError}`;
 
       // Map frontend field names to what the edge function expects
       const { artworkFile, ...rest } = submission;
