@@ -1,4 +1,5 @@
-import { supabase } from "@/integrations/supabase/client";
+import { shopmanager as supabase } from "@/integrations/shopmanager/client";
+import { supabase as cloud } from "@/integrations/supabase/client";
 
 export interface BrandContext {
   situation?: string;
