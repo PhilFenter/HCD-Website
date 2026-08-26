@@ -1,4 +1,5 @@
-import { supabase } from "@/integrations/supabase/client";
+import { shopmanager as supabase } from "@/integrations/shopmanager/client";
+import { supabase as cloud } from "@/integrations/supabase/client";
 
 export interface BrandContext {
   situation?: string;
@@ -193,6 +194,26 @@ export async function submitQuoteRequest(submission: QuoteSubmission) {
       );
 
       if (error) throw error;
+
+      // Fire-and-forget email notification — never blocks or fails the quote
+      try {
+        const quoteNumber = (data as { quote_number?: string } | null)?.quote_number;
+        void cloud.functions
+          .invoke("notify-quote", {
+            body: {
+              name: submission.name,
+              email: submission.email,
+              phone: submission.phone,
+              company: submission.company,
+              serviceType: submission.serviceType,
+              quoteNumber,
+            },
+          })
+          .catch((notifyErr) => console.error("Quote notification failed:", notifyErr));
+      } catch (notifyErr) {
+        console.error("Quote notification failed:", notifyErr);
+      }
+
       return data;
     } finally {
       _inflight = null;
