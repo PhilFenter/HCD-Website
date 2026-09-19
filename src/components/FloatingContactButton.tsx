@@ -14,7 +14,7 @@ const FloatingContactButton = () => {
         {open && (
           <>
             <motion.a
-              href={`sms:+${PHONE_NUMBER}`}
+              href={`sms:+${PHONE_NUMBER}?&body=`}
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.8 }}
@@ -22,7 +22,7 @@ const FloatingContactButton = () => {
               className="flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:scale-105"
             >
               <MessageCircle className="h-4 w-4" />
-              Text Us
+              Text {DISPLAY_NUMBER}
             </motion.a>
             <motion.a
               href={`tel:+${PHONE_NUMBER}`}
