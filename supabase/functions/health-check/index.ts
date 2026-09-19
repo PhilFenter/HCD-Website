@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
-  const expected = Deno.env.get('HEALTH_CHECK_TOKEN')
+  const expected = Deno.env.get('HEALTH_CHECK_KEY')
   if (!expected || req.headers.get('x-health-token') !== expected) {
     return new Response('Unauthorized', { status: 401, headers: corsHeaders })
   }
