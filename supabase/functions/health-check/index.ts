@@ -82,6 +82,10 @@ Deno.serve(async (req) => {
         notes: 'AUTOMATED NIGHTLY SYSTEM CHECK — not a real customer. Safe to delete.',
         quantity: 1,
         details: { check: 'nightly' },
+        customer_name: 'AUTOMATED SYSTEM CHECK — ignore',
+        customer_email: 'systemcheck@hellscanyondesigns.com',
+        customer_phone: '0000000000',
+        customer_company: 'AUTOMATED SYSTEM CHECK',
       }),
     })
     const text = await res.text()
