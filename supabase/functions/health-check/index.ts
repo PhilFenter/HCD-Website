@@ -57,18 +57,31 @@ Deno.serve(async (req) => {
   const failures: string[] = []
   const checks: Record<string, string> = {}
 
-  // 1. Is the public website reachable?
-  try {
-    const site = await fetch(SITE_URL, { redirect: 'follow' })
-    if (!site.ok) failures.push(`The website returned an error (${site.status}).`)
-    checks.website = site.ok ? 'ok' : `status ${site.status}`
-  } catch (err) {
-    failures.push('The website could not be reached at all.')
-    checks.website = `error: ${String(err)}`
+  // Retry transient blips twice before treating a check as a real failure.
+  async function withRetry<T>(fn: () => Promise<T | null>): Promise<T | null> {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const result = await fn()
+        if (result !== null) return result
+      } catch (_err) {
+        // fall through to retry
+      }
+      if (attempt < 2) await new Promise((r) => setTimeout(r, 5000))
+    }
+    return null
   }
 
+  // 1. Is the public website reachable?
+  const siteOk = await withRetry(async () => {
+    const site = await fetch(SITE_URL, { redirect: 'follow' })
+    return site.ok ? 'ok' : null
+  })
+  checks.website = siteOk ? 'ok' : 'unreachable after 3 attempts'
+  if (!siteOk) failures.push('The website could not be reached (checked 3 times).')
+
   // 2. Can a quote actually be created end to end?
-  try {
+  let lastQuoteError = 'unknown'
+  const quoteOk = await withRetry(async () => {
     const res = await fetch(`${SHOPMANAGER_URL}/functions/v1/create-quote-action-item`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SHOPMANAGER_KEY },
