@@ -103,15 +103,18 @@ Deno.serve(async (req) => {
     })
     const text = await res.text()
     if (!res.ok) {
-      failures.push(`Quote requests are failing (error ${res.status}). Customers cannot submit quotes.`)
-      checks.quotes = `status ${res.status}: ${text.slice(0, 300)}`
-    } else {
-      checks.quotes = 'ok'
+      lastQuoteError = `status ${res.status}: ${text.slice(0, 300)}`
+      return null
     }
-  } catch (err) {
-    failures.push('The quote system could not be reached. Customers cannot submit quotes.')
-    checks.quotes = `error: ${String(err)}`
+    return 'ok'
+  })
+  checks.quotes = quoteOk ? 'ok' : `failed after 3 attempts — ${lastQuoteError}`
+  if (!quoteOk) {
+    failures.push(
+      `Quote requests failed 3 times in a row. Customers may not be able to submit quotes. (${lastQuoteError})`,
+    )
   }
+
 
   if (failures.length > 0) {
     await sendAlert(failures)
