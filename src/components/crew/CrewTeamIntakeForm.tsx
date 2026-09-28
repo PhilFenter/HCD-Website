@@ -37,7 +37,6 @@ const artworkOptions = [
 ] as const;
 const deadlineOptions = ["Yes, specific date", "Within 30 days", "No rush"] as const;
 
-const formatSummaryList = (items: string[]) => (items.length ? items.join(", ") : "Not provided");
 
 const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
   const { toast } = useToast();
@@ -89,21 +88,10 @@ const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
     if (!canSubmit) return;
 
     const formattedDeadlineDate = deadlineDate ? format(deadlineDate, "yyyy-MM-dd") : undefined;
-    const notes = [
-      "— Crew Team Intake —",
-      `Name: ${name.trim()}`,
-      `Email: ${email.trim()}`,
-      `Phone: ${phone.trim() || "Not provided"}`,
-      `Company: ${company.trim() || "Not provided"}`,
-      `Organization Type: ${organizationType || "Not provided"}`,
-      `What You Do and Who You Serve: ${whatYouDoAndWhoYouServe.trim() || "Not provided"}`,
-      `Items Needed: ${formatSummaryList(itemsLookingFor)}`,
-      `People Outfitting: ${teamSize || "Not provided"}`,
-      `Order Type: ${orderType || "Not provided"}`,
-      `Artwork Status: ${artworkStatus || "Not provided"}`,
-      `Deadline: ${deadlineType || "Not provided"}`,
-      `Specific Date: ${formattedDeadlineDate || "Not provided"}`,
-    ].join("\n");
+    // Every answer is already sent as structured `details` below, and
+    // submitQuoteRequest turns those into the "Order Details" notes. Sending the
+    // same fields again as a free-text block duplicated everything in
+    // ShopManagerPro and broke the Brand & Customer Details display.
 
     setSubmitting(true);
     try {
@@ -114,7 +102,6 @@ const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
         email: email.trim(),
         phone: phone.trim(),
         company: company.trim() || undefined,
-        notes,
         timeline: deadlineType,
         details: {
           source: "website-crew-team",
