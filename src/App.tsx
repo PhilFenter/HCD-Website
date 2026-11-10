@@ -29,6 +29,7 @@ import Event from "./pages/start/Event";
 import SomethingElse from "./pages/start/SomethingElse";
 import Partner from "./pages/Partner";
 import Portfolio from "./pages/Portfolio";
+import Care from "./pages/Care";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="/start/something-else" element={<SomethingElse />} />
             <Route path="/partner" element={<Partner />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/care" element={<Care />} />
             <Route path="/screen-printing-quote" element={<ScreenPrintingQuote />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

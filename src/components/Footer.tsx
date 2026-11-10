@@ -37,6 +37,9 @@ const Footer = () => {
               <Link to="/dtf-transfers" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 DTF Transfers & Garments
               </Link>
+              <Link to="/care" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Care Instructions
+              </Link>
             </nav>
           </div>
 
