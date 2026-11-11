@@ -9,6 +9,7 @@ import { ArrowRight, ArrowLeft, Check, Upload, X, DollarSign, Star } from "lucid
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import OptionCard from "./OptionCard";
 import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 // ── Pricing ────────────────────────────────────────────
 const HAT_PRICE_TIERS = [
@@ -139,12 +140,14 @@ const HatQuoteBuilder = () => {
   };
 
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
 
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
       const est = estimate;
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "custom_hats",
         name: data.name,
         email: data.email,
@@ -676,6 +679,8 @@ const HatQuoteBuilder = () => {
         )}
 
         {/* Navigation */}
+        {step === STEPS.length - 1 && <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />}
+
         <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
           <Button
             variant="ghost"

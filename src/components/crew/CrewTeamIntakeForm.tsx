@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import OptionCard from "@/components/quote/OptionCard";
 import { submitQuoteRequest } from "@/lib/submitQuote";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 const organizationOptions = [
   "Construction or trades",
@@ -42,6 +43,7 @@ const formatSummaryList = (items: string[]) => (items.length ? items.join(", ") 
 const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -108,6 +110,7 @@ const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "other",
         source: "website-crew-team",
         name: name.trim(),
@@ -345,6 +348,7 @@ const CrewTeamIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
               </div>
             )}
 
+            <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
             <Button type="submit" variant="cta" size="lg" className="mt-4 w-full" disabled={!canSubmit || submitting}>
               {submitting ? "Submitting..." : "Get My Crew Quote →"}
             </Button>

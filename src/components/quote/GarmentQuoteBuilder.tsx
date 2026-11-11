@@ -20,6 +20,7 @@ import ArtworkRightsCheckbox from "./ArtworkRightsCheckbox";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { submitQuoteRequest } from "@/lib/submitQuote";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 // ── Pricing ────────────────────────────────────────────
 const MIN_QTY = 12;
@@ -358,6 +359,7 @@ const GarmentQuoteBuilder = () => {
   const [data, setData] = useState<GarmentQuoteData>(initialData);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const { toast } = useToast();
 
   const update = (fields: Partial<GarmentQuoteData>) =>
@@ -446,6 +448,7 @@ const GarmentQuoteBuilder = () => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: data.garmentType === "polos" ? "embroidery" : "screen_print",
         name: data.name,
         email: data.email,
@@ -809,6 +812,8 @@ const GarmentQuoteBuilder = () => {
         </AnimatePresence>
 
         {/* Navigation */}
+        {step === STEPS.length - 1 && <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />}
+
         <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
           <Button variant="ghost" onClick={prev} disabled={step === 0} className="font-heading tracking-wide">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back

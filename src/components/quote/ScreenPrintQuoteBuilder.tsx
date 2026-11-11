@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, ArrowLeft, Check, Upload, X } from "lucide-react";
 import OptionCard from "./OptionCard";
 import { submitQuoteRequest } from "@/lib/submitQuote";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 interface ScreenPrintQuoteData {
   garmentType: string;
@@ -82,11 +83,13 @@ const ScreenPrintQuoteBuilder = ({ source }: ScreenPrintQuoteBuilderProps = {}) 
   const prev = () => { if (step > 0) setStep(step - 1); };
 
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
 
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "screen_print",
         name: data.name,
         email: data.email,
@@ -305,6 +308,8 @@ const ScreenPrintQuoteBuilder = ({ source }: ScreenPrintQuoteBuilderProps = {}) 
 
           </motion.div>
         </AnimatePresence>
+
+        {step === STEPS.length - 1 && <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />}
 
         <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
           <Button variant="ghost" onClick={prev} disabled={step === 0} className="font-heading tracking-wide">

@@ -39,6 +39,8 @@ export interface QuoteSubmission {
   artworkFile?: File | null;
   /** Brand intake context from the Brand Builder funnel */
   brandContext?: BrandContext;
+  /** Customer ticked the (unchecked by default) marketing-email box */
+  emailOptIn?: boolean;
 }
 
 /**
@@ -177,9 +179,11 @@ export async function submitQuoteRequest(submission: QuoteSubmission) {
       if (artworkError) fullNotes += `\n⚠️ ${artworkError}`;
 
       // Map frontend field names to what the edge function expects
-      const { artworkFile, ...rest } = submission;
+      const { artworkFile, emailOptIn, ...rest } = submission;
       const payload = {
         ...rest,
+        // Only a literal true subscribes anyone to the HCD Email List.
+        marketing_opt_in: emailOptIn === true,
         notes: fullNotes,
         customer_name: submission.name,
         customer_email: submission.email,

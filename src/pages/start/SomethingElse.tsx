@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, AlertCircle } from "lucide-react";
 import { submitQuoteRequest } from "@/lib/submitQuote";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -22,6 +23,7 @@ const SomethingElse = () => {
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [emailOptIn, setEmailOptIn] = useState(false);
 
   const canSubmit = name.trim() && email.trim() && message.trim() && status !== "submitting";
 
@@ -32,6 +34,7 @@ const SomethingElse = () => {
     setStatus("submitting");
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "other",
         name,
         email,
@@ -130,6 +133,7 @@ const SomethingElse = () => {
                   </div>
                 )}
 
+                <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
                 <Button type="submit" size="lg" disabled={!canSubmit} className="w-full gap-2 font-heading tracking-wide">
                   {status === "submitting" ? "Sending…" : "Start The Conversation"}
                   {status !== "submitting" && <ArrowRight className="h-4 w-4" />}

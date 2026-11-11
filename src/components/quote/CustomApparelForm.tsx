@@ -169,6 +169,7 @@ const COLOR_COUNTS = [
 
 // ── Component ──────────────────────────────────────────
 import type { BrandContext } from "@/lib/submitQuote";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 interface CustomApparelFormProps {
   brandContext?: BrandContext;
@@ -176,6 +177,7 @@ interface CustomApparelFormProps {
 
 const CustomApparelForm = ({ brandContext }: CustomApparelFormProps) => {
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
@@ -230,6 +232,7 @@ const CustomApparelForm = ({ brandContext }: CustomApparelFormProps) => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "custom_apparel",
         name,
         email,
@@ -648,6 +651,7 @@ const CustomApparelForm = ({ brandContext }: CustomApparelFormProps) => {
       </div>
 
       {/* Submit */}
+      <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
       <Button
         type="submit"
         size="lg"

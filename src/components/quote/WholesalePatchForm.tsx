@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 // ── Patch Types ────────────────────────────────────────
 const PATCH_TYPES = [
@@ -139,6 +140,7 @@ function getTierPricesForSize(patchType: string, size: string): { min: number; l
 // ── Component ──────────────────────────────────────────
 const WholesalePatchForm = () => {
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
@@ -179,6 +181,7 @@ const WholesalePatchForm = () => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "wholesale_patches",
         name,
         email,
@@ -610,6 +613,7 @@ const WholesalePatchForm = () => {
       </div>
 
       {/* Submit */}
+      <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
       <Button
         type="submit"
         size="lg"
