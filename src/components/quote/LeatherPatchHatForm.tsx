@@ -389,6 +389,7 @@ const LEATHER_COLORS = [
 ];
 
 import type { BrandContext } from "@/lib/submitQuote";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 interface LeatherPatchHatFormProps {
   brandContext?: BrandContext;
@@ -396,6 +397,7 @@ interface LeatherPatchHatFormProps {
 
 const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
@@ -425,6 +427,7 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "leather_patch_hats",
         name,
         email,
@@ -840,6 +843,7 @@ const LeatherPatchHatForm = ({ brandContext }: LeatherPatchHatFormProps) => {
           </ul>
         </div>
       )}
+      <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
       <Button
         type="submit"
         size="lg"

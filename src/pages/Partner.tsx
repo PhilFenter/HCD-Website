@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import { useToast } from "@/hooks/use-toast";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 const fade = {
   initial: { opacity: 0, y: 16, filter: "blur(4px)" },
@@ -73,6 +74,7 @@ const programs = [
 const Partner = () => {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -93,6 +95,7 @@ const Partner = () => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "other",
         source: "website-partner",
         name: form.name,
@@ -349,6 +352,7 @@ const Partner = () => {
                     placeholder="What are you looking for? Company store, ongoing program, something else?"
                   />
                 </div>
+                <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
                 <Button
                   type="submit"
                   size="lg"

@@ -18,6 +18,7 @@ import {
 import OptionCard from "@/components/quote/OptionCard";
 import { submitQuoteRequest } from "@/lib/submitQuote";
 import { cn } from "@/lib/utils";
+import EmailOptInCheckbox from "@/components/quote/EmailOptInCheckbox";
 
 const eventTypeOptions = [
   "Car show or automotive",
@@ -41,6 +42,7 @@ const artworkOptions = [
 const EventIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const [emailOptIn, setEmailOptIn] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -97,6 +99,7 @@ const EventIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
     setSubmitting(true);
     try {
       await submitQuoteRequest({
+        emailOptIn,
         serviceType: "other",
         source: "website-event",
         name: name.trim(),
@@ -318,6 +321,7 @@ const EventIntakeForm = ({ onSubmitted }: { onSubmitted?: () => void }) => {
               />
             </div>
 
+            <EmailOptInCheckbox checked={emailOptIn} onCheckedChange={setEmailOptIn} />
             <Button type="submit" variant="cta" size="lg" className="mt-4 w-full" disabled={!canSubmit || submitting}>
               {submitting ? "Submitting..." : "Get My Event Quote →"}
             </Button>
